@@ -47,5 +47,31 @@ namespace IntroProject
                 for (int y = 0; y < height; y++)
                     tiles[x, y].draw(g, xPos + tiles[x, y].x, yPos + tiles[x, y].y);
         }
+
+        public int[] PosToHexPos(int x, int y) 
+        {
+            int kolom = (int) (x / (size * 3 + margin * Hexagon.sqrt3)); //2x brede kolom waar dit punt inzit
+            int relXPos = x - (int)((kolom + 0.5) * (size * 3 + margin * Hexagon.sqrt3));
+            int rij = (int)(y / (size * Hexagon.sqrt2 + margin)); //de rij waar dit inzit ervanuitgaande dat we in de middelste kolom zitten
+            int relYPos = y - (int)((rij + 0.5) * (size * Hexagon.sqrt2 + margin));
+            int rXPos = relXPos;
+            int rYPos = relYPos;
+            if (rXPos < 0)
+                rXPos = -rXPos;
+            if (rYPos < 0)
+                rYPos = -rYPos;
+            int mSize = (int)(size + (margin / 2) / Hexagon.sqrt3);
+            if (rXPos < mSize - (y / Hexagon.sqrt3)) {
+                return new int[2] { rij, kolom * 2 + 1 };
+            }
+            if (relXPos > 0) {
+                if (relYPos > 0)
+                    return new int[2] { rij, kolom * 2 + 2 };
+                return new int[2] { rij + 1, kolom * 2 + 2 };
+            }
+            if (relYPos > 0)
+                return new int[2] { rij, kolom * 2};
+            return new int[2] { rij + 1, kolom * 2};
+        }
     }
 }
