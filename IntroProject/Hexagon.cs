@@ -21,10 +21,11 @@ namespace IntroProject
         }
 
 
-        public Hexagon(int size, int c, int x, int y) //size is the length of each side
+        public Hexagon(int size, double c, int x, int y) //size is the length of each side
         {
+            int col = (int) (((c + 1) * 255) / 2);
             this.size = size;
-            color = Color.FromArgb(c,c,c);
+            color = Color.FromArgb(col, col, col);
 
             this.x = x;
             this.y = y;

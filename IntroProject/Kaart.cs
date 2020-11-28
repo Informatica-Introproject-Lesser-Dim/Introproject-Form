@@ -36,8 +36,8 @@ namespace IntroProject
                     yOff = (int)((size * Hexagon.sqrt3 + margin) / 2);
                 for (int y = 0; y < height; y++)
                 {
-                    int yPos = (int)(margin + Hexagon.sqrt3 * size)*y + yOff;
-                    tiles[x, y] = new Hexagon(size, random.Next(0,255), xPos, yPos);
+                    int yPos = (int)((margin + Hexagon.sqrt3 * size)*y) + yOff;
+                    tiles[x, y] = new Hexagon(size, random.NextDouble(), xPos, yPos);
                 }
             }
         }
@@ -51,27 +51,34 @@ namespace IntroProject
         public int[] PosToHexPos(int x, int y) 
         {
             int kolom = (int) (x / (size * 3 + margin * Hexagon.sqrt3)); //2x brede kolom waar dit punt inzit
-            int relXPos = x - (int)((kolom + 0.5) * (size * 3 + margin * Hexagon.sqrt3));
-            int rij = (int)(y / (size * Hexagon.sqrt2 + margin)); //de rij waar dit inzit ervanuitgaande dat we in de middelste kolom zitten
-            int relYPos = y - (int)((rij + 0.5) * (size * Hexagon.sqrt2 + margin));
+            if (x < 0)
+                kolom--;
+            int relXPos = x - (int)((kolom + 0.5) * (size * 3 + margin * Hexagon.sqrt3)); //de x relatief tot het midden van zijn kolom
+            
+            int rij = (int)(y / (size * Hexagon.sqrt3 + margin)); //de rij waar dit inzit ervanuitgaande dat we in de middelste rij hexagons in onze kolom zitten
+            if (y < 0)
+                rij--;
+            
+            int relYPos = y - (int)((rij + 0.5) * (size * Hexagon.sqrt3 + margin)); //de y relatief tot onze middelste hexagon
             int rXPos = relXPos;
             int rYPos = relYPos;
             if (rXPos < 0)
                 rXPos = -rXPos;
             if (rYPos < 0)
                 rYPos = -rYPos;
-            int mSize = (int)(size + (margin / 2) / Hexagon.sqrt3);
-            if (rXPos < mSize - (y / Hexagon.sqrt3)) {
-                return new int[2] { rij, kolom * 2 + 1 };
+            int mSize = (int)(size + (margin) / Hexagon.sqrt3);
+            if (rXPos < mSize - (rYPos / Hexagon.sqrt3))
+            {
+                return new int[2] {kolom * 2 + 1, rij };
             }
             if (relXPos > 0) {
                 if (relYPos > 0)
-                    return new int[2] { rij, kolom * 2 + 2 };
-                return new int[2] { rij + 1, kolom * 2 + 2 };
+                    return new int[2] { kolom * 2 + 2 , rij + 1};
+                return new int[2] { kolom * 2 + 2, rij};
             }
             if (relYPos > 0)
-                return new int[2] { rij, kolom * 2};
-            return new int[2] { rij + 1, kolom * 2};
+                return new int[2] { kolom * 2, rij + 1 };
+            return new int[2] { kolom * 2, rij};
         }
     }
 }

@@ -20,8 +20,8 @@ namespace IntroProject
 
         public Debug() 
         {
-            this.Size = new Size(800, 600);
-            debugscr = new DebugScreen(800, 600);
+            this.Size = new Size(800, 650);
+            debugscr = new DebugScreen(800, 650);
             this.Controls.Add(debugscr);
         }
     }
@@ -50,6 +50,24 @@ namespace IntroProject
             pea.Graphics.FillRectangle(new SolidBrush(Color.DarkGray), 0, 0, this.Width, this.Height);
             kaart.draw(pea.Graphics, 50, 100);
             pea.Graphics.DrawString(pos[0].ToString() + "," + pos[1].ToString(), font,Brushes.Black, 0, 0);
+            Bitmap bm = new Bitmap(this.Width, this.Height);
+            for (int x = 0; x < bm.Width; x++)
+                for (int y = 0; y < bm.Height; y++) {
+                    pos = kaart.PosToHexPos(x - 50, y - 100);
+                    int r = 0;
+                    if (pos[0] % 2 == 0)
+                        r = 125;
+                    int g = 0;
+                    if (pos[1] % 2 == 0)
+                        g = 125;
+                    int a = 0;
+                    if (r != 0 || g != 0)
+                        a = 70;
+                    Color c = Color.FromArgb(a, r, g, 0);
+                    bm.SetPixel(x, y, c);
+                }
+            pea.Graphics.DrawImage(bm, 0, 0);
+                    
         }
     }
 }
