@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using LibNoise.Primitive;
+
 namespace IntroProject
 {
     public class Kaart
@@ -18,7 +20,7 @@ namespace IntroProject
         private int margin;
 
         Hexagon[,] tiles;
-        Random random;
+        SimplexPerlin perlin = new SimplexPerlin();
 
         Bitmap mapBase;
 
@@ -28,7 +30,6 @@ namespace IntroProject
             this.size = size;
             this.margin = margin;
             tiles = new Hexagon[width, height];
-            random = new Random();
 
             for (int x = 0; x < width; x++)
             {
@@ -39,7 +40,7 @@ namespace IntroProject
                 for (int y = 0; y < height; y++)
                 {
                     int yPos = (int)((margin + Hexagon.sqrt3 * size)*y) + yOff;
-                    tiles[x, y] = new Hexagon(size, random.NextDouble(), xPos, yPos);
+                    tiles[x, y] = new Hexagon(size, perlin.GetValue(x, y), xPos, yPos);
                 }
                 
             }
