@@ -20,6 +20,8 @@ namespace IntroProject
         Hexagon[,] tiles;
         Random random;
 
+        Bitmap mapBase;
+
         public Kaart(int width, int height, int size, int margin) {
             this.width = width;
             this.height = height;
@@ -39,13 +41,24 @@ namespace IntroProject
                     int yPos = (int)((margin + Hexagon.sqrt3 * size)*y) + yOff;
                     tiles[x, y] = new Hexagon(size, random.NextDouble(), xPos, yPos);
                 }
+                
             }
+            this.drawBase();
+
+
+
+        }
+
+        private void drawBase() {
+            mapBase = new Bitmap(tiles[width - 1, height - 1].x + 2 * size, tiles[width - 1, height - 1].y + (int)(size * Hexagon.sqrt3));
+            Graphics g = Graphics.FromImage(mapBase);
+            for (int x = 0; x < width; x++)
+                for (int y = 0; y < height; y++)
+                    tiles[x, y].draw(g, size + tiles[x, y].x, (int)(size * Hexagon.sqrt3 / 2) + tiles[x, y].y);
         }
 
         public void draw(Graphics g, int xPos, int yPos) {
-            for (int x = 0; x < width; x++)
-                for (int y = 0; y < height; y++)
-                    tiles[x, y].draw(g, xPos + tiles[x, y].x, yPos + tiles[x, y].y);
+            g.DrawImage(mapBase, xPos - size, yPos - (int) (size*Hexagon.sqrt3/2));
         }
 
         public int[] PosToHexPos(int x, int y) 
