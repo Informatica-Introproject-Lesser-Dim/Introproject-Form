@@ -1,7 +1,8 @@
 ﻿namespace IntroProject
 {
-    public struct Genen<T>
+    public class Genen<T>
     {
+        public string @class;
         T snelheidx;
         T snelheidy;
         T spronghoogte;

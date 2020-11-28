@@ -4,14 +4,19 @@
 
     public abstract class Wezen : Entity
     {
-        protected StandaardGenen genen = new StandaardGenen();
+        public StandaardGenen Genen { get; protected set; }
         public int Leven;
         //Evolutieschaal Vincent: wat was daar ookalweer de bedoeling van?
         public Wezen()
         {
+            Genen = new StandaardGenen();
+            Genen.@class = this.GetType().Name;
             //mogelijk met een rng variable geven, of marges die in de contrustor worden gebracht.
         }
-        public Wezen(Wezen ouder1, Wezen ouder2)
+
+        public Wezen(Wezen ouder1, Wezen ouder2) : this(ouder1.Genen, ouder2.Genen) { }
+
+        public Wezen(StandaardGenen ouder1, StandaardGenen ouder2)
         {
             //twee wezens maken een nieuw wezen.
         }
