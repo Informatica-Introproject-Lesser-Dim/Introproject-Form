@@ -1,11 +1,10 @@
 ﻿namespace IntroProject
 {
+    using StandaardGenen = Genen<int>;
+
     public abstract class Wezen : Entity
     {
-        protected int snelheidx;
-        protected int snelheidy;
-        protected int spronghoogte;
-        protected int moed;
+        protected StandaardGenen genen = new StandaardGenen();
         public int Leven;
         //Evolutieschaal Vincent: wat was daar ookalweer de bedoeling van?
         public Wezen()
