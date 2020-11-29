@@ -1,11 +1,11 @@
 ﻿namespace IntroProject
 {
-    public class Genen<T>
+    public class Genen
     {
         public string @class;
-        T snelheidx;
-        T snelheidy;
-        T spronghoogte;
-        T moed;
+        int snelheidx;
+        int snelheidy;
+        int spronghoogte;
+        int moed;
     }
 }
