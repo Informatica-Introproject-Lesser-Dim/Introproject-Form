@@ -1,9 +1,12 @@
-﻿namespace IntroProject
+﻿using IntroProject.Core.Error;
+
+namespace IntroProject
 {
     public abstract class Wezen : Entity
     {
         public Genen Genen { get; protected set; }
         public int Leven;
+        public bool isReadyToMate = true;
         //Evolutieschaal Vincent: wat was daar ookalweer de bedoeling van?
         public Wezen()
         {
@@ -25,22 +28,38 @@
         }
 
         // Assuming this is the same type as wezen: we don't want Herbivores mating Carnivores
-        public abstract Wezen? MateWith(Wezen wezen);
+
+        public virtual void MatingSuccess()
+        {
+            isReadyToMate = false;
+        }
+
+        public virtual Wezen? MateWith(Wezen wezen)
+        {
+            if (!this.isReadyToMate || !wezen.isReadyToMate)
+                throw new UnreadyForMating();
+
+            this.MatingSuccess();
+            wezen.MatingSuccess();
+            return this;
+        }
     }
 
     public sealed class WezenTestable : Wezen
     {
-        private bool matingWillWork;
         public WezenTestable() : base() { }
 
         public WezenTestable(bool matingWillWork) : base()
         {
-            this.matingWillWork = matingWillWork;
+            this.isReadyToMate = matingWillWork;
         }
 
         public WezenTestable(Wezen ouder1, Wezen ouder2) : base(ouder1, ouder2) { }
 
-        public override Wezen MateWith(Wezen wezen) =>
-            new WezenTestable(this, wezen);
+        public override Wezen MateWith(Wezen wezen)
+        {
+            base.MateWith(wezen);
+            return new WezenTestable(this, wezen);
+        }
     }
 }
