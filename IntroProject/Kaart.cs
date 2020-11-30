@@ -54,14 +54,39 @@ namespace IntroProject
 
         private void drawBase() {
             mapBase = new Bitmap(tiles[width - 1, height - 1].x + 2 * size, tiles[width - 1, height - 1].y + (int)(size * Hexagon.sqrt3));
+            if (margin == 0) {
+                for (int x = 0; x < mapBase.Width; x++)
+                    for (int y = 0; y < mapBase.Height; y++)
+                        mapBase.SetPixel(x, y, drawPixel(x - size, (int)(y - size * 0.5 * Hexagon.sqrt3)));
+                return;
+            }
             Graphics g = Graphics.FromImage(mapBase);
             for (int x = 0; x < width; x++)
                 for (int y = 0; y < height; y++)
                     tiles[x, y].draw(g, size + tiles[x, y].x, (int)(size * Hexagon.sqrt3 / 2) + tiles[x, y].y);
         }
 
+        private Color drawPixel(int x, int y) {
+            int[] pos = PosToHexPos(x, y);
+            if (pos[0] < 0 || pos[0] >= width || pos[1] < 0 || pos[1] >= height)
+                return Color.FromArgb(0, 0, 0, 0);
+            return tiles[pos[0], pos[1]].color;
+        }
+
         public void draw(Graphics g, int xPos, int yPos) {
             g.DrawImage(mapBase, xPos - size, yPos - (int) (size*Hexagon.sqrt3/2));
+        }
+
+        public int[] HexAdressToXY(int x, int y) {
+            int xPos = (int)(x * (size * 3 + margin * Hexagon.sqrt3) / 2);
+            int yOff = 0;
+            if (x % 2 == 1)
+                yOff = (int)((size * Hexagon.sqrt3 + margin) / 2);
+            
+            int yPos = (int)((margin + Hexagon.sqrt3 * size) * y) + yOff;
+            return new int[2] { xPos, yPos };
+            
+
         }
 
         public int[] PosToHexPos(int x, int y) 
