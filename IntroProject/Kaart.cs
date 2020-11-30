@@ -67,8 +67,8 @@ namespace IntroProject
             for (int i = 0; i < n; i++)
             {
                 if (i == n - 1)
-                    result += factors[i + 1] * perlin[i].GetValue(x * factors[n - i - 1], y * factors[n - i - 1]);
-                result += 2 * factors[i+1] * perlin[i].GetValue(x * factors[n - i - 1], y * factors[n - i - 1]);
+                    result += factor *factors[i + 1] * perlin[i].GetValue(x * factors[n - i - 1], y * factors[n - i - 1]);
+                result += (1 - factor) * factors[i] * perlin[i].GetValue(x * factors[n - i - 1], y * factors[n - i - 1]);
             }
             return result;
                 
