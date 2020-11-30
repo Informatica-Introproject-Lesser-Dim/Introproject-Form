@@ -20,7 +20,8 @@ namespace IntroProject
         private int margin;
 
         Hexagon[,] tiles;
-        SimplexPerlin perlin = new SimplexPerlin();
+        Random random = new Random();
+        SimplexPerlin perlin;
 
         Bitmap mapBase;
 
@@ -30,6 +31,7 @@ namespace IntroProject
             this.size = size;
             this.margin = margin;
             tiles = new Hexagon[width, height];
+            perlin = new SimplexPerlin(random.Next(), LibNoise.NoiseQuality.Best);
 
             for (int x = 0; x < width; x++)
             {
@@ -40,7 +42,7 @@ namespace IntroProject
                 for (int y = 0; y < height; y++)
                 {
                     int yPos = (int)((margin + Hexagon.sqrt3 * size)*y) + yOff;
-                    tiles[x, y] = new Hexagon(size, perlin.GetValue(x, y), xPos, yPos);
+                    tiles[x, y] = new Hexagon(size, perlin.GetValue((xPos*0.1f)/size, (yPos*0.1f)/size), xPos, yPos);
                 }
                 
             }
