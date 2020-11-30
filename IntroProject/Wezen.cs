@@ -44,22 +44,4 @@ namespace IntroProject
             return this;
         }
     }
-
-    public sealed class WezenTestable : Wezen
-    {
-        public WezenTestable() : base() { }
-
-        public WezenTestable(bool matingWillWork) : base()
-        {
-            this.isReadyToMate = matingWillWork;
-        }
-
-        public WezenTestable(Wezen ouder1, Wezen ouder2) : base(ouder1, ouder2) { }
-
-        public override Wezen MateWith(Wezen wezen)
-        {
-            base.MateWith(wezen);
-            return new WezenTestable(this, wezen);
-        }
-    }
 }
