@@ -36,7 +36,6 @@ namespace IntroProject
             for(int i = 0; i < n; i++)
                 perlin[i] = new SimplexPerlin(random.Next(), LibNoise.NoiseQuality.Best);
 
-
             for (int x = 0; x < width; x++)
             {
                 int xPos = (int) (x*(size * 3 + margin * Hexagon.sqrt3)/2);
