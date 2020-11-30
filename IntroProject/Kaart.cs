@@ -56,23 +56,21 @@ namespace IntroProject
 
         private float calcNoise(float x, float y) {
             float factor = 0.3f;
-            float[] factors = new float[n + 1];
-            float currentFactor = 1;
-            for (int i = 0; i < n + 1; i++) {
-                factors[i] = currentFactor;
-                currentFactor *= factor;
-            }
-                
+
+            Func<int, float> scaled = index => (float)Math.Pow(factor, index);
+            float[] factors = Enumerable.Range(0, n + 1).Select(scaled).ToArray();
+
             float result = 0;
             for (int i = 0; i < n; i++)
             {
+                float scaledPerlinNoise = factors[i] * perlin[i].GetValue(x * factors[n - i - 1], y * factors[n - i - 1]);
                 if (i == n - 1)
-                    result += factor *factors[i + 1] * perlin[i].GetValue(x * factors[n - i - 1], y * factors[n - i - 1]);
-                result += (1 - factor) * factors[i] * perlin[i].GetValue(x * factors[n - i - 1], y * factors[n - i - 1]);
+                    result += factor * scaledPerlinNoise;
+                result += (1 - factor) * scaledPerlinNoise;
             }
             return result;
-                
         }
+
 
         private void drawBase() {
             mapBase = new Bitmap(tiles[width - 1, height - 1].x + 2 * size, tiles[width - 1, height - 1].y + (int)(size * Hexagon.sqrt3));
