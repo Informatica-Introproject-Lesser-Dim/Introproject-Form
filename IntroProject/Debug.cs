@@ -36,7 +36,7 @@ namespace IntroProject
         {
             this.Size = new Size(w, h);
             this.Paint += drawScreen;
-            kaart = new Kaart(20, 10, 20, 0);
+            kaart = new Kaart(200, 150, 5, 0);
             this.MouseClick += Klik;
         }
 

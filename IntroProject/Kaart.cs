@@ -21,7 +21,8 @@ namespace IntroProject
 
         Hexagon[,] tiles;
         Random random = new Random();
-        SimplexPerlin perlin;
+        SimplexPerlin[] perlin;
+        int n = 4;
 
         Bitmap mapBase;
 
@@ -31,7 +32,10 @@ namespace IntroProject
             this.size = size;
             this.margin = margin;
             tiles = new Hexagon[width, height];
-            perlin = new SimplexPerlin(random.Next(), LibNoise.NoiseQuality.Best);
+            perlin = new SimplexPerlin[4];
+            for(int i = 0; i < n; i++)
+                perlin[i] = new SimplexPerlin(random.Next(), LibNoise.NoiseQuality.Best);
+
 
             for (int x = 0; x < width; x++)
             {
@@ -42,14 +46,32 @@ namespace IntroProject
                 for (int y = 0; y < height; y++)
                 {
                     int yPos = (int)((margin + Hexagon.sqrt3 * size)*y) + yOff;
-                    tiles[x, y] = new Hexagon(size, perlin.GetValue((xPos*0.1f)/size, (yPos*0.1f)/size), xPos, yPos);
+
+                    tiles[x, y] = new Hexagon(size, calcNoise((xPos*1.0f)/(size + margin),(yPos*1.0f )/(size + margin)), xPos, yPos);
                 }
                 
             }
             this.drawBase();
+        }
 
-
-
+        private float calcNoise(float x, float y) {
+            float factor = 0.3f;
+            float[] factors = new float[n + 1];
+            float currentFactor = 1;
+            for (int i = 0; i < n + 1; i++) {
+                factors[i] = currentFactor;
+                currentFactor *= factor;
+            }
+                
+            float result = 0;
+            for (int i = 0; i < n; i++)
+            {
+                if (i == n - 1)
+                    result += factors[i + 1] * perlin[i].GetValue(x * factors[n - i - 1], y * factors[n - i - 1]);
+                result += 2 * factors[i+1] * perlin[i].GetValue(x * factors[n - i - 1], y * factors[n - i - 1]);
+            }
+            return result;
+                
         }
 
         private void drawBase() {
