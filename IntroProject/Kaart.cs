@@ -19,7 +19,11 @@ namespace IntroProject
         private int size;
         private int margin;
 
-        Hexagon[,] tiles;
+        private Hexagon[,] tiles;
+        public Hexagon this[int x, int y] {
+            get { return getHex(x, y); }
+        }
+
         Random random = new Random();
         SimplexPerlin[] perlin;
         int n = 4;
@@ -50,7 +54,30 @@ namespace IntroProject
                 }
                 
             }
+
+            for (int x = 0; x < width; x++)
+                for (int y = 0; y < height; y++)
+                    tiles[x, y].setNeighbors(calcNeighbors(x,y));
+
             this.drawBase();
+        }
+
+        private Hexagon[] calcNeighbors(int x, int y) {
+            Hexagon[] result = new Hexagon[6];
+            int a = x % 2;
+            result[0] = getHex(0, -1);
+            result[1] = getHex(1, -1 + a);
+            result[2] = getHex(1, 0 + a);
+            result[3] = getHex(0, 1);
+            result[4] = getHex(-1, 0 + a);
+            result[5] = getHex(-1, -1 + a); //a for loop would be longer than this code itself here (all the neighbors)
+            return result;
+        }
+
+        private Hexagon getHex(int x, int y) {
+            if (x > 0 && x < width && y > 0 && y < height)
+                return tiles[x, y];
+            return null;
         }
 
         private float calcNoise(float x, float y) {

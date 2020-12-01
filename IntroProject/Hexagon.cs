@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace IntroProject
 {
-    class Hexagon
+    public class Hexagon
     {
         private int size;
         public static double sqrt3 = Math.Sqrt(3);
@@ -13,6 +13,22 @@ namespace IntroProject
         public int x, y;
         public Color color;
         public double h;
+        private Hexagon[] neighbors;
+        public Hexagon this[int a, int b] { //the a is wether you want the neighbor to the left or right, b is wether you want the neighbour up or down
+            get {
+                if (a == 0 && b == 0)
+                    return this;
+                if (!(b == 1 || b == -1) || a < -1 || a > 1)
+                    return null;
+                if (a == 0)
+                    return neighbors[(int)(1.5 + b * 1.5)];
+                if (a == 1)
+                    return neighbors[(int)(1.5 + b * 0.5)];
+                if (a == -1) //this if statement is unneccessary but is kept to make the code clear
+                    return neighbors[(int)(4.5 + b * 0.5)];
+                return null;
+            }
+        }
 
         public int width {
             get { return size * 2; }
@@ -35,10 +51,16 @@ namespace IntroProject
             calcColor((float)c);
             this.size = size;
 
+            neighbors = new Hexagon[6];
+
             this.x = x;
             this.y = y;
 
         }
+
+        public void setNeighbors(Hexagon[] h) { //start at the top and go around through all the neighbors
+            neighbors = h;
+        } 
 
         private Color calcAvrColor(int n, double d) {
             int R = (int)(heightColors[n, 0].R * (1 - d) + heightColors[n,1].R * d);
