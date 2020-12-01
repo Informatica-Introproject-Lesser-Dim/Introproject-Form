@@ -26,7 +26,7 @@ namespace IntroProject
                 if (a == 1)
                     return neighbors[(int)(1.5 + b * 0.5)];
                 if (a == -1) //this if statement is unneccessary but is kept to make the code clear
-                    return neighbors[(int)(4.5 + b * 0.5)];
+                    return neighbors[(int)(4.5 + b * -0.5)];
                 return null;
             }
         }

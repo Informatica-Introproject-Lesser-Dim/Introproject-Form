@@ -65,17 +65,17 @@ namespace IntroProject
         private Hexagon[] calcNeighbors(int x, int y) {
             Hexagon[] result = new Hexagon[6];
             int a = x % 2;
-            result[0] = getHex(0, -1);
-            result[1] = getHex(1, -1 + a);
-            result[2] = getHex(1, 0 + a);
-            result[3] = getHex(0, 1);
-            result[4] = getHex(-1, 0 + a);
-            result[5] = getHex(-1, -1 + a); //a for loop would be longer than this code itself here (all the neighbors)
+            result[0] = getHex(x, y - 1);
+            result[1] = getHex(x + 1, y - 1 + a);
+            result[2] = getHex(x + 1, y + a);
+            result[3] = getHex(x, y + 1);
+            result[4] = getHex(x - 1, y + a);
+            result[5] = getHex(x - 1, y - 1 + a); //a for loop would be longer than this code itself here (all the neighbors)
             return result;
         }
 
         private Hexagon getHex(int x, int y) {
-            if (x > 0 && x < width && y > 0 && y < height)
+            if (x >= 0 && x < width && y >= 0 && y < height)
                 return tiles[x, y];
             return null;
         }
@@ -98,7 +98,7 @@ namespace IntroProject
         }
 
 
-        private void drawBase() {
+        public void drawBase() {
             mapBase = new Bitmap(tiles[width - 1, height - 1].x + 2 * size, tiles[width - 1, height - 1].y + (int)(size * Hexagon.sqrt3));
             if (margin == 0) {
                 for (int x = 0; x < mapBase.Width; x++)

@@ -41,7 +41,12 @@ namespace IntroProject
         }
 
         public void Klik(object o, MouseEventArgs mea) {
-            pos = kaart.PosToHexPos(mea.X - 50, mea.Y - 100);
+            int[] adress = kaart.PosToHexPos(mea.X - 50, mea.Y - 100);
+            Hexagon hex = kaart[adress[0], adress[1]];
+            if (hex != null)
+                if (hex[-1,1] != null)
+                    hex[-1,1].color = Color.Black;
+            kaart.drawBase();
             this.Invalidate();
         }
 
