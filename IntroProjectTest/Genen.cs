@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 
 using IntroProject;
 
@@ -6,26 +7,62 @@ namespace IntroProjectTest
 {
     class GenenTest
     {
+        public sealed class GenenTestable : Genen
+        {
+            public GenenTestable(Func<bool> willMutate) => this.willMutate = willMutate;
+        }
+
         [TestFixture]
         public class GeneCombining
         {
-            Genen genenSetA, genenSetB;
-
-            [SetUp]
-            public void SetUp()
+            public class GeneCombiningStable
             {
-                genenSetA = new Genen();
-                genenSetB = new Genen();
+                Genen stableGeneSetA, stableGeneSetB;
+
+                [SetUp]
+                public void SetUp()
+                {
+                    stableGeneSetA = new GenenTestable(willMutate: () => false);
+                    stableGeneSetB = new GenenTestable(willMutate: () => false);
+                }
+
+                [Test]
+                public void TestCombiningSameGenesNoRefEqCheck()
+                {
+                    Assert.IsFalse(ReferenceEquals(stableGeneSetA, stableGeneSetA * stableGeneSetA));
+                }
+
+                [Test]
+                public void TestCombiningSameGenesResultsInSameGenes()
+                {
+                    Genen idemGenesA = stableGeneSetA * stableGeneSetA;
+                    Assert.AreEqual(idemGenesA, stableGeneSetA);
+
+                    Genen idemGenesB = stableGeneSetB * stableGeneSetB;
+                    Assert.AreEqual(idemGenesB, stableGeneSetB);
+                }
             }
 
-            [Test]
-            public void TestCombiningSameGenesResultsInSameGenes()
+            public class GeneCombiningUnstable
             {
-                Genen idemGenesA = genenSetA + genenSetA;
-                Assert.AreEqual(idemGenesA, genenSetA);
+                Genen unstableGeneSetA, unstableGeneSetB;
 
-                Genen idemGenesB = genenSetB + genenSetB;
-                Assert.AreEqual(idemGenesB, genenSetB);
+                [SetUp]
+                public void SetUp()
+                {
+                    unstableGeneSetA = new GenenTestable(willMutate: () => true);
+                    unstableGeneSetB = new GenenTestable(willMutate: () => true);
+                }
+
+                [Test]
+                public void TestCombiningSameGenesResultsInDifferentGenes()
+                {
+                    Genen mutatedGenesA = unstableGeneSetA * unstableGeneSetA;
+                    Assert.AreNotEqual(mutatedGenesA, unstableGeneSetA);
+
+                    Genen mutatedGenesB = unstableGeneSetB * unstableGeneSetB;
+                    Assert.AreNotEqual(mutatedGenesB, unstableGeneSetB);
+                }
             }
         }
     }
