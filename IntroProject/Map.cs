@@ -14,10 +14,15 @@ namespace IntroProject
         private int size;
         private int margin;
 
-        Hexagon[,] tiles;
+        private Hexagon[,] tiles;
+        public Hexagon this[int x, int y] {
+            get { return getHex(x, y); }
+        }
+
         Random random = new Random();
         SimplexPerlin[] perlin;
         int n = 4;
+        private float biasRange = 20;
 
         Bitmap mapBase;
 
@@ -45,7 +50,30 @@ namespace IntroProject
                 }
                 
             }
+
+            for (int x = 0; x < width; x++)
+                for (int y = 0; y < height; y++)
+                    tiles[x, y].setNeighbors(calcNeighbors(x,y));
+
             this.drawBase();
+        }
+
+        private Hexagon[] calcNeighbors(int x, int y) {
+            Hexagon[] result = new Hexagon[6];
+            int a = x % 2;
+            result[0] = getHex(x, y - 1);
+            result[1] = getHex(x + 1, y - 1 + a);
+            result[2] = getHex(x + 1, y + a);
+            result[3] = getHex(x, y + 1);
+            result[4] = getHex(x - 1, y + a);
+            result[5] = getHex(x - 1, y - 1 + a); //a for loop would be longer than this code itself here (all the neighbors)
+            return result;
+        }
+
+        private Hexagon getHex(int x, int y) {
+            if (x >= 0 && x < width && y >= 0 && y < height)
+                return tiles[x, y];
+            return null;
         }
 
         private float calcNoise(float x, float y) {
@@ -62,11 +90,31 @@ namespace IntroProject
                     result += factor * scaledPerlinNoise;
                 result += (1 - factor) * scaledPerlinNoise;
             }
-            return result;
+
+
+            return Bias(result,x,y);
+        }
+
+        private float Bias(float f, float x, float y) {
+            x *= size + margin;
+            y *= size + margin;
+            int w = HexAdressToXY(width - 1, height - 1)[0];
+            int h = HexAdressToXY(width - 1, height - 1)[1];
+
+            if (w - x < x)
+                x = w - x;
+            if (h - y < y)
+                y = h - y;
+            float val = x;
+            if (y < x)
+                val = y;
+            if (val < biasRange * size)
+                return Math.Max(-1, f - (1.0f * (biasRange * size - val)) / (biasRange * size));
+            return f;
         }
 
 
-        private void drawBase() {
+        public void drawBase() {
             mapBase = new Bitmap(tiles[width - 1, height - 1].x + 2 * size, tiles[width - 1, height - 1].y + (int)(size * Hexagon.sqrt3));
             if (margin == 0) {
                 for (int x = 0; x < mapBase.Width; x++)

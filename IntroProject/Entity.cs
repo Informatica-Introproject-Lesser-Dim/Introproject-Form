@@ -3,7 +3,8 @@
     public abstract class Entity
     {
         protected int id; //Vincent: Hoe kan je er voor zorgen dat de id niet overlapt met id's van andere entities?
-        protected (int, int) positie;
+        public int x,y;
+        public Hexagon chunk;
 
         public void Sterven()
         {
