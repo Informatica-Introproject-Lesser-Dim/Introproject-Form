@@ -9,9 +9,9 @@
             this.positie = positie;
             this.voedingswaarde = voedingswaarde;
         }
-        private Wezen voed(Wezen wezen) //concept hoe een plant een wezen kan voeden, mogelijk moet herbivoor de specificatie zijn hier en niet wezen. 
+        private Creature voed(Creature wezen) //concept hoe een plant een wezen kan voeden, mogelijk moet herbivoor de specificatie zijn hier en niet wezen.
         {//MOET NOG BESPROKEN WORDEN
-            wezen.Leven += voedingswaarde; 
+            wezen.isAlive += voedingswaarde;
             //death methode aanroepen
             return wezen;
         }

@@ -28,7 +28,7 @@ namespace IntroProject
 
     class DebugScreen : UserControl
     {
-        Kaart kaart;
+        Map kaart;
         int[] pos = new int[2] { 0, 0 };
         Font font = new Font("Arial", 12);
 
@@ -36,7 +36,7 @@ namespace IntroProject
         {
             this.Size = new Size(w, h);
             this.Paint += drawScreen;
-            kaart = new Kaart(200, 150, 5, 0);
+            kaart = new Map(200, 150, 5, 0);
             this.MouseClick += Klik;
         }
 

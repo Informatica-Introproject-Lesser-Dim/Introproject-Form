@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 using LibNoise.Primitive;
 
 namespace IntroProject
 {
-    public class Kaart
+    public class Map
     {
         private int width;
         private int height;
@@ -26,7 +21,7 @@ namespace IntroProject
 
         Bitmap mapBase;
 
-        public Kaart(int width, int height, int size, int margin) {
+        public Map(int width, int height, int size, int margin) {
             this.width = width;
             this.height = height;
             this.size = size;
@@ -104,22 +99,20 @@ namespace IntroProject
             
             int yPos = (int)((margin + Hexagon.sqrt3 * size) * y) + yOff;
             return new int[2] { xPos, yPos };
-            
-
         }
 
         public int[] PosToHexPos(int x, int y) 
         {
-            int kolom = (int) (x / (size * 3 + margin * Hexagon.sqrt3)); //2x brede kolom waar dit punt inzit
+            int column = (int) (x / (size * 3 + margin * Hexagon.sqrt3)); // 2-wide column which includes this point
             if (x < 0)
-                kolom--;
-            int relXPos = x - (int)((kolom + 0.5) * (size * 3 + margin * Hexagon.sqrt3)); //de x relatief tot het midden van zijn kolom
+                column--;
+            int relXPos = x - (int)((column + 0.5) * (size * 3 + margin * Hexagon.sqrt3)); // x center-relative
             
-            int rij = (int)(y / (size * Hexagon.sqrt3 + margin)); //de rij waar dit inzit ervanuitgaande dat we in de middelste rij hexagons in onze kolom zitten
+            int row = (int)(y / (size * Hexagon.sqrt3 + margin));
             if (y < 0)
-                rij--;
+                row--;
             
-            int relYPos = y - (int)((rij + 0.5) * (size * Hexagon.sqrt3 + margin)); //de y relatief tot onze middelste hexagon
+            int relYPos = y - (int)((row + 0.5) * (size * Hexagon.sqrt3 + margin)); // y relative to the middle hexagon
             int rXPos = relXPos;
             int rYPos = relYPos;
             if (rXPos < 0)
@@ -129,16 +122,16 @@ namespace IntroProject
             int mSize = (int)(size + (margin) / Hexagon.sqrt3);
             if (rXPos < mSize - (rYPos / Hexagon.sqrt3))
             {
-                return new int[2] {kolom * 2 + 1, rij };
+                return new int[2] {column * 2 + 1, row };
             }
             if (relXPos > 0) {
                 if (relYPos > 0)
-                    return new int[2] { kolom * 2 + 2 , rij + 1};
-                return new int[2] { kolom * 2 + 2, rij};
+                    return new int[2] { column * 2 + 2 , row + 1};
+                return new int[2] { column * 2 + 2, row};
             }
             if (relYPos > 0)
-                return new int[2] { kolom * 2, rij + 1 };
-            return new int[2] { kolom * 2, rij};
+                return new int[2] { column * 2, row + 1 };
+            return new int[2] { column * 2, row};
         }
     }
 }
