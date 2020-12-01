@@ -14,6 +14,7 @@ namespace IntroProject
         public Color color;
         public double h;
         private Hexagon[] neighbors;
+        public List<Entity> entities;
         public Hexagon this[int a, int b] { //the a is wether you want the neighbor to the left or right, b is wether you want the neighbour up or down
             get {
                 if (a == 0 && b == 0)
@@ -51,6 +52,7 @@ namespace IntroProject
             calcColor((float)c);
             this.size = size;
 
+            entities = new List<Entity>();
             neighbors = new Hexagon[6];
 
             this.x = x;
@@ -67,6 +69,12 @@ namespace IntroProject
             int B = (int)(heightColors[n, 0].B * (1 - d) + heightColors[n, 1].B * d);
             int G = (int)(heightColors[n, 0].G * (1 - d) + heightColors[n, 1].G * d);
             return Color.FromArgb(R, G, B);
+        }
+
+        public void addEntity(Entity e) {
+            //be sure to change values in the entity like it's position and in wich chunck it's saved
+            e.chunk = this;
+            this.entities.Add(e);
         }
 
         private void calcColor(float f) {
