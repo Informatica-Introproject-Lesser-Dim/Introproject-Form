@@ -18,6 +18,7 @@ namespace IntroProjectTest
 
             public WezenTestable(Wezen ouder1, Wezen ouder2) : base(ouder1, ouder2) { }
 
+
             public override Wezen MateWith(Wezen wezen)
             {
                 base.MateWith(wezen);
@@ -40,7 +41,7 @@ namespace IntroProjectTest
             [TestFixture]
             public class AfterMating
             {
-                Wezen wezen_wild, wezen_hitsig;
+                Wezen wezen_wild, wezen_hitsig, wezen_kind;
 
                 [SetUp]
                 public void SetUp()
@@ -48,7 +49,7 @@ namespace IntroProjectTest
                     wezen_wild = new WezenTestable(matingWillWork: true);
                     wezen_hitsig = new WezenTestable(matingWillWork: true);
 
-                    wezen_hitsig.MateWith(wezen_wild);
+                    wezen_kind = wezen_hitsig.MateWith(wezen_wild);
                 }
 
                 [Test]
@@ -62,6 +63,13 @@ namespace IntroProjectTest
                 public void TestAfterMatingMatingAgainThrowsInvalidMating()
                 {
                     Assert.Throws<UnreadyForMating>(() => wezen_hitsig.MateWith(wezen_wild));
+                }
+
+                [Test]
+                public void TestAfterMatingOnlyGenesArePassed()
+                {
+                    // Weak test as we don't have tons of properties yet
+                    Assert.IsTrue(wezen_kind.isReadyToMate);
                 }
             }
         }
