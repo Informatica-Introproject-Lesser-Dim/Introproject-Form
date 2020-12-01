@@ -35,11 +35,24 @@ namespace IntroProjectTest
                 [Test]
                 public void TestCombiningSameGenesResultsInSameGenes()
                 {
-                    Genen idemGenesA = stableGeneSetA * stableGeneSetA;
-                    Assert.AreEqual(idemGenesA, stableGeneSetA);
+                    Genen idemGenesAPlus = stableGeneSetA + stableGeneSetA;
+                    Assert.AreEqual(idemGenesAPlus, stableGeneSetA);
 
-                    Genen idemGenesB = stableGeneSetB * stableGeneSetB;
-                    Assert.AreEqual(idemGenesB, stableGeneSetB);
+                    Genen idemGenesBPlus = stableGeneSetB + stableGeneSetB;
+                    Genen idemGenesBMult = stableGeneSetB * stableGeneSetB;
+                }
+
+                [Test]
+                public void TestCombineSameGenesStableAddEqMult()
+                {
+                    Genen idemGenesAPlus = stableGeneSetA + stableGeneSetA;
+                    Genen idemGenesAMult = stableGeneSetA * stableGeneSetA;
+                    Assert.AreEqual(idemGenesAPlus, idemGenesAMult);
+
+                    Genen idemGenesBPlus = stableGeneSetB + stableGeneSetB;
+                    Genen idemGenesBMult = stableGeneSetB * stableGeneSetB;
+                    Assert.AreEqual(idemGenesBPlus, idemGenesBMult);
+
                 }
             }
 
@@ -62,6 +75,18 @@ namespace IntroProjectTest
 
                     Genen mutatedGenesB = unstableGeneSetB * unstableGeneSetB;
                     Assert.AreNotEqual(mutatedGenesB, unstableGeneSetB);
+                }
+
+                [Test]
+                public void TestCombineSameGenesStableAddNotEqMult()
+                {
+                    Genen idemGenesAPlus = unstableGeneSetA + unstableGeneSetA;
+                    Genen idemGenesAMult = unstableGeneSetA * unstableGeneSetA;
+                    Assert.AreNotEqual(idemGenesAPlus, idemGenesAMult);
+
+                    Genen idemGenesBPlus = unstableGeneSetB + unstableGeneSetB;
+                    Genen idemGenesBMult = unstableGeneSetB * unstableGeneSetB;
+                    Assert.AreNotEqual(idemGenesBPlus, idemGenesBMult);
                 }
             }
         }
