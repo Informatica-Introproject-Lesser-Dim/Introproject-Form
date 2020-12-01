@@ -20,8 +20,8 @@ namespace IntroProject
 
         public Debug() 
         {
-            this.Size = new Size(800, 650);
-            debugscr = new DebugScreen(800, 650);
+            this.Size = new Size(1800, 1200);
+            debugscr = new DebugScreen(1800, 1200);
             this.Controls.Add(debugscr);
         }
     }
@@ -36,24 +36,18 @@ namespace IntroProject
         {
             this.Size = new Size(w, h);
             this.Paint += drawScreen;
-            kaart = new Kaart(200, 150, 5, 0);
+            kaart = new Kaart(200, 100, 5, 0);
             this.MouseClick += Klik;
         }
 
         public void Klik(object o, MouseEventArgs mea) {
-            int[] adress = kaart.PosToHexPos(mea.X - 50, mea.Y - 100);
-            Hexagon hex = kaart[adress[0], adress[1]];
-            if (hex != null)
-                if (hex[-1,1] != null)
-                    hex[-1,1].color = Color.Black;
-            kaart.drawBase();
-            this.Invalidate();
+            int[] adress = kaart.PosToHexPos(mea.X - 50, mea.Y - 50);
         }
 
         public void drawScreen(object o, PaintEventArgs pea) 
         {
             pea.Graphics.FillRectangle(new SolidBrush(Color.DarkGray), 0, 0, this.Width, this.Height);
-            kaart.draw(pea.Graphics, 50, 100);
+            kaart.draw(pea.Graphics, 50, 50);
             pea.Graphics.DrawString(pos[0].ToString() + "," + pos[1].ToString(), font,Brushes.Black, 0, 0);                  
         }
     }

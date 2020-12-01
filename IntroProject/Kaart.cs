@@ -27,6 +27,7 @@ namespace IntroProject
         Random random = new Random();
         SimplexPerlin[] perlin;
         int n = 4;
+        private float biasRange = 20;
 
         Bitmap mapBase;
 
@@ -94,7 +95,27 @@ namespace IntroProject
                     result += factor * scaledPerlinNoise;
                 result += (1 - factor) * scaledPerlinNoise;
             }
-            return result;
+
+
+            return Bias(result,x,y);
+        }
+
+        private float Bias(float f, float x, float y) {
+            x *= size + margin;
+            y *= size + margin;
+            int w = HexAdressToXY(width - 1, height - 1)[0];
+            int h = HexAdressToXY(width - 1, height - 1)[1];
+
+            if (w - x < x)
+                x = w - x;
+            if (h - y < y)
+                y = h - y;
+            float val = x;
+            if (y < x)
+                val = y;
+            if (val < biasRange * size)
+                return Math.Max(-1, f - (1.0f * (biasRange * size - val)) / (biasRange * size));
+            return f;
         }
 
 
@@ -131,8 +152,6 @@ namespace IntroProject
             
             int yPos = (int)((margin + Hexagon.sqrt3 * size) * y) + yOff;
             return new int[2] { xPos, yPos };
-            
-
         }
 
         public int[] PosToHexPos(int x, int y) 
