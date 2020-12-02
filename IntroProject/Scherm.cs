@@ -10,17 +10,20 @@ using System.Windows.Forms;
 
 namespace IntroProject
 {
-    public partial class Scherm : Form
+    public partial class Scherm
     {
-        public Scherm()
+        Ecosystem ecosystem;
+        Overlay overlay;
+        public Scherm(Ecosystem eco)
         {
-            InitializeComponent();
-
+            ecosystem = eco;
+            overlay = new Overlay(eco.settings);
             // (mogelijk) na informatie van de user is verkregen maak een processor classe, om het ecosysteem op te zetten.
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
+        public void Draw(Graphics g) {
+            ecosystem.Draw(g, 0, 0);
+            overlay.Draw(g);
 
         }
     }
