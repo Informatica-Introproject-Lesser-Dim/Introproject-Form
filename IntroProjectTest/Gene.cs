@@ -5,7 +5,7 @@ using IntroProject;
 
 namespace IntroProjectTest
 {
-    class GenenTest
+    class GeneTest
     {
         public sealed class GeneTestable : Gene
         {
@@ -37,9 +37,6 @@ namespace IntroProjectTest
                 {
                     Gene idemGeneAPlus = stableGeneSetA + stableGeneSetA;
                     Assert.AreEqual(idemGeneAPlus, stableGeneSetA);
-
-                    Gene idemGenesBPlus = stableGeneSetB + stableGeneSetB;
-                    Gene idemGenesBMult = stableGeneSetB * stableGeneSetB;
                 }
 
                 [Test]
@@ -52,7 +49,6 @@ namespace IntroProjectTest
                     Gene idemGeneBPlus = stableGeneSetB + stableGeneSetB;
                     Gene idemGeneBMult = stableGeneSetB * stableGeneSetB;
                     Assert.AreEqual(idemGeneBPlus, idemGeneBMult);
-
                 }
             }
 
