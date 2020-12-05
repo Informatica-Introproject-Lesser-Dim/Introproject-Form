@@ -38,11 +38,24 @@ namespace IntroProject
             get { return (int) (size * sqrt3); }
         }
 
-        private static Color[,] heightColors = new Color[5, 2] {{Color.FromArgb(108, 116, 150), Color.FromArgb(108, 116, 150) } ,
-                                                                {Color.FromArgb(108, 116, 150), Color.FromArgb(184, 204, 222) },
-                                                                {Color.FromArgb(227, 225, 191), Color.FromArgb(212, 208, 171)},
-                                                                {Color.FromArgb(155, 184, 147) ,Color.FromArgb(109, 135, 105) },
-                                                                {Color.FromArgb(158, 163, 157), Color.FromArgb(223, 227, 222)} };
+        private struct ColorScale
+        {
+            public Color startColor;
+            public Color endColor;
+
+            public ColorScale(Color startColor, Color endColor)
+            {
+                this.startColor = startColor;
+                this.endColor = endColor;
+            }
+        }
+
+        private static ColorScale[] heightColors = new ColorScale[5]{ new ColorScale(Color.FromArgb(108, 116, 150), Color.FromArgb(108, 116, 150))
+                                                                    , new ColorScale(Color.FromArgb(108, 116, 150), Color.FromArgb(184, 204, 222))
+                                                                    , new ColorScale(Color.FromArgb(227, 225, 191), Color.FromArgb(212, 208, 171))
+                                                                    , new ColorScale(Color.FromArgb(155, 184, 147), Color.FromArgb(109, 135, 105))
+                                                                    , new ColorScale(Color.FromArgb(158, 163, 157), Color.FromArgb(223, 227, 222))
+                                                                    };
         private static float[] heights = new float[6] {-1f,-0.4f, -0.15f, 0.1f, 0.7f, 1f};
 
 
@@ -64,10 +77,10 @@ namespace IntroProject
             neighbors = h;
         } 
 
-        private Color calcAvrColor(int n, double d) {
-            int R = (int)(heightColors[n, 0].R * (1 - d) + heightColors[n,1].R * d);
-            int B = (int)(heightColors[n, 0].B * (1 - d) + heightColors[n, 1].B * d);
-            int G = (int)(heightColors[n, 0].G * (1 - d) + heightColors[n, 1].G * d);
+        private static Color calcAvrColor(int n, double d) {
+            int R = (int)(heightColors[n].startColor.R * (1 - d) + heightColors[n].endColor.R * d);
+            int G = (int)(heightColors[n].startColor.G * (1 - d) + heightColors[n].endColor.G * d);
+            int B = (int)(heightColors[n].startColor.B * (1 - d) + heightColors[n].endColor.B * d);
             return Color.FromArgb(R, G, B);
         }
 
