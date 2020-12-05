@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Drawing;
 
 namespace IntroProject
@@ -48,6 +47,17 @@ namespace IntroProject
                 this.startColor = startColor;
                 this.endColor = endColor;
             }
+
+            private static int PickValueOnColorChannel(int colorScaleChannelStart, int colorScaleChannelEnd, double fractionPlaceOnScale) =>
+                (int)(colorScaleChannelStart * (1 - fractionPlaceOnScale) + colorScaleChannelEnd * fractionPlaceOnScale);
+
+            public static Color PickValue(ColorScale colorScale, double fractionPlaceOnScale)
+            {
+                int R = PickValueOnColorChannel(colorScale.startColor.R, colorScale.endColor.R, fractionPlaceOnScale);
+                int G = PickValueOnColorChannel(colorScale.startColor.G, colorScale.endColor.G, fractionPlaceOnScale);
+                int B = PickValueOnColorChannel(colorScale.startColor.B, colorScale.endColor.B, fractionPlaceOnScale);
+                return Color.FromArgb(R, G, B);
+            }
         }
 
         private static ColorScale[] heightColors = new ColorScale[5]{ new ColorScale(Color.FromArgb(108, 116, 150), Color.FromArgb(108, 116, 150))
@@ -75,13 +85,6 @@ namespace IntroProject
 
         public void setNeighbors(Hexagon[] h) { //start at the top and go around through all the neighbors
             neighbors = h;
-        } 
-
-        private static Color calcAvrColor(int n, double d) {
-            int R = (int)(heightColors[n].startColor.R * (1 - d) + heightColors[n].endColor.R * d);
-            int G = (int)(heightColors[n].startColor.G * (1 - d) + heightColors[n].endColor.G * d);
-            int B = (int)(heightColors[n].startColor.B * (1 - d) + heightColors[n].endColor.B * d);
-            return Color.FromArgb(R, G, B);
         }
 
         public void addEntity(Entity e) {
@@ -91,11 +94,11 @@ namespace IntroProject
         }
 
         private void calcColor(float f) {
-            int n = 0;
+            int layer = 0;
             for (int i = 1; i < heights.Length - 1; i++)
-                if (heights[i] < f)
-                    n = i;
-            this.color = calcAvrColor(n, (f - heights[n]) / (heights[n + 1] - heights[n]));
+              if (heights[i] < f)
+                layer = i;
+            this.color = ColorScale.PickValue(heightColors[layer], (f - heights[layer]) / (heights[layer + 1] - heights[layer]));
         }
 
         public void draw(Graphics g, int sx, int sy) { //center of the hexagon is at sx,sy
