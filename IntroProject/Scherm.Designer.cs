@@ -40,6 +40,7 @@
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "Scherm";
             this.Text = "2BV!2B";
+
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
 
