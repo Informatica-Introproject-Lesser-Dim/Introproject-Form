@@ -11,7 +11,8 @@ namespace IntroProject
         public static double sqrt2 = Math.Sqrt(2);
         public int x, y;
         public Color color;
-        public double h;
+        public double heightOfTile;
+        public double longitudeOnMap;
         private Hexagon[] neighbors;
         public List<Entity> entities;
         public Hexagon this[int a, int b] { //the a is wether you want the neighbor to the left or right, b is wether you want the neighbour up or down
@@ -69,9 +70,10 @@ namespace IntroProject
         private static float[] heights = new float[6] {-1f,-0.4f, -0.15f, 0.1f, 0.7f, 1f};
 
 
-        public Hexagon(int size, double c, int x, int y) //size is the length of each side
+        public Hexagon(int size, double c, int x, int y, double longitudeOnMap) //size is the length of each side
         {
-            h = c;
+            this.longitudeOnMap = longitudeOnMap;
+            heightOfTile = c;
             calcColor((float)c);
             this.size = size;
 
@@ -80,7 +82,6 @@ namespace IntroProject
 
             this.x = x;
             this.y = y;
-
         }
 
         public void setNeighbors(Hexagon[] h) { //start at the top and go around through all the neighbors
@@ -99,7 +100,22 @@ namespace IntroProject
               if (heights[i] < f)
                 layer = i;
             this.color = ColorScale.PickValue(heightColors[layer], (f - heights[layer]) / (heights[layer + 1] - heights[layer]));
+
+            var warmthScale = new ColorScale(Color.FromArgb(0x55aa1111), Color.FromArgb(0x660033dd));
+            var snowScale = new ColorScale(Color.FromArgb(0x66003377), Color.FromArgb(0x55ffff));
+
+            double relHeight = Math.Max(0, heightOfTile) / 2 + Math.Abs(.5 - longitudeOnMap);
+
+            ColorScale scale;
+            if (relHeight > .95)
+                scale = snowScale;
+            else
+                scale = warmthScale;
+
+            var warmth = ColorScale.PickValue(scale, relHeight);
+            this.color = Color.FromArgb((color.R + warmth.R) >> 1, (color.G + warmth.G) >> 1, (color.B + warmth.B) >> 1);
         }
+
 
         public void draw(Graphics g, int sx, int sy) { //center of the hexagon is at sx,sy
             Bitmap bm = new Bitmap(width + 1, height + 1);
