@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Drawing;
 
 namespace IntroProject
@@ -38,11 +37,35 @@ namespace IntroProject
             get { return (int) (size * sqrt3); }
         }
 
-        private static Color[,] heightColors = new Color[5, 2] {{Color.FromArgb(108, 116, 150), Color.FromArgb(108, 116, 150) } ,
-                                                                {Color.FromArgb(108, 116, 150), Color.FromArgb(184, 204, 222) },
-                                                                {Color.FromArgb(227, 225, 191), Color.FromArgb(212, 208, 171)},
-                                                                {Color.FromArgb(155, 184, 147) ,Color.FromArgb(109, 135, 105) },
-                                                                {Color.FromArgb(158, 163, 157), Color.FromArgb(223, 227, 222)} };
+        private struct ColorScale
+        {
+            public Color startColor;
+            public Color endColor;
+
+            public ColorScale(Color startColor, Color endColor)
+            {
+                this.startColor = startColor;
+                this.endColor = endColor;
+            }
+
+            private static int PickValueOnColorChannel(int colorScaleChannelStart, int colorScaleChannelEnd, double fractionPlaceOnScale) =>
+                (int)(colorScaleChannelStart * (1 - fractionPlaceOnScale) + colorScaleChannelEnd * fractionPlaceOnScale);
+
+            public static Color PickValue(ColorScale colorScale, double fractionPlaceOnScale)
+            {
+                int R = PickValueOnColorChannel(colorScale.startColor.R, colorScale.endColor.R, fractionPlaceOnScale);
+                int G = PickValueOnColorChannel(colorScale.startColor.G, colorScale.endColor.G, fractionPlaceOnScale);
+                int B = PickValueOnColorChannel(colorScale.startColor.B, colorScale.endColor.B, fractionPlaceOnScale);
+                return Color.FromArgb(R, G, B);
+            }
+        }
+
+        private static ColorScale[] heightColors = new ColorScale[5]{ new ColorScale(Color.FromArgb(108, 116, 150), Color.FromArgb(108, 116, 150))
+                                                                    , new ColorScale(Color.FromArgb(108, 116, 150), Color.FromArgb(184, 204, 222))
+                                                                    , new ColorScale(Color.FromArgb(227, 225, 191), Color.FromArgb(212, 208, 171))
+                                                                    , new ColorScale(Color.FromArgb(155, 184, 147), Color.FromArgb(109, 135, 105))
+                                                                    , new ColorScale(Color.FromArgb(158, 163, 157), Color.FromArgb(223, 227, 222))
+                                                                    };
         private static float[] heights = new float[6] {-1f,-0.4f, -0.15f, 0.1f, 0.7f, 1f};
 
 
@@ -62,13 +85,6 @@ namespace IntroProject
 
         public void setNeighbors(Hexagon[] h) { //start at the top and go around through all the neighbors
             neighbors = h;
-        } 
-
-        private Color calcAvrColor(int n, double d) {
-            int R = (int)(heightColors[n, 0].R * (1 - d) + heightColors[n,1].R * d);
-            int B = (int)(heightColors[n, 0].B * (1 - d) + heightColors[n, 1].B * d);
-            int G = (int)(heightColors[n, 0].G * (1 - d) + heightColors[n, 1].G * d);
-            return Color.FromArgb(R, G, B);
         }
 
         public void addEntity(Entity e) {
@@ -78,11 +94,11 @@ namespace IntroProject
         }
 
         private void calcColor(float f) {
-            int n = 0;
+            int layer = 0;
             for (int i = 1; i < heights.Length - 1; i++)
-                if (heights[i] < f)
-                    n = i;
-            this.color = calcAvrColor(n, (f - heights[n]) / (heights[n + 1] - heights[n]));
+              if (heights[i] < f)
+                layer = i;
+            this.color = ColorScale.PickValue(heightColors[layer], (f - heights[layer]) / (heights[layer + 1] - heights[layer]));
         }
 
         public void draw(Graphics g, int sx, int sy) { //center of the hexagon is at sx,sy
