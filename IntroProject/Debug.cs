@@ -17,12 +17,15 @@ namespace IntroProject
     class Debug : Form
     {
         DebugScreen debugscr;
+        DropMenu dropMenu;
 
         public Debug() 
         {
             this.Size = new Size(1800, 1200);
             debugscr = new DebugScreen(1800, 1200);
+            dropMenu = new DropMenu(Size.Width/10, Size.Height);
             this.Controls.Add(debugscr);
+            this.Controls.Add(dropMenu);
         }
     }
 
@@ -95,5 +98,13 @@ namespace IntroProject
             kaart.draw(pea.Graphics, 50, 50);
             pea.Graphics.DrawString(pos[0].ToString() + "," + pos[1].ToString(), font,Brushes.Black, 0, 0);                  
         }
+    }
+    class DropMenu : UserControl
+    {
+        public DropMenu(int w, int h)
+        {
+
+        }
+
     }
 }
