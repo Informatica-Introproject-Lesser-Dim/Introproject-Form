@@ -100,6 +100,16 @@ namespace IntroProject
                     return neighbors[dir].searchLine(dir, l - 1, type);
             List<Entity> result = new List<Entity>();
             for (int i = dir + 5; i <= dir + 7; i++)
+                if (neighbors[i%6] != null)
+                    result = result.Concat(neighbors[i%6].searchLine(i%6, l - 1, type)).ToList();
+            return result;
+        }
+
+        public List<Entity> searchPoint(int l, EntityType type) {
+            if (l == 0)
+                return this.getByType(type);
+            List<Entity> result = new List<Entity>();
+            for (int i = 0; i < 6; i++)
                 if (neighbors[i] != null)
                     result = result.Concat(neighbors[i].searchLine(i, l - 1, type)).ToList();
             return result;
