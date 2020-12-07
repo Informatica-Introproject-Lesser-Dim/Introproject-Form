@@ -12,7 +12,7 @@ namespace IntroProject
         public static double sqrt2 = Math.Sqrt(2);
         public int x, y;
         public Color color;
-        public double h;
+        public double Height;
         private Hexagon[] neighbors;
         public List<Entity> entities;
         public Hexagon this[int a, int b] { //the a is wether you want the neighbor to the left or right, b is wether you want the neighbour up or down
@@ -38,17 +38,19 @@ namespace IntroProject
             get { return (int) (size * sqrt3); }
         }
 
+        public static float seaLevel = -0.15f;
         private static Color[,] heightColors = new Color[5, 2] {{Color.FromArgb(108, 116, 150), Color.FromArgb(108, 116, 150) } ,
                                                                 {Color.FromArgb(108, 116, 150), Color.FromArgb(184, 204, 222) },
                                                                 {Color.FromArgb(227, 225, 191), Color.FromArgb(212, 208, 171)},
                                                                 {Color.FromArgb(155, 184, 147) ,Color.FromArgb(109, 135, 105) },
                                                                 {Color.FromArgb(158, 163, 157), Color.FromArgb(223, 227, 222)} };
         private static float[] heights = new float[6] {-1f,-0.4f, -0.15f, 0.1f, 0.7f, 1f};
+        
 
 
         public Hexagon(int size, double c, int x, int y) //size is the length of each side
         {
-            h = c;
+            Height = c;
             calcColor((float)c);
             this.size = size;
 
@@ -72,9 +74,13 @@ namespace IntroProject
         }
 
         public void addEntity(Entity e) {
-            //be sure to change values in the entity like it's position and in wich chunck it's saved
             e.chunk = this;
             this.entities.Add(e);
+        }
+
+        public void drawEntities(Graphics g, int xPos, int yPos) {
+            foreach (Entity e in entities)
+                e.draw(g, x + xPos, y + yPos);
         }
 
         private void calcColor(float f) {

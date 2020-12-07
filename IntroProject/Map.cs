@@ -58,6 +58,13 @@ namespace IntroProject
             this.drawBase();
         }
 
+        public void placeEntity(Entity e, int x, int y) {
+            if (x < 0 || x >= width || y < 0 || y >= height)
+                return;
+            tiles[x, y].addEntity(e);
+        }
+
+
         private Hexagon[] calcNeighbors(int x, int y) {
             Hexagon[] result = new Hexagon[6];
             int a = x % 2;
@@ -135,8 +142,30 @@ namespace IntroProject
             return tiles[pos[0], pos[1]].color;
         }
 
-        public void draw(Graphics g, int xPos, int yPos) {
+        public void draw(Graphics g, int xPos, int yPos, int scrWidth, int scrHeight) {
             g.DrawImage(mapBase, xPos - size, yPos - (int) (size*Hexagon.sqrt3/2));
+            int[] start = PosToHexPos(-xPos, -yPos);
+            start[0]--;
+            start[1]--;
+            int[] end = PosToHexPos(-xPos + scrWidth, -yPos + scrHeight);
+            end[0]++;
+            end[1]++;
+            for (int x = start[0]; x <= end[0]; x++)
+                for (int y = start[1]; y <= end[1]; y++)
+                    if (x >= 0 && y >= 0 && x < width && y < height)
+                        tiles[x, y].drawEntities(g, xPos, yPos);
+                    
+        }
+
+        public void placeRandom(Entity e) { //place an entity on a random chunck above sea level
+            int x, y;
+            do
+            {
+                x = random.Next(0, width);
+                y = random.Next(0, height);
+            } while (tiles[x, y].Height < Hexagon.seaLevel);
+
+            this.placeEntity(e, x, y);
         }
 
         public int[] HexAdressToXY(int x, int y) {
