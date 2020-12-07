@@ -18,17 +18,31 @@ namespace IntroProject
     {
         DebugScreen debugscr;
         DropMenu dropMenu;
+        SettingsMenu settingsMenu;
 
         public Debug() 
         {
             this.Size = new Size(1800, 1200);
             debugscr = new DebugScreen(1800, 1200);
             dropMenu = new DropMenu(Size.Width/10, Size.Height);
+            settingsMenu = new SettingsMenu(Size.Width, Size.Height);
             dropMenu.Dock = DockStyle.Right;
             this.Controls.Add(debugscr);
             this.Controls.Add(dropMenu);
+            this.Controls.Add(settingsMenu);
             dropMenu.BringToFront();
             dropMenu.Hide();
+            settingsMenu.BringToFront();
+            settingsMenu.Hide();
+
+            Button plus = new Button();
+            plus.BackgroundImage = Properties.Resources.Plus_icon;
+            plus.BackgroundImageLayout = ImageLayout.Stretch;
+            plus.Size = new Size(50, 50);
+            plus.Location = new Point(Size.Width - 66, 5);
+            plus.Click += (object o, EventArgs ea) => { dropMenu.Show(); plus.Hide(); };
+            this.Controls.Add(plus);
+            plus.BringToFront();
         }
     }
 
@@ -59,15 +73,14 @@ namespace IntroProject
             exit.BackgroundImage = Properties.Resources.X_icon;
             exit.BackgroundImageLayout = ImageLayout.Stretch;
 
-            pause.Size = new Size(40, 40);
-            play.Size = new Size(40, 40);
-            stop.Size = new Size(40, 40);
+            pause.Size = new Size(60, 60);
+            play.Size = new Size(60, 60);
+            stop.Size = new Size(60, 60);
 
-            pause.Location = new Point(40, 40);
-            play.Location = new Point(80, 40);
-            stop.Location = new Point(120, 40);
+            pause.Location = new Point(40, 5);
+            play.Location = new Point(100, 5);
+            stop.Location = new Point(160, 5);
 
-            pause.AutoSize = true;
 
             this.Controls.Add(pause);
             this.Controls.Add(play);
@@ -94,6 +107,7 @@ namespace IntroProject
     {
         public DropMenu(int w, int h)
         {
+            // FlatStyle to flat, and the colors of FlatAppearance MouseDownBackColor & MouseOverBackColor to transparent
             Button settings = new Button();
             Button statistics = new Button();
             Button help = new Button();
@@ -105,14 +119,50 @@ namespace IntroProject
             help.BackgroundImage = Properties.Resources.Help_icon;
             help.BackgroundImageLayout = ImageLayout.Stretch;
 
+            statistics.Size = new Size(150, 150);
+            settings.Size = new Size(150, 150);
+            help.Size = new Size(150, 150);
+
+            statistics.Padding = new Padding(0, 0, 0, 0);
+            settings.Padding = new Padding(0, 0, 0, 0);
+            help.Padding = new Padding(0, 0, 0, 0);
+
+            statistics.FlatStyle = FlatStyle.Flat;
+            settings.FlatStyle = FlatStyle.Flat;
+            help.FlatStyle = FlatStyle.Flat;
+
+            statistics.FlatAppearance.MouseDownBackColor = Color.Transparent;
+            settings.FlatAppearance.MouseDownBackColor = Color.Transparent;
+            help.FlatAppearance.MouseDownBackColor = Color.Transparent;
+
+            statistics.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            settings.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            help.FlatAppearance.MouseOverBackColor = Color.Transparent;
+
+            statistics.FlatAppearance.BorderColor = Color.DimGray;
+            settings.FlatAppearance.BorderColor = Color.DimGray;
+            help.FlatAppearance.BorderColor = Color.DimGray;
+
+
+            statistics.Location = new Point(20, 550);
+            settings.Location = new Point(20, 720);
+            help.Location = new Point(20, 890);
 
             this.Controls.Add(settings);
             this.Controls.Add(statistics);
             this.Controls.Add(help);
 
-            this.BackColor = Color.Red;
+            this.BackColor = Color.DimGray;
             this.Size = new Size(w, h);
         }
 
+    }
+
+    class SettingsMenu : UserControl
+    {
+        public SettingsMenu(int w, int h)
+        {
+            this.BackColor = Color.Purple;
+        }
     }
 }
