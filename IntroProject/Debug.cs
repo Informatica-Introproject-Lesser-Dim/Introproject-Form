@@ -22,6 +22,13 @@ namespace IntroProject
 
         public Debug() 
         {
+            Button plus = new Button();
+            plus.BackgroundImage = Properties.Resources.Plus_icon;
+            plus.BackgroundImageLayout = ImageLayout.Stretch;
+            plus.Size = new Size(50, 50);
+            plus.Location = new Point(Size.Width - 66, 5);
+            plus.Click += (object o, EventArgs ea) => { dropMenu.Show(); plus.Hide(); };
+
             this.Size = new Size(1800, 1200);
             debugscr = new DebugScreen(1800, 1200);
             dropMenu = new DropMenu(Size.Width/10, Size.Height);
@@ -30,18 +37,11 @@ namespace IntroProject
             this.Controls.Add(debugscr);
             this.Controls.Add(dropMenu);
             this.Controls.Add(settingsMenu);
+            this.Controls.Add(plus);
             dropMenu.BringToFront();
             dropMenu.Hide();
             settingsMenu.BringToFront();
             settingsMenu.Hide();
-
-            Button plus = new Button();
-            plus.BackgroundImage = Properties.Resources.Plus_icon;
-            plus.BackgroundImageLayout = ImageLayout.Stretch;
-            plus.Size = new Size(50, 50);
-            plus.Location = new Point(Size.Width - 66, 5);
-            plus.Click += (object o, EventArgs ea) => { dropMenu.Show(); plus.Hide(); };
-            this.Controls.Add(plus);
             plus.BringToFront();
         }
     }
@@ -148,6 +148,8 @@ namespace IntroProject
             settings.Location = new Point(20, 720);
             help.Location = new Point(20, 890);
 
+            //settings.Click += (object o, EventArgs ea) => { settingsMenu.Show(); this.Hide(); };
+            
             this.Controls.Add(settings);
             this.Controls.Add(statistics);
             this.Controls.Add(help);
