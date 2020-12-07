@@ -37,10 +37,11 @@ namespace IntroProject
             this.Size = new Size(w, h);
             this.Paint += drawScreen;
             kaart = new Map(50, 30, 20, 0);
-            for (int i = 0; i < 50; i++) {
+            for (int i = 0; i < 20; i++) {
                 Herbivore herbivore = new Herbivore();
                 herbivore.x = 10;
                 kaart.placeRandom(herbivore);
+                kaart.placeRandom(new Planten(0, 0, 5));
             }
                 
             this.MouseClick += Klik;

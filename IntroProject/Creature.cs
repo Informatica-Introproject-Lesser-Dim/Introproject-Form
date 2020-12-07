@@ -15,6 +15,12 @@ namespace IntroProject
             // gene should be random at first
         }
 
+        public void calcFoodDistance() {
+            //checks his own hexagon for food
+
+            //starts search lines of increasing length
+        }
+
         public Creature(Creature parentA, Creature parentB) : this(parentA.gene, parentB.gene) { }
 
         public Creature(Gene parentA, Gene parentB) {}

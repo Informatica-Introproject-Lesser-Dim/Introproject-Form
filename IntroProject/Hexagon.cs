@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Drawing;
+using System.Linq;
 
 namespace IntroProject
 {
+    
     public class Hexagon
     {
         private int size;
@@ -60,6 +61,48 @@ namespace IntroProject
             this.x = x;
             this.y = y;
 
+        }
+
+        public List<Entity> getByType(EntityType type) {
+            List<Entity> result = new List<Entity>();
+            switch (type) {
+                case EntityType.Entity:
+                    return entities;
+                case EntityType.Creature:
+                    foreach (Entity e in entities)
+                        if (e is Creature)
+                            result.Add(e);
+                    return result;
+                case EntityType.Herbivore:
+                    foreach (Entity e in entities)
+                        if (e is Herbivore)
+                            result.Add(e);
+                    return result;
+                case EntityType.Plant:
+                    foreach (Entity e in entities)
+                        if (e is Planten)
+                            result.Add(e);
+                    return result;
+                case EntityType.Carnivore:
+                    foreach (Entity e in entities)
+                        if (e is Carnivore)
+                            result.Add(e);
+                    return result;
+                default: return result;
+            }
+        }
+
+        public List<Entity> searchLine(int dir, int l, EntityType type) {
+            if (l == 0)
+                return this.getByType(type);
+            if (dir % 2 == 1)
+                if (neighbors[dir] != null)
+                    return neighbors[dir].searchLine(dir, l - 1, type);
+            List<Entity> result = new List<Entity>();
+            for (int i = dir + 5; i <= dir + 7; i++)
+                if (neighbors[i] != null)
+                    result = result.Concat(neighbors[i].searchLine(i, l - 1, type)).ToList();
+            return result;
         }
 
         public void setNeighbors(Hexagon[] h) { //start at the top and go around through all the neighbors
