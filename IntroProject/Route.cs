@@ -10,14 +10,14 @@ using System.Windows.Forms;
 
 namespace IntroProject
 {
-    class Route
+    public class Route
     {
         List<int> points; //all the different exits from the hexagons
         Point start;
         Point end;
         List<float> distances; //length of the path untill this point
         int hex; //number of current hexagon in the list
-        int pos; //position within current hex
+        float pos; //position within current hex
         int size; //hex size
 
         public Route(Point start, int size) {
@@ -64,15 +64,19 @@ namespace IntroProject
 
         //how to use a route class: call move every time you want to move, call getPos to get the position and if move returns true
         //then you call isDone, if it isnt then you continue the loop
-        public bool move(int amount) { 
+        public bool move(float amount) { 
             if (hex == distances.Count)
                 return true;
             pos += amount;
             if (pos < distances[hex])
                 return false;
-            pos -= (int) distances[hex];
+            pos -= distances[hex];
             hex++;
             return true;
+        }
+
+        public int getDir() {
+            return points[hex - 1];
         }
 
         public Point getPos() {

@@ -10,6 +10,8 @@ namespace IntroProject
         public Gene gene { get; protected set; }
         public int isAlive;
         public bool isReadyToMate = true;
+        private Route route;
+        private float speed = 1; //temporary variable untill speed is implemented in the genes
 
         public Creature()
         {
@@ -66,6 +68,32 @@ namespace IntroProject
             this.MatingSuccess();
             other.MatingSuccess();
             return this;
+        }
+
+        public void changePath(Route r) {
+            route = r;
+        }
+
+        public void move() {
+            if (route != null) {
+                Point temp;
+                if (route.move(speed)) {
+                    temp = route.getPos();
+                    x = temp.X;
+                    y = temp.Y;
+                    if (route.isDone()) {
+                        route = null; //put any functions wich are to activate when the route is done here
+                        return;
+                    }
+                    this.chunk = this.chunk[route.getDir()];
+                    return;
+                }
+                temp = route.getPos();
+                x = temp.X;
+                y = temp.Y;
+                return;
+            }
+            //do whatever and entity should do when it doesnt have a route
         }
     }
 }

@@ -31,6 +31,9 @@ namespace IntroProject
                 return null;
             }
         }
+        public Hexagon this[int a] {
+            get { return this.neighbors[a]; }
+        }
 
         public int width {
             get { return size * 2; }
