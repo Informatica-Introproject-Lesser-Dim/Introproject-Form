@@ -63,6 +63,30 @@ namespace IntroProject
 
         }
 
+        public static Point calcSide(int size, int dir) {
+            int x, y;
+            switch ((dir + 1) % 3)
+            {
+                case 1:
+                    x = 3 * size / 4; y = (int)(size * Hexagon.sqrt3 / 2);
+                    break;
+                case 2:
+                    x = 0; y = (int)(size * Hexagon.sqrt3 / 2);
+                    break;
+                case 3:
+                    x = -3 * size / 4; y = (int)(size * Hexagon.sqrt3 / 2);
+                    break;
+                default:
+                    x = 5; y = 6;
+                    break;
+            }
+            if ((dir + 1) % 6 / 3 >= 1)
+            {
+                x *= -1; y *= -1;
+            }
+            return new Point(x, y);
+        }
+
         public List<Entity> getByType(EntityType type) {
             List<Entity> result = new List<Entity>();
             switch (type) {
