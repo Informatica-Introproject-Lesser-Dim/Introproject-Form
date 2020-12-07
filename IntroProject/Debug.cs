@@ -9,23 +9,19 @@ namespace IntroProject
         public Debug()
         {
             InitializeComponent();
-            this.Size = new Size(1800, 1200);
-            debugscr = new DebugScreen(1800, 1200);
+            debugscr = new DebugScreen(this.Size);
+            this.tabs.TabPages.Add(debugscr);
         }
-
-        private void Debug_MouseClick(object sender, MouseEventArgs e) =>
-            debugscr.Klik(sender, e);
-
-        private void Debug_Paint(object sender, PaintEventArgs e) =>
-            debugscr.drawScreen(sender, e);
     }
 
-    class DebugScreen : UserControl
+    class DebugScreen : TabPage
     {
         Map kaart;
         int[] pos = new int[2] { 0, 0 };
         Font font = new Font("Arial", 12);
 
+
+        public DebugScreen(Size size) : this(size.Width, size.Height) { }
         public DebugScreen(int w, int h) 
         {
             this.Size = new Size(w, h);
