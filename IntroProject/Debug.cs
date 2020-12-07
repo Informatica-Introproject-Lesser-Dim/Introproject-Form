@@ -24,8 +24,11 @@ namespace IntroProject
             this.Size = new Size(1800, 1200);
             debugscr = new DebugScreen(1800, 1200);
             dropMenu = new DropMenu(Size.Width/10, Size.Height);
+            dropMenu.Dock = DockStyle.Right;
             this.Controls.Add(debugscr);
             this.Controls.Add(dropMenu);
+            dropMenu.BringToFront();
+            dropMenu.Hide();
         }
     }
 
@@ -41,10 +44,7 @@ namespace IntroProject
             Button play = new Button();
             Button stop = new Button();
             Button pause = new Button();
-            Button settings = new Button();
-            Button statistics = new Button();
             Button exit = new Button();
-            Button help = new Button();
             strip.Dock = DockStyle.Right;
             ToolStripTextBox box = new ToolStripTextBox();
 
@@ -56,27 +56,18 @@ namespace IntroProject
             stop.BackgroundImageLayout = ImageLayout.Stretch;
             pause.BackgroundImage = Properties.Resources.Pause_icon;
             pause.BackgroundImageLayout = ImageLayout.Stretch;
-            settings.BackgroundImage = Properties.Resources.Settings_icon;
-            settings.BackgroundImageLayout = ImageLayout.Stretch;
-            statistics.BackgroundImage = Properties.Resources.Graph_icon;
-            statistics.BackgroundImageLayout = ImageLayout.Stretch;
             exit.BackgroundImage = Properties.Resources.X_icon;
             exit.BackgroundImageLayout = ImageLayout.Stretch;
-            help.BackgroundImage = Properties.Resources.Help_icon;
-            help.BackgroundImageLayout = ImageLayout.Stretch;
-
 
             pause.Size = new Size(40, 40);
             play.Size = new Size(40, 40);
             stop.Size = new Size(40, 40);
-
 
             pause.Location = new Point(40, 40);
             play.Location = new Point(80, 40);
             stop.Location = new Point(120, 40);
 
             pause.AutoSize = true;
-
 
             this.Controls.Add(pause);
             this.Controls.Add(play);
@@ -103,7 +94,24 @@ namespace IntroProject
     {
         public DropMenu(int w, int h)
         {
+            Button settings = new Button();
+            Button statistics = new Button();
+            Button help = new Button();
 
+            settings.BackgroundImage = Properties.Resources.Settings_icon;
+            settings.BackgroundImageLayout = ImageLayout.Stretch;
+            statistics.BackgroundImage = Properties.Resources.Graph_icon;
+            statistics.BackgroundImageLayout = ImageLayout.Stretch;
+            help.BackgroundImage = Properties.Resources.Help_icon;
+            help.BackgroundImageLayout = ImageLayout.Stretch;
+
+
+            this.Controls.Add(settings);
+            this.Controls.Add(statistics);
+            this.Controls.Add(help);
+
+            this.BackColor = Color.Red;
+            this.Size = new Size(w, h);
         }
 
     }
