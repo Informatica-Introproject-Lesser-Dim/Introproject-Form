@@ -1,29 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 using System.Windows.Forms;
-
-
 
 namespace IntroProject
 {
-
-    //this class is for when you need to test something that doesnt end up in the final code
-    class Debug : Form
+    public partial class Debug : Form
     {
         DebugScreen debugscr;
-
-        public Debug() 
+        public Debug()
         {
+            InitializeComponent();
             this.Size = new Size(1800, 1200);
             debugscr = new DebugScreen(1800, 1200);
-            this.Controls.Add(debugscr);
         }
+
+        private void Debug_MouseClick(object sender, MouseEventArgs e) =>
+            debugscr.Klik(sender, e);
+
+        private void Debug_Paint(object sender, PaintEventArgs e) =>
+            debugscr.drawScreen(sender, e);
     }
 
     class DebugScreen : UserControl
