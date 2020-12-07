@@ -83,6 +83,16 @@ namespace IntroProject.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Minus_icon {
+            get {
+                object obj = ResourceManager.GetObject("Minus_icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Pause_icon {
             get {
                 object obj = ResourceManager.GetObject("Pause_icon", resourceCulture);
@@ -96,6 +106,16 @@ namespace IntroProject.Properties {
         internal static System.Drawing.Bitmap Play_icon {
             get {
                 object obj = ResourceManager.GetObject("Play_icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Plus_icon {
+            get {
+                object obj = ResourceManager.GetObject("Plus_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
