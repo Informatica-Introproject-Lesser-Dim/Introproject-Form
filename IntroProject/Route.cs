@@ -19,15 +19,18 @@ namespace IntroProject
         int hex; //number of current hexagon in the list
         float pos; //position within current hex
         int size; //hex size
+        Hexagon endHex;
 
-        public Route(Point start, int size) {
+        public Route(Point start, int size, Hexagon startHex) {
             this.start = start;
             pos = 0;
             hex = 0;
             this.size = size;
+            endHex = startHex;
         }
 
-        public void addDirection(int n) {
+        public void addDirection(int n) { //breaks if you enter in invalid direction or go off the map
+            endHex = endHex[n];
             if (points == null) {
                 points.Add(n);
                 Point go = Hexagon.calcSide(size, n);
@@ -41,6 +44,30 @@ namespace IntroProject
             points.Add(n);
             Curve curve = Path.getCurve((entrance + 3) % 6, n);
             distances.Add((float) curve.Length);
+        }
+
+        public Route(Route clonable) { //clones everything except the end and the position
+            start = clonable.start;
+            endHex = clonable.endHex;
+            size = clonable.size;
+            points = new List<int>();
+            distances = new List<float>();
+
+            foreach (int p in clonable.points) //I hope this keeps everything in order....
+                points.Add(p);
+            foreach (float f in clonable.distances)
+                distances.Add(f);
+        }
+
+        public Route Clone()
+        {
+            return new Route(this);
+        }
+
+        public Route addAndClone(int dir) {
+            Route result = new Route(this);
+            result.addDirection(dir);
+            return result;
         }
 
         public void addEnd(Point end) {
