@@ -26,23 +26,23 @@ namespace IntroProject
             plus.BackgroundImage = Properties.Resources.Plus_icon;
             plus.BackgroundImageLayout = ImageLayout.Stretch;
             plus.Size = new Size(50, 50);
-            plus.Location = new Point(Size.Width - 66, 5);
+            plus.Location = new Point(1800 - 66, 5);
             plus.Click += (object o, EventArgs ea) => { dropMenu.Show(); plus.Hide(); };
+            this.Controls.Add(plus);
 
             this.Size = new Size(1800, 1200);
             debugscr = new DebugScreen(1800, 1200);
-            dropMenu = new DropMenu(Size.Width/10, Size.Height);
             settingsMenu = new SettingsMenu(Size.Width, Size.Height);
+            dropMenu = new DropMenu(Size.Width/10, Size.Height, settingsMenu, plus);
             dropMenu.Dock = DockStyle.Right;
             this.Controls.Add(debugscr);
             this.Controls.Add(dropMenu);
             this.Controls.Add(settingsMenu);
-            this.Controls.Add(plus);
+            plus.BringToFront();
             dropMenu.BringToFront();
             dropMenu.Hide();
             settingsMenu.BringToFront();
             settingsMenu.Hide();
-            plus.BringToFront();
         }
     }
 
@@ -58,7 +58,6 @@ namespace IntroProject
             Button play = new Button();
             Button stop = new Button();
             Button pause = new Button();
-            Button exit = new Button();
             strip.Dock = DockStyle.Right;
             ToolStripTextBox box = new ToolStripTextBox();
 
@@ -70,12 +69,12 @@ namespace IntroProject
             stop.BackgroundImageLayout = ImageLayout.Stretch;
             pause.BackgroundImage = Properties.Resources.Pause_icon;
             pause.BackgroundImageLayout = ImageLayout.Stretch;
-            exit.BackgroundImage = Properties.Resources.X_icon;
-            exit.BackgroundImageLayout = ImageLayout.Stretch;
 
-            pause.Size = new Size(60, 60);
-            play.Size = new Size(60, 60);
-            stop.Size = new Size(60, 60);
+            Size middel = new Size(60, 60);
+            
+            pause.Size = middel;
+            play.Size = middel;
+            stop.Size = middel;
 
             pause.Location = new Point(40, 5);
             play.Location = new Point(100, 5);
@@ -105,12 +104,13 @@ namespace IntroProject
     }
     class DropMenu : UserControl
     {
-        public DropMenu(int w, int h)
+        public DropMenu(int w, int h, SettingsMenu settingsMenu, Button plus)
         {
             // FlatStyle to flat, and the colors of FlatAppearance MouseDownBackColor & MouseOverBackColor to transparent
             Button settings = new Button();
             Button statistics = new Button();
             Button help = new Button();
+            Button min = new Button();
 
             settings.BackgroundImage = Properties.Resources.Settings_icon;
             settings.BackgroundImageLayout = ImageLayout.Stretch;
@@ -118,41 +118,55 @@ namespace IntroProject
             statistics.BackgroundImageLayout = ImageLayout.Stretch;
             help.BackgroundImage = Properties.Resources.Help_icon;
             help.BackgroundImageLayout = ImageLayout.Stretch;
+            min.BackgroundImage = Properties.Resources.Minus_icon;
+            min.BackgroundImageLayout = ImageLayout.Stretch;
 
-            statistics.Size = new Size(150, 150);
-            settings.Size = new Size(150, 150);
-            help.Size = new Size(150, 150);
+            Size groot = new Size(150, 150);
+            
+            statistics.Size = groot;
+            settings.Size = groot;
+            help.Size = groot;
+            min.Size = new Size(50, 50);
 
-            statistics.Padding = new Padding(0, 0, 0, 0);
-            settings.Padding = new Padding(0, 0, 0, 0);
-            help.Padding = new Padding(0, 0, 0, 0);
+            statistics.Padding = Padding.Empty;
+            settings.Padding = Padding.Empty;
+            help.Padding = Padding.Empty;
+            min.Padding = Padding.Empty;
 
             statistics.FlatStyle = FlatStyle.Flat;
             settings.FlatStyle = FlatStyle.Flat;
             help.FlatStyle = FlatStyle.Flat;
+            min.FlatStyle = FlatStyle.Flat;
 
             statistics.FlatAppearance.MouseDownBackColor = Color.Transparent;
             settings.FlatAppearance.MouseDownBackColor = Color.Transparent;
             help.FlatAppearance.MouseDownBackColor = Color.Transparent;
+            min.FlatAppearance.MouseDownBackColor = Color.Transparent;
 
             statistics.FlatAppearance.MouseOverBackColor = Color.Transparent;
             settings.FlatAppearance.MouseOverBackColor = Color.Transparent;
             help.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            min.FlatAppearance.MouseOverBackColor = Color.Transparent;
 
             statistics.FlatAppearance.BorderColor = Color.DimGray;
             settings.FlatAppearance.BorderColor = Color.DimGray;
             help.FlatAppearance.BorderColor = Color.DimGray;
+            min.FlatAppearance.BorderColor = Color.DimGray;
 
 
             statistics.Location = new Point(20, 550);
             settings.Location = new Point(20, 720);
             help.Location = new Point(20, 890);
+            min.Location = new Point(5, 5);
+            min.BringToFront();
 
-            //settings.Click += (object o, EventArgs ea) => { settingsMenu.Show(); this.Hide(); };
-            
+            settings.Click += (object o, EventArgs ea) => { settingsMenu.Show(); };
+            min.Click += (object o, EventArgs ea) => { this.Hide(); plus.Show(); };
+
             this.Controls.Add(settings);
             this.Controls.Add(statistics);
             this.Controls.Add(help);
+            this.Controls.Add(min);
 
             this.BackColor = Color.DimGray;
             this.Size = new Size(w, h);
@@ -164,7 +178,22 @@ namespace IntroProject
     {
         public SettingsMenu(int w, int h)
         {
-            this.BackColor = Color.Purple;
+            this.BackColor = Color.FromArgb(0, 20, 99);
+            this.Size = new Size(w, h);
+
+            Button exit = new Button();
+            exit.BackgroundImage = Properties.Resources.X_icon;
+            exit.BackgroundImageLayout = ImageLayout.Stretch;
+            exit.Location = new Point(2, 2);
+            exit.Size = new Size(50, 50);
+            exit.Padding = Padding.Empty;
+            exit.FlatStyle = FlatStyle.Flat;
+            exit.FlatAppearance.MouseDownBackColor = Color.Transparent;
+            exit.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            exit.FlatAppearance.BorderColor = Color.FromArgb(0, 20, 99);
+            exit.Click += (object o, EventArgs ea) => { this.Hide(); };
+
+            this.Controls.Add(exit);
         }
     }
 }
