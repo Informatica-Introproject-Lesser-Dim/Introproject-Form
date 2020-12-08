@@ -102,7 +102,7 @@ namespace IntroProject
                         route = null; //put any functions wich are to activate when the route is done here
                         return;
                     }
-                    this.chunk = this.chunk[route.getDir()];
+                    this.chunk.moveEntity(this, route.getDir());
                     return;
                 }
                 temp = route.getPos();
