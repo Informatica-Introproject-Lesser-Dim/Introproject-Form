@@ -21,7 +21,7 @@ namespace IntroProject
 
         public Gene(int speedX, int speedY, float jumpHeight, int courage)
             : this(speedX, jumpHeight, courage) { }
-        public Gene(float speed, int jumpHeight, int courage)
+        public Gene(float speed, float jumpHeight, int courage)
         {
             this.speed = speed;
             this.jumpHeight = jumpHeight;

@@ -21,12 +21,17 @@ namespace IntroProject
             routeList = new RouteList();
             routeList.Add(new RouteElement(0, temp));
             //start with the few base routes
-            
-            //while you arent at the end point
-            //pop the lowest cost route from the list
-            //expand it
-            //mark the newly reached places as reached
-            //put the new routes in the list
+            Route current;
+            while (!isDone(current = routeList.Pop())) { //add a test wether hte current route is null aka no route has been found
+                expandPoint(current);
+            }
+            //now put the end point into current and have it as a result
+            Point end = new Point(-100,-100);
+            foreach (Entity e in current.endHex.entities)
+                if (e is Planten)
+                    end = new Point(e.x, e.y);
+            current.addEnd(end);
+            result = current;
         }
 
         public Route getResult() {
@@ -51,6 +56,20 @@ namespace IntroProject
 
         private void expandPoint(Route r) {
             //call addDir for every direction except the one yo came from
+            int not = (r.lastDir + 3) % 6;
+            if (r.lastDir == -1)
+                not = -1;
+            for (int i = 0; i < 6; i++)
+                if (i != not)
+                    addDir(r, i);
+        }
+
+        private bool isDone(Route r) {
+            Hexagon end = r.endHex;
+            foreach (Entity e in end.entities)
+                if (e is Planten)
+                    return true;
+            return false;
         }
 
         private void mark(Hexagon hex) {

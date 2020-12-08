@@ -8,7 +8,7 @@ namespace IntroProject
     
     public class Hexagon
     {
-        private int size;
+        public int size;
         public static double sqrt3 = Math.Sqrt(3);
         public static double sqrt2 = Math.Sqrt(2);
         public int x, y;

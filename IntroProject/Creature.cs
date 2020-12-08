@@ -76,7 +76,8 @@ namespace IntroProject
         }
 
         public void search() {
-            route = AStar.search(new Point(x, y), this.chunk, this.gene);
+            AStar aStar = new AStar(new Point(this.x, this.y), this.chunk, this.gene, this.chunk.size);
+            route = aStar.getResult();
         }
 
         public void move() {
