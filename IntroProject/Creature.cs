@@ -16,6 +16,7 @@ namespace IntroProject
         public Creature()
         {
             gene = new Gene();
+            
             gene.@class = this.GetType().Name;
             // gene should be random at first
         }
@@ -72,6 +73,10 @@ namespace IntroProject
 
         public void changePath(Route r) {
             route = r;
+        }
+
+        public void search() {
+            route = AStar.search(new Point(x, y), this.chunk, this.gene);
         }
 
         public void move() {
