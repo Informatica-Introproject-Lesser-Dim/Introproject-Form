@@ -35,16 +35,17 @@ namespace IntroProject
             settingsMenu = new SettingsMenu(Size.Width, Size.Height);
             dropMenu = new DropMenu(Size.Width/10, Size.Height, settingsMenu, plus);
             dropMenu.Dock = DockStyle.Right;
-            this.Controls.Add(debugscr);
             this.Controls.Add(dropMenu);
+            this.Controls.Add(debugscr);
             this.Controls.Add(settingsMenu);
-            plus.BringToFront();
-            dropMenu.BringToFront();
             dropMenu.Hide();
-            settingsMenu.BringToFront();
             settingsMenu.Hide();
 
-            Resize += (object o, EventArgs ea) => { dropMenu.Size = new Size(Size.Width / 10, Size.Height); };
+            Resize += (object o, EventArgs ea) => 
+            {
+                dropMenu.Size = new Size(Size.Width / 10, Size.Height);
+                plus.Location = new Point(Size.Width - 66, 5); 
+            };
         }
     }
 
@@ -123,13 +124,6 @@ namespace IntroProject
             min.BackgroundImage = Properties.Resources.Minus_icon;
             min.BackgroundImageLayout = ImageLayout.Stretch;
 
-            Size groot = new Size((int)(Size.Width / 1.2), (int)(Size.Width / 1.2));
-
-            statistics.Size = groot;
-            settings.Size = groot;
-            help.Size = groot;
-            min.Size = groot / 3;
-
             statistics.Padding = Padding.Empty;
             settings.Padding = Padding.Empty;
             help.Padding = Padding.Empty;
@@ -155,34 +149,42 @@ namespace IntroProject
             help.FlatAppearance.BorderColor = Color.DimGray;
             min.FlatAppearance.BorderColor = Color.DimGray;
 
-            statistics.Location = new Point(20, 550);
-            settings.Location = new Point(20, 720);
-            help.Location = new Point(20, 890);
+            statistics.Location = new Point(Size.Width/10, (int) (Size.Height*.45));
+            settings.Location = new Point(Size.Width / 10, (int)(Size.Height * .6));
+            help.Location = new Point(Size.Width / 10, (int)(Size.Height * .75));
             min.Location = new Point(5, 5);
             min.BringToFront();
 
             settings.Click += (object o, EventArgs ea) => { settingsMenu.Show(); settingsMenu.BringToFront(); };
+            statistics.Click += (object o, EventArgs ea) => { }; //click events van statistics en help
+            help.Click += (object o, EventArgs ea) => { };
             min.Click += (object o, EventArgs ea) => { this.Hide(); plus.Show(); };
 
-            this.Controls.Add(settings);
-            this.Controls.Add(statistics);
-            this.Controls.Add(help);
             this.Controls.Add(min);
+            this.Controls.Add(statistics);
+            this.Controls.Add(settings);
+            this.Controls.Add(help);
 
             this.BackColor = Color.DimGray;
             this.Size = new Size(w, h);
 
+            Size groot = new Size((int)(Size.Width / 1.2), (int)(Size.Width / 1.2));
+
             Resize += (object o, EventArgs ea) =>
-            { 
-                groot = new Size((int) (Size.Width/1.2), (int)(Size.Width / 1.2));
+            {
+                int edge = Math.Min((int)(Size.Width / 1.2), (int)Size.Height / 7);
+                groot = new Size(edge, edge);
                 statistics.Size = groot;
                 settings.Size = groot;
                 help.Size = groot;
                 min.Size = groot / 3;
+
+                statistics.Location = new Point(Size.Width / 10, (int)(Size.Height * .45));
+                settings.Location = new Point(Size.Width / 10, (int)(Size.Height * .6));
+                help.Location = new Point(Size.Width / 10, (int)(Size.Height * .75));
             };
 
         }
-
     }
 
     class SettingsMenu : UserControl
