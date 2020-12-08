@@ -19,7 +19,8 @@ namespace IntroProject
         int hex; //number of current hexagon in the list
         float pos; //position within current hex
         int size; //hex size
-        Hexagon endHex;
+        public Hexagon endHex;
+        public int lastDir = -1;
 
         public Route(Point start, int size, Hexagon startHex) {
             this.start = start;
@@ -31,6 +32,7 @@ namespace IntroProject
 
         public void addDirection(int n) { //breaks if you enter in invalid direction or go off the map
             endHex = endHex[n];
+            lastDir = n;
             if (points == null) {
                 points.Add(n);
                 Point go = Hexagon.calcSide(size, n);

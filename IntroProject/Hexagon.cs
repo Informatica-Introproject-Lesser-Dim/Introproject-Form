@@ -16,6 +16,7 @@ namespace IntroProject
         public double Height;
         private Hexagon[] neighbors;
         public List<Entity> entities;
+        public int Tag = -1;
         public Hexagon this[int a, int b] { //the a is wether you want the neighbor to the left or right, b is wether you want the neighbour up or down
             get {
                 if (a == 0 && b == 0)
