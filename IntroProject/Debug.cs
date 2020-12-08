@@ -33,7 +33,7 @@ namespace IntroProject
             this.Size = new Size(1800, 1200);
             debugscr = new DebugScreen(1800, 1200);
             settingsMenu = new SettingsMenu(Size.Width, Size.Height);
-            dropMenu = new DropMenu(Size.Width/10, Size.Height, settingsMenu, plus);
+            dropMenu = new DropMenu(Size.Width/10, Size.Height, (object o, EventArgs ea) => { settingsMenu.Show(); settingsMenu.BringToFront(); }, plus);
             dropMenu.Dock = DockStyle.Right;
             this.Controls.Add(dropMenu);
             this.Controls.Add(debugscr);
@@ -115,7 +115,7 @@ namespace IntroProject
 
     class DropMenu : UserControl
     {
-        public DropMenu(int w, int h, SettingsMenu settingsMenu, Button plus)
+        public DropMenu(int w, int h, EventHandler settingsMenuOnClick, Button plus)
         {
             // FlatStyle to flat, and the colors of FlatAppearance MouseDownBackColor & MouseOverBackColor to transparent
             ButtonImaged settings = new ButtonImaged(Properties.Resources.Settings_icon);
@@ -129,7 +129,7 @@ namespace IntroProject
             min.Location = new Point(5, 5);
             min.BringToFront();
 
-            settings.Click += (object o, EventArgs ea) => { settingsMenu.Show(); settingsMenu.BringToFront(); };
+            settings.Click += settingsMenuOnClick;
             statistics.Click += (object o, EventArgs ea) => { }; //click events van statistics en help
             help.Click += (object o, EventArgs ea) => { };
             min.Click += (object o, EventArgs ea) => { this.Hide(); plus.Show(); };
