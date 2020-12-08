@@ -58,20 +58,13 @@ namespace IntroProject
         public DebugScreen(int w, int h)
         {
             ToolStrip strip = new ToolStrip();
-            Button play = new Button();
-            Button stop = new Button();
-            Button pause = new Button();
+            Button play = new ButtonImaged(Properties.Resources.Play_icon);
+            Button stop = new ButtonImaged(Properties.Resources.Stop_icon);
+            Button pause = new ButtonImaged(Properties.Resources.Pause_icon);
             strip.Dock = DockStyle.Right;
             ToolStripTextBox box = new ToolStripTextBox();
 
             strip.Items.Add(box);
-
-            play.BackgroundImage = Properties.Resources.Play_icon;
-            play.BackgroundImageLayout = ImageLayout.Stretch;
-            stop.BackgroundImage = Properties.Resources.Stop_icon;
-            stop.BackgroundImageLayout = ImageLayout.Stretch;
-            pause.BackgroundImage = Properties.Resources.Pause_icon;
-            pause.BackgroundImageLayout = ImageLayout.Stretch;
 
             Size middel = new Size(60, 60);
             
@@ -105,49 +98,30 @@ namespace IntroProject
             pea.Graphics.DrawString(pos[0].ToString() + "," + pos[1].ToString(), font,Brushes.Black, 0, 0);                  
         }
     }
+    internal class ButtonImaged : Button
+    {
+        public ButtonImaged(Image bgI)
+        {
+            BackgroundImage = bgI;
+            BackgroundImageLayout = ImageLayout.Stretch;
+            Padding = Padding.Empty;
+            FlatStyle = FlatStyle.Flat;
+
+            FlatAppearance.MouseDownBackColor = Color.Transparent;
+            FlatAppearance.MouseOverBackColor = Color.Transparent;
+            FlatAppearance.BorderColor = Color.DimGray;
+        }
+    }
+
     class DropMenu : UserControl
     {
         public DropMenu(int w, int h, SettingsMenu settingsMenu, Button plus)
         {
             // FlatStyle to flat, and the colors of FlatAppearance MouseDownBackColor & MouseOverBackColor to transparent
-            Button settings = new Button();
-            Button statistics = new Button();
-            Button help = new Button();
-            Button min = new Button();
-
-            settings.BackgroundImage = Properties.Resources.Settings_icon;
-            settings.BackgroundImageLayout = ImageLayout.Stretch;
-            statistics.BackgroundImage = Properties.Resources.Graph_icon;
-            statistics.BackgroundImageLayout = ImageLayout.Stretch;
-            help.BackgroundImage = Properties.Resources.Help_icon;
-            help.BackgroundImageLayout = ImageLayout.Stretch;
-            min.BackgroundImage = Properties.Resources.Minus_icon;
-            min.BackgroundImageLayout = ImageLayout.Stretch;
-
-            statistics.Padding = Padding.Empty;
-            settings.Padding = Padding.Empty;
-            help.Padding = Padding.Empty;
-            min.Padding = Padding.Empty;
-
-            statistics.FlatStyle = FlatStyle.Flat;
-            settings.FlatStyle = FlatStyle.Flat;
-            help.FlatStyle = FlatStyle.Flat;
-            min.FlatStyle = FlatStyle.Flat;
-
-            statistics.FlatAppearance.MouseDownBackColor = Color.Transparent;
-            settings.FlatAppearance.MouseDownBackColor = Color.Transparent;
-            help.FlatAppearance.MouseDownBackColor = Color.Transparent;
-            min.FlatAppearance.MouseDownBackColor = Color.Transparent;
-
-            statistics.FlatAppearance.MouseOverBackColor = Color.Transparent;
-            settings.FlatAppearance.MouseOverBackColor = Color.Transparent;
-            help.FlatAppearance.MouseOverBackColor = Color.Transparent;
-            min.FlatAppearance.MouseOverBackColor = Color.Transparent;
-
-            statistics.FlatAppearance.BorderColor = Color.DimGray;
-            settings.FlatAppearance.BorderColor = Color.DimGray;
-            help.FlatAppearance.BorderColor = Color.DimGray;
-            min.FlatAppearance.BorderColor = Color.DimGray;
+            ButtonImaged settings = new ButtonImaged(Properties.Resources.Settings_icon);
+            ButtonImaged statistics = new ButtonImaged(Properties.Resources.Graph_icon);
+            ButtonImaged help = new ButtonImaged(Properties.Resources.Help_icon);
+            ButtonImaged min = new ButtonImaged(Properties.Resources.Minus_icon);
 
             statistics.Location = new Point(Size.Width/10, (int) (Size.Height*.45));
             settings.Location = new Point(Size.Width / 10, (int)(Size.Height * .6));
@@ -194,15 +168,9 @@ namespace IntroProject
             this.BackColor = Color.FromArgb(0, 20, 99);
             this.Size = new Size(w, h);
 
-            Button exit = new Button();
-            exit.BackgroundImage = Properties.Resources.X_icon;
-            exit.BackgroundImageLayout = ImageLayout.Stretch;
+            Button exit = new ButtonImaged(Properties.Resources.X_icon);
             exit.Location = new Point(2, 2);
             exit.Size = new Size(50, 50);
-            exit.Padding = Padding.Empty;
-            exit.FlatStyle = FlatStyle.Flat;
-            exit.FlatAppearance.MouseDownBackColor = Color.Transparent;
-            exit.FlatAppearance.MouseOverBackColor = Color.Transparent;
             exit.FlatAppearance.BorderColor = Color.FromArgb(0, 20, 99);
             exit.Click += (object o, EventArgs ea) => { this.Hide(); };
 
