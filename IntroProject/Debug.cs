@@ -39,11 +39,11 @@ namespace IntroProject
             this.Paint += drawScreen;
             kaart = new Map(50, 30, 20, 0);
             Path.initializePaths(20);
-            for (int i = 0; i < 20; i++) {
+            for (int i = 0; i < 10; i++) {
                 kaart.placeRandom(new Planten(0, 0, 5));
             }
 
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 2; i++)
             {
                 Herbivore herbivore = new Herbivore();
                 herbivore.x = 10;

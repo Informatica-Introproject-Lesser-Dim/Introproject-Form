@@ -14,7 +14,6 @@ namespace IntroProject
         //when you initialize an AStar object it starts calculating hte best route and then you're able to ask for the Route
         public AStar(Point loc, Hexagon chunck, Gene gene, int size) {
             Tag++;
-
             //add the starting point
             mark(chunck);
             Route temp = new Route(loc, size, chunck);
@@ -55,7 +54,9 @@ namespace IntroProject
         }
 
         private float calcCost(Route r) { //lowest cost = best route
-            return 1.0f; //this is a placeholder... needs to be changed
+            int expected = Creature.calcDistance2(EntityType.Plant, r.endHex, new Point(r.endHex.x, r.endHex.y));
+            float current = r.Length;
+            return current + expected; //note that expected distance is still squared at this point
         }
 
         private void expandPoint(Route r) {

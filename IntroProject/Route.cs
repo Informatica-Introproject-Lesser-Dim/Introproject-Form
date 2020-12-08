@@ -16,11 +16,13 @@ namespace IntroProject
         Point start;
         Point end;
         List<float> distances; //length of the path untill this point
+        public float Length { get { if (distances.Count == 0) return 0; return distances[distances.Count - 1]; } }
         int hex; //number of current hexagon in the list
         float pos; //position within current hex
         int size; //hex size
         public Hexagon endHex;
         public int lastDir = -1;
+
 
         public Route(Point start, int size, Hexagon startHex) {
             this.start = start;

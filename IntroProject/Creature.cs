@@ -22,31 +22,29 @@ namespace IntroProject
             // gene should be random at first
         }
 
-        public int calcDistance2(EntityType type) {
+        public static int calcDistance2(EntityType type, Hexagon place, Point point) { //enter the world relative position for point
             List<Entity> targets = new List<Entity>();
             for (int l = 0; targets.Count == 0; l++)
-                targets = this.chunk.searchPoint(l, type);
-            int dist = calcDist2(targets[0]);
+                targets = place.searchPoint(l, type);
+            int dist = calcDist2(targets[0], point);
             foreach (Entity e in targets)
-                if (calcDist2(e) < dist)
-                    dist = calcDist2(e);
+                if (calcDist2(e,point) < dist)
+                    dist = calcDist2(e,point);
             return dist;
         }
 
         public void calcFoodDist() {
-            int dist = (int) (Math.Sqrt(calcDistance2(EntityType.Plant)));
+            int dist = (int) (Math.Sqrt(calcDistance2(EntityType.Plant, this.chunk, new Point(x + this.chunk.x,y + this.chunk.y))));
             if (dist > 255)
                 dist = 255;
             this.color = Color.FromArgb(255 - dist, 50, 50);
         }
 
-        public int calcDist2(Entity e) {
-            int x1 = this.x + this.chunk.x;
-            int y1 = this.y + this.chunk.y;
+        public static int calcDist2(Entity e, Point p) {
             int x2 = e.x + e.chunk.x;
             int y2 = e.y + e.chunk.y;
-            int dx = x1 - x2;
-            int dy = y1 - y2;
+            int dx = p.X - x2;
+            int dy = p.Y - y2;
             return dx * dx + dy * dy;
         }
 
