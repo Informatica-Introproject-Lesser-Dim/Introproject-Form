@@ -22,9 +22,7 @@ namespace IntroProject
 
         public Debug() 
         {
-            Button plus = new Button();
-            plus.BackgroundImage = Properties.Resources.Plus_icon;
-            plus.BackgroundImageLayout = ImageLayout.Stretch;
+            Button plus = new ButtonImaged(Properties.Resources.Plus_icon);
             plus.Size = new Size(50, 50);
             plus.Location = new Point(1800 - 66, 5);
             plus.Click += (object o, EventArgs ea) => { dropMenu.Show(); plus.Hide(); };
@@ -43,8 +41,10 @@ namespace IntroProject
 
             Resize += (object o, EventArgs ea) => 
             {
+                int maxim = Math.Max((int)(Size.Width / 36), (int)(Size.Height / 36));
                 dropMenu.Size = new Size(Size.Width / 10, Size.Height);
-                plus.Location = new Point(Size.Width - 66, 5); 
+                plus.Location = new Point(Size.Width - maxim - 16, 5);
+                plus.Size = new Size(maxim, maxim);
             };
         }
     }
@@ -73,12 +73,14 @@ namespace IntroProject
             stop.Size = middel;
 
             pause.Location = new Point(40, 5);
-            play.Location = new Point(100, 5);
-            stop.Location = new Point(160, 5);
+            play.Location = new Point(40, 5);
+            stop.Location = new Point(105, 5);
 
+            play.Click += (object o, EventArgs ea) => { play.Hide(); };
+            pause.Click += (object o, EventArgs ea) => { play.Show(); };
 
+            this.Controls.Add(play); 
             this.Controls.Add(pause);
-            this.Controls.Add(play);
             this.Controls.Add(stop);
 
             this.Size = new Size(w, h);
@@ -109,7 +111,9 @@ namespace IntroProject
 
             FlatAppearance.MouseDownBackColor = Color.Transparent;
             FlatAppearance.MouseOverBackColor = Color.Transparent;
-            FlatAppearance.BorderColor = Color.DimGray;
+            FlatAppearance.BorderSize = 0;
+            BackColor = Color.Transparent;
+            Cursor = Cursors.Hand;
         }
     }
 
@@ -146,7 +150,7 @@ namespace IntroProject
 
             Resize += (object o, EventArgs ea) =>
             {
-                int edge = Math.Min((int)(Size.Width / 1.2), (int)Size.Height / 7);
+                int edge = Math.Max((int)(Size.Width / 1.2), (int)Size.Height / 7);
                 groot = new Size(edge, edge);
                 statistics.Size = groot;
                 settings.Size = groot;
