@@ -22,10 +22,14 @@ namespace IntroProject
             routeList.Add(new RouteElement(0, temp));
             //start with the few base routes
             Route current;
-            while (!isDone(current = routeList.Pop())) { //add a test wether hte current route is null aka no route has been found
+            while ((current = routeList.Pop()) != null) { //add a test wether hte current route is null aka no route has been found
+                if (isDone(current))
+                    break;
                 expandPoint(current);
             }
             //now put the end point into current and have it as a result
+            if (current == null)
+                return;
             Point end = new Point(-100,-100);
             foreach (Entity e in current.endHex.entities)
                 if (e is Planten)

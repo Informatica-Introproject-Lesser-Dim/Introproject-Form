@@ -12,6 +12,7 @@ namespace IntroProject
         public bool isReadyToMate = true;
         private Route route;
         private float speed = 1; //temporary variable untill speed is implemented in the genes
+        private bool done = false;
 
         public Creature()
         {
@@ -78,6 +79,16 @@ namespace IntroProject
         public void search() {
             AStar aStar = new AStar(new Point(this.x, this.y), this.chunk, this.gene, this.chunk.size);
             route = aStar.getResult();
+            done = route == null;
+        }
+
+        public void activate() {
+            if (done)
+                return;
+            if (route != null)
+                this.move();
+            else
+                this.search();
         }
 
         public void move() {

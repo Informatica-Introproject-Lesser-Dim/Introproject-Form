@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace IntroProject
         private int height;
         private int size;
         private int margin;
+        private List<Entity> entities;
 
         private Hexagon[,] tiles;
         public Hexagon this[int x, int y] {
@@ -31,6 +33,7 @@ namespace IntroProject
             this.height = height;
             this.size = size;
             this.margin = margin;
+            entities = new List<Entity>();
             tiles = new Hexagon[width, height];
             perlin = new SimplexPerlin[4];
             for(int i = 0; i < n; i++)
@@ -62,6 +65,13 @@ namespace IntroProject
             if (x < 0 || x >= width || y < 0 || y >= height)
                 return;
             tiles[x, y].addEntity(e);
+            entities.Add(e);
+        }
+
+        public void activateEntities() {
+            foreach (Entity e in entities)
+                if (e is Creature)
+                    ((Creature)e).activate();
         }
 
 

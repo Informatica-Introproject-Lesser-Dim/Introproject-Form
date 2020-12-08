@@ -31,12 +31,14 @@ namespace IntroProject
         Map kaart;
         int[] pos = new int[2] { 0, 0 };
         Font font = new Font("Arial", 12);
+        
 
         public DebugScreen(int w, int h) 
         {
             this.Size = new Size(w, h);
             this.Paint += drawScreen;
             kaart = new Map(50, 30, 20, 0);
+            Path.initializePaths(20);
             for (int i = 0; i < 20; i++) {
                 kaart.placeRandom(new Planten(0, 0, 5));
             }
@@ -54,14 +56,16 @@ namespace IntroProject
 
         public void Klik(object o, MouseEventArgs mea) {
             int[] adress = kaart.PosToHexPos(mea.X - 50, mea.Y - 50);
+            this.Invalidate();
         }
 
         public void drawScreen(object o, PaintEventArgs pea) 
         {
+            kaart.activateEntities();
             pea.Graphics.FillRectangle(new SolidBrush(Color.DarkGray), 0, 0, this.Width, this.Height);
             kaart.draw(pea.Graphics, 50, 50, this.Width, this.Height);
             pea.Graphics.DrawString(pos[0].ToString() + "," + pos[1].ToString(), font, Brushes.Black, 0, 0);
-
+            
         }
     }
 }

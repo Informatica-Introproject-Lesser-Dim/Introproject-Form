@@ -28,12 +28,14 @@ namespace IntroProject
             hex = 0;
             this.size = size;
             endHex = startHex;
+            points = new List<int>();
+            distances = new List<float>();
         }
 
         public void addDirection(int n) { //breaks if you enter in invalid direction or go off the map
             endHex = endHex[n];
             lastDir = n;
-            if (points == null) {
+            if (points.Count == 0) {
                 points.Add(n);
                 Point go = Hexagon.calcSide(size, n);
                 int dx = go.X - start.X;
@@ -75,7 +77,7 @@ namespace IntroProject
         public void addEnd(Point end) {
             float dist;
             int dx, dy;
-            if (points == null) {
+            if (points.Count == 0) {
                 dx = end.X - start.X;
                 dy = end.Y - start.Y;
                 dist = (float)Math.Sqrt(dx * dx + dy * dy);
@@ -133,7 +135,7 @@ namespace IntroProject
             if (hex == distances.Count) {
                 return end;
             }
-            Curve curve = Path.getCurve(points[hex - 1], points[hex]);
+            Curve curve = Path.getCurve((points[hex - 1] + 3)%6, points[hex]);
             return curve.go(pos);
         }
 
