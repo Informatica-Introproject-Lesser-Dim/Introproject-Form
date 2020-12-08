@@ -43,6 +43,8 @@ namespace IntroProject
             dropMenu.Hide();
             settingsMenu.BringToFront();
             settingsMenu.Hide();
+
+            Resize += (object o, EventArgs ea) => { dropMenu.Size = new Size(Size.Width / 10, Size.Height); };
         }
     }
 
@@ -121,12 +123,12 @@ namespace IntroProject
             min.BackgroundImage = Properties.Resources.Minus_icon;
             min.BackgroundImageLayout = ImageLayout.Stretch;
 
-            Size groot = new Size(150, 150);
-            
+            Size groot = new Size((int)(Size.Width / 1.2), (int)(Size.Width / 1.2));
+
             statistics.Size = groot;
             settings.Size = groot;
             help.Size = groot;
-            min.Size = new Size(50, 50);
+            min.Size = groot / 3;
 
             statistics.Padding = Padding.Empty;
             settings.Padding = Padding.Empty;
@@ -153,14 +155,13 @@ namespace IntroProject
             help.FlatAppearance.BorderColor = Color.DimGray;
             min.FlatAppearance.BorderColor = Color.DimGray;
 
-
             statistics.Location = new Point(20, 550);
             settings.Location = new Point(20, 720);
             help.Location = new Point(20, 890);
             min.Location = new Point(5, 5);
             min.BringToFront();
 
-            settings.Click += (object o, EventArgs ea) => { settingsMenu.Show(); };
+            settings.Click += (object o, EventArgs ea) => { settingsMenu.Show(); settingsMenu.BringToFront(); };
             min.Click += (object o, EventArgs ea) => { this.Hide(); plus.Show(); };
 
             this.Controls.Add(settings);
@@ -170,6 +171,16 @@ namespace IntroProject
 
             this.BackColor = Color.DimGray;
             this.Size = new Size(w, h);
+
+            Resize += (object o, EventArgs ea) =>
+            { 
+                groot = new Size((int) (Size.Width/1.2), (int)(Size.Width / 1.2));
+                statistics.Size = groot;
+                settings.Size = groot;
+                help.Size = groot;
+                min.Size = groot / 3;
+            };
+
         }
 
     }
