@@ -67,5 +67,15 @@ namespace IntroProject
             pea.Graphics.DrawString(pos[0].ToString() + "," + pos[1].ToString(), font, Brushes.Black, 0, 0);
             
         }
+
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams handeleparam = base.CreateParams;
+                handeleparam.ExStyle |= 0x02000000;
+                return handeleparam;
+            }
+        }
     }
 }
