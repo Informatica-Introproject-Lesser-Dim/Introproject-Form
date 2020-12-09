@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 
 namespace IntroProject
 {
@@ -8,9 +7,7 @@ namespace IntroProject
         public string @class;
         int courage;
         float jumpHeight;
-        int speedX; //waarom is dit verdeelt in twee speeds?
-        int speedY;
-        public float speed;
+        float speed;
 
         protected Func<bool> willMutate = () => true;
 
@@ -19,8 +16,6 @@ namespace IntroProject
             jumpHeight = 0.05f;
         }
 
-        public Gene(int speedX, int speedY, float jumpHeight, int courage)
-            : this(speedX, jumpHeight, courage) { }
         public Gene(float speed, float jumpHeight, int courage)
         {
             this.speed = speed;
@@ -44,21 +39,19 @@ namespace IntroProject
         public object Clone() => this.MemberwiseClone();
 
         public static Gene operator +(Gene a, Gene b) =>
-          new Gene( (a.speedX + b.speedX) / 2
-                  , (a.speedY + b.speedY) / 2
+          new Gene( (a.speed + b.speed) / 2
                   , (a.jumpHeight + b.jumpHeight) / 2
                   , (a.courage + b.courage) / 2
                   );
 
         public static Gene ApplyMutation(Gene toBeMutated)
         {
-            toBeMutated.speedX += 2;
+            toBeMutated.speed += 2;
             return toBeMutated;
         }
 
         public bool Equals(Gene other)
-          => this.speedX == other.speedX
-          && this.speedY == other.speedY
+          => this.speed == other.speed
           && this.jumpHeight == other.jumpHeight
           && this.courage == other.courage;
     }
