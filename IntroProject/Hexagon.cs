@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace IntroProject
 {
+    
     public class Hexagon
     {
-        private int size;
+        public int size;
         public static double sqrt3 = Math.Sqrt(3);
         public static double sqrt2 = Math.Sqrt(2);
         public int x, y;
@@ -15,6 +17,7 @@ namespace IntroProject
         public double longitudeOnMap;
         private Hexagon[] neighbors;
         public List<Entity> entities;
+        public int Tag = -1;
         public Hexagon this[int a, int b] { //the a is wether you want the neighbor to the left or right, b is wether you want the neighbour up or down
             get {
                 if (a == 0 && b == 0)
@@ -29,6 +32,9 @@ namespace IntroProject
                     return neighbors[(int)(4.5 + b * -0.5)];
                 return null;
             }
+        }
+        public Hexagon this[int a] {
+            get { return this.neighbors[a]; }
         }
 
         public int width {
@@ -67,7 +73,9 @@ namespace IntroProject
                                                                     , new ColorScale(Color.FromArgb(155, 184, 147), Color.FromArgb(109, 135, 105))
                                                                     , new ColorScale(Color.FromArgb(158, 163, 157), Color.FromArgb(223, 227, 222))
                                                                     };
+        public static float seaLevel = -0.15f;
         private static float[] heights = new float[6] {-1f,-0.4f, -0.15f, 0.1f, 0.7f, 1f};
+        
 
 
         public Hexagon(int size, double c, int x, int y, double longitudeOnMap) //size is the length of each side
@@ -84,14 +92,95 @@ namespace IntroProject
             this.y = y;
         }
 
+        public void moveEntity(Entity e, int dir) {
+            if (!entities.Contains(e))
+                return;
+            this[dir].addEntity(e);
+            entities.Remove(e);
+        }
+
+        public static Point calcSide(int size, int dir) {
+            int x, y;
+            switch (dir % 3)
+            {
+                case 1:
+                    x = 3 * size / 4; y = -(int)(size * Hexagon.sqrt3 / 4);
+                    break;
+                case 0:
+                    x = 0; y = -(int)(size * Hexagon.sqrt3 / 2);
+                    break;
+                case 2:
+                    x = -3 * size / 4; y = -(int)(size * Hexagon.sqrt3 / 4);
+                    break;
+                default:
+                    x = -5; y = -6;
+                    break;
+            }
+            if (dir >= 2 && dir <= 4)
+            {
+                x *= -1; y *= -1;
+            }
+            return new Point(x, y);
+        }
+
+        private Func<Entity, bool> entityIsType<T>() =>
+            (Entity entity) => (entity is T);
+        public List<Entity> getByType(EntityType type) {
+            List<Entity> result = new List<Entity>();
+            switch (type) {
+                case EntityType.Entity:
+                    return entities;
+                case EntityType.Creature:
+                    result.AddRange(entities.Where(entityIsType<Creature>()));
+                    return result;
+                case EntityType.Herbivore:
+                    result.AddRange(entities.Where(entityIsType<Herbivore>()));
+                    return result;
+                case EntityType.Plant:
+                    result.AddRange(entities.Where(entityIsType<Planten>()));
+                    return result;
+                case EntityType.Carnivore:
+                    result.AddRange(entities.Where(entityIsType<Carnivore>()));
+                    return result;
+                default: return result;
+            }
+        }
+
+        public List<Entity> searchLine(int dir, int l, EntityType type) {
+            if (l == 0)
+                return this.getByType(type);
+            if (dir % 2 == 1)
+                if (neighbors[dir] != null)
+                    return neighbors[dir].searchLine(dir, l - 1, type);
+            List<Entity> result = new List<Entity>();
+            for (int i = dir + 5; i <= dir + 7; i++)
+                if (neighbors[i%6] != null)
+                    result = result.Concat(neighbors[i%6].searchLine(i%6, l - 1, type)).ToList();
+            return result;
+        }
+
+        public List<Entity> searchPoint(int l, EntityType type) {
+            if (l == 0)
+                return this.getByType(type);
+            List<Entity> result = new List<Entity>();
+            for (int i = 0; i < 6; i++)
+                if (neighbors[i] != null)
+                    result = result.Concat(neighbors[i].searchLine(i, l - 1, type)).ToList();
+            return result;
+        }
+
         public void setNeighbors(Hexagon[] h) { //start at the top and go around through all the neighbors
             neighbors = h;
         }
 
         public void addEntity(Entity e) {
-            //be sure to change values in the entity like it's position and in wich chunck it's saved
             e.chunk = this;
             this.entities.Add(e);
+        }
+
+        public void drawEntities(Graphics g, int xPos, int yPos) {
+            foreach (Entity e in entities)
+                e.draw(g, x + xPos, y + yPos);
         }
 
         private void calcColor(float f) {

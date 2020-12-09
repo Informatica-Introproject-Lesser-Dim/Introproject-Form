@@ -7,20 +7,23 @@ namespace IntroProject
     {
         public string @class;
         int courage;
-        int jumpHeight;
-        int speedX;
+        float jumpHeight;
+        int speedX; //waarom is dit verdeelt in twee speeds?
         int speedY;
+        public float speed;
 
         protected Func<bool> willMutate = () => true;
 
-        public Gene() {}
+        public Gene() {
+            speed = 1.0f;
+            jumpHeight = 0.05f;
+        }
 
-        public Gene(int speedX, int speedY, int jumpHeight, int courage)
-            : this(new Point(speedX, speedY), jumpHeight, courage) { }
-        public Gene(Point speed, int jumpHeight, int courage)
+        public Gene(int speedX, int speedY, float jumpHeight, int courage)
+            : this(speedX, jumpHeight, courage) { }
+        public Gene(float speed, float jumpHeight, int courage)
         {
-            this.speedX = speed.X;
-            this.speedY = speed.Y;
+            this.speed = speed;
             this.jumpHeight = jumpHeight;
             this.courage = courage;
         }

@@ -1,4 +1,6 @@
-﻿namespace IntroProject
+﻿using System.Drawing;
+
+namespace IntroProject
 {
     public class Planten : Entity
     {
@@ -9,12 +11,15 @@
             this.x = x;
             this.y = y;
             this.voedingswaarde = voedingswaarde;
+            color = Color.Green;
         }
-        private Creature voed(Creature wezen) //concept hoe een plant een wezen kan voeden, mogelijk moet herbivoor de specificatie zijn hier en niet wezen.
+        private Creature feed(Creature wezen) //concept hoe een plant een wezen kan voeden, mogelijk moet herbivoor de specificatie zijn hier en niet wezen.
         {//MOET NOG BESPROKEN WORDEN
             wezen.isAlive += voedingswaarde;
             //death methode aanroepen
             return wezen;
         }
+
+       
     }
 }
