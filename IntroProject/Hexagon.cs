@@ -76,52 +76,46 @@ namespace IntroProject
 
         public static Point calcSide(int size, int dir) {
             int x, y;
-            switch ((dir + 1) % 3)
+            switch (dir % 3)
             {
-                case 2:
+                case 1:
                     x = 3 * size / 4; y = -(int)(size * Hexagon.sqrt3 / 4);
                     break;
-                case 1:
+                case 0:
                     x = 0; y = -(int)(size * Hexagon.sqrt3 / 2);
                     break;
-                case 0:
+                case 2:
                     x = -3 * size / 4; y = -(int)(size * Hexagon.sqrt3 / 4);
                     break;
                 default:
                     x = -5; y = -6;
                     break;
             }
-            if ((dir + 1) % 6 / 3 >= 1)
+            if (dir >= 2 && dir <= 4)
             {
                 x *= -1; y *= -1;
             }
             return new Point(x, y);
         }
 
+        private Func<Entity, bool> entityIsType<T>() =>
+            (Entity entity) => (entity is T);
         public List<Entity> getByType(EntityType type) {
             List<Entity> result = new List<Entity>();
             switch (type) {
                 case EntityType.Entity:
                     return entities;
                 case EntityType.Creature:
-                    foreach (Entity e in entities)
-                        if (e is Creature)
-                            result.Add(e);
+                    result.AddRange(entities.Where(entityIsType<Creature>()));
                     return result;
                 case EntityType.Herbivore:
-                    foreach (Entity e in entities)
-                        if (e is Herbivore)
-                            result.Add(e);
+                    result.AddRange(entities.Where(entityIsType<Herbivore>()));
                     return result;
                 case EntityType.Plant:
-                    foreach (Entity e in entities)
-                        if (e is Planten)
-                            result.Add(e);
+                    result.AddRange(entities.Where(entityIsType<Planten>()));
                     return result;
                 case EntityType.Carnivore:
-                    foreach (Entity e in entities)
-                        if (e is Carnivore)
-                            result.Add(e);
+                    result.AddRange(entities.Where(entityIsType<Carnivore>()));
                     return result;
                 default: return result;
             }
