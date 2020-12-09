@@ -1,12 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace IntroProject
 {
@@ -116,22 +110,23 @@ namespace IntroProject
             if (hex == 0)
             {
                 int dx, dy;
-                if (distances.Count == 1) {
+                if (distances.Count == 1)
+                {
                     dx = end.X - start.X;
                     dy = end.Y - start.Y;
-                    return new Point((int) (start.X + (dx * pos) / distances[0]), (int) (start.Y + (dy * pos) / distances[0]) );
+                } else {
+                    Point temp = Hexagon.calcSide(size, points[0]);
+                    dx = temp.X - start.X;
+                    dy = temp.Y - start.Y;
                 }
-                Point temp = Hexagon.calcSide(size, points[0]);
-                dx = temp.X - start.X;
-                dy = temp.Y - start.Y;
                 return new Point((int)(start.X + (dx * pos) / distances[0]), (int)(start.Y + (dy * pos) / distances[0]));
 
             }
             if (hex == distances.Count - 1) {
                 Point temp = Hexagon.calcSide(size, (points[hex - 1] + 3) % 6);
-                int dx = temp.X - start.X;
-                int dy = temp.Y - start.Y;
-                return new Point((int)(start.X + (dx * pos) / distances[0]), (int)(start.Y + (dy * pos) / distances[0]));
+                int dx = end.X - temp.X;
+                int dy = end.Y - temp.Y;
+                return new Point((int)(temp.X + (dx * pos) / distances[0]), (int)(temp.Y + (dy * pos) / distances[0]));
 
             }
             if (hex == distances.Count) {
