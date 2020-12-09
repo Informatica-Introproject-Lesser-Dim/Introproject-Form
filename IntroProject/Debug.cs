@@ -143,7 +143,7 @@ namespace IntroProject
             ButtonImaged help = new ButtonImaged(Properties.Resources.Help_icon);
             ButtonImaged min = new ButtonImaged(Properties.Resources.Minus_icon);
 
-            int edge = Math.Max((int)(Size.Width / 1.2), (int)Size.Height / 7);
+            int edge = Math.Min((int)(Size.Width / 1.2), (int)Size.Height / 7);
             Size groot = new Size(edge, edge);
             int locY = (int)(Size.Height * .40);
             int marge = (int)(edge * .2);
