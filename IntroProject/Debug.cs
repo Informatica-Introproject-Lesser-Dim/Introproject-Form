@@ -31,6 +31,7 @@ namespace IntroProject
         Map kaart;
         int[] pos = new int[2] { 0, 0 };
         Font font = new Font("Arial", 12);
+        int n = 0;
         
 
         public DebugScreen(int w, int h) 
@@ -39,14 +40,14 @@ namespace IntroProject
             this.Paint += drawScreen;
             kaart = new Map(50, 30, 20, 0);
             Path.initializePaths(20);
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 1; i++) {
                 kaart.placeRandom(new Planten(0, 0, 5));
             }
 
             for (int i = 0; i < 2; i++)
             {
                 Herbivore herbivore = new Herbivore();
-                herbivore.x = 10;
+                herbivore.x = 0;
                 kaart.placeRandom(herbivore);
                 herbivore.calcFoodDist();
             }
@@ -61,11 +62,16 @@ namespace IntroProject
 
         public void drawScreen(object o, PaintEventArgs pea) 
         {
-            kaart.activateEntities();
+            if (n > 4) {
+                kaart.activateEntities();
+                n = 0;
+
+            }
             pea.Graphics.FillRectangle(new SolidBrush(Color.DarkGray), 0, 0, this.Width, this.Height);
             kaart.draw(pea.Graphics, 50, 50, this.Width, this.Height);
             pea.Graphics.DrawString(pos[0].ToString() + "," + pos[1].ToString(), font, Brushes.Black, 0, 0);
-            
+            n++;
+            this.Invalidate();
         }
 
         protected override CreateParams CreateParams
