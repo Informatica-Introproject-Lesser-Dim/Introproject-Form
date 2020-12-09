@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Numerics;
 
 namespace IntroProject
 {
@@ -72,19 +73,17 @@ namespace IntroProject
 
         public void addEnd(Point end) {
             float dist;
-            int dx, dy;
+            Point delta;
             if (points.Count == 0) {
-                dx = end.X - start.X;
-                dy = end.Y - start.Y;
-                dist = (float)Math.Sqrt(dx * dx + dy * dy);
+                delta = end - (Size)start;
+                dist = new Vector2(delta.X, delta.Y).Length();
                 distances.Add(dist);
                 this.end = end;
                 return;
             }
             Point temp = Hexagon.calcSide(size, (points[points.Count - 1] + 3) % 6);
-            dx = temp.X - end.X;
-            dy = temp.Y - end.Y;
-            dist = (float)Math.Sqrt(dx * dx + dy * dy);
+            delta = temp - (Size)end;
+            dist = new Vector2(delta.X, delta.Y).Length();
             distances.Add(dist);
             this.end = end;
         }
@@ -107,31 +106,28 @@ namespace IntroProject
         }
 
         public Point getPos() {
-            if (hex == 0)
-            {
-                int dx, dy;
-                if (distances.Count == 1)
-                {
-                    dx = end.X - start.X;
-                    dy = end.Y - start.Y;
-                } else {
-                    Point temp = Hexagon.calcSide(size, points[0]);
-                    dx = temp.X - start.X;
-                    dy = temp.Y - start.Y;
-                }
-                return new Point((int)(start.X + (dx * pos) / distances[0]), (int)(start.Y + (dy * pos) / distances[0]));
-
-            }
+            if (hex == distances.Count)
+                return end;
             if (hex == distances.Count - 1) {
                 Point temp = Hexagon.calcSide(size, (points[hex - 1] + 3) % 6);
-                int dx = end.X - temp.X;
-                int dy = end.Y - temp.Y;
-                return new Point((int)(temp.X + (dx * pos) / distances[0]), (int)(temp.Y + (dy * pos) / distances[0]));
+                Point delta = end - (Size)temp;
+                double scale = pos / distances[0];
+                return temp + new Size((int)(delta.X * scale), (int)(delta.Y * scale));
+            }
+            if (hex == 0)
+            {
+                Point delta;
+                if (distances.Count == 1)
+                {
+                    delta = end + (Size)start;
+                } else {
+                    Point temp = Hexagon.calcSide(size, points[0]);
+                    delta = temp + (Size)start;
+                }
+                double scale = pos / distances[0];
+                return start + new Size((int)(delta.X * scale), (int)(delta.Y * scale));
+            }
 
-            }
-            if (hex == distances.Count) {
-                return end;
-            }
             Curve curve = Path.getCurve((points[hex - 1] + 3)%6, points[hex]);
             return curve.go(pos);
         }
