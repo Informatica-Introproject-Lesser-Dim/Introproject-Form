@@ -143,9 +143,14 @@ namespace IntroProject
             ButtonImaged help = new ButtonImaged(Properties.Resources.Help_icon);
             ButtonImaged min = new ButtonImaged(Properties.Resources.Minus_icon);
 
-            statistics.Location = new Point(Size.Width/10, (int) (Size.Height*.45));
-            settings.Location = new Point(Size.Width / 10, (int)(Size.Height * .6));
-            help.Location = new Point(Size.Width / 10, (int)(Size.Height * .75));
+            int edge = Math.Max((int)(Size.Width / 1.2), (int)Size.Height / 7);
+            Size groot = new Size(edge, edge);
+            int locY = (int)(Size.Height * .40);
+            int marge = (int)(edge * .2);
+            
+            statistics.Location = new Point(Size.Width/10, locY);
+            settings.Location = new Point(Size.Width / 10, locY + groot.Width + marge);
+            help.Location = new Point(Size.Width / 10, locY + 2*groot.Width + 2 *marge);
             min.Location = new Point(5, 5);
             min.BringToFront();
 
@@ -162,20 +167,22 @@ namespace IntroProject
             this.BackColor = Color.DimGray;
             this.Size = new Size(w, h);
 
-            Size groot = new Size((int)(Size.Width / 1.2), (int)(Size.Width / 1.2));
-
             Resize += (object o, EventArgs ea) =>
             {
-                int edge = Math.Max((int)(Size.Width / 1.2), (int)Size.Height / 7);
+                edge = Math.Min((int)(Size.Width / 1.2), (int)Size.Height / 7);
+
                 groot = new Size(edge, edge);
                 statistics.Size = groot;
                 settings.Size = groot;
                 help.Size = groot;
                 min.Size = groot / 3;
+                
+                locY = (int)(Size.Height * .40);
+                marge = (int)(edge * .2);
 
-                statistics.Location = new Point(Size.Width / 10, (int)(Size.Height * .45));
-                settings.Location = new Point(Size.Width / 10, (int)(Size.Height * .6));
-                help.Location = new Point(Size.Width / 10, (int)(Size.Height * .75));
+                statistics.Location = new Point(Size.Width / 10, locY);
+                settings.Location = new Point(Size.Width / 10, locY + groot.Width + marge);
+                help.Location = new Point(Size.Width / 10, locY + 2*groot.Width + 2 * marge);
             };
 
         }
