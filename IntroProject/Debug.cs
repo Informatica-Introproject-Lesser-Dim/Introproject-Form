@@ -19,6 +19,8 @@ namespace IntroProject
         DebugScreen debugscr;
         DropMenu dropMenu;
         SettingsMenu settingsMenu;
+        HelpMenu helpMenu;
+        StatisticsMenu statisticsMenu;
 
         public Debug() 
         {
@@ -31,18 +33,32 @@ namespace IntroProject
             this.Size = new Size(1800, 1200);
             debugscr = new DebugScreen(1800, 1200);
             settingsMenu = new SettingsMenu(Size.Width, Size.Height);
-            dropMenu = new DropMenu(Size.Width/10, Size.Height, (object o, EventArgs ea) => { settingsMenu.Show(); settingsMenu.BringToFront(); }, plus);
+            helpMenu = new HelpMenu(Size.Width, Size.Height);
+            statisticsMenu = new StatisticsMenu(Size.Width, Size.Height);
+            dropMenu = new DropMenu(Size.Width/10, Size.Height, 
+                                   (object o, EventArgs ea) => { settingsMenu.Show(); settingsMenu.BringToFront(); }, 
+                                   (object o, EventArgs ea) => { helpMenu.Show(); helpMenu.BringToFront(); }, 
+                                   (object o, EventArgs ea) => { statisticsMenu.Show(); statisticsMenu.BringToFront(); },
+                                    plus);
             dropMenu.Dock = DockStyle.Right;
             this.Controls.Add(dropMenu);
             this.Controls.Add(debugscr);
             this.Controls.Add(settingsMenu);
+            this.Controls.Add(helpMenu);
+            this.Controls.Add(statisticsMenu);
             dropMenu.Hide();
             settingsMenu.Hide();
+            statisticsMenu.Hide();
+            helpMenu.Hide();
 
             Resize += (object o, EventArgs ea) => 
             {
                 int maxim = Math.Max((int)(Size.Width / 36), (int)(Size.Height / 36));
+                debugscr.Size = new Size(Size.Width, Size.Height);
                 dropMenu.Size = new Size(Size.Width / 10, Size.Height);
+                settingsMenu.Size = new Size(Size.Width, Size.Height);
+                helpMenu.Size = new Size(Size.Width, Size.Height);
+                statisticsMenu.Size = new Size(Size.Width, Size.Height);
                 plus.Location = new Point(Size.Width - maxim - 16, 5);
                 plus.Size = new Size(maxim, maxim);
             };
@@ -119,7 +135,7 @@ namespace IntroProject
 
     class DropMenu : UserControl
     {
-        public DropMenu(int w, int h, EventHandler settingsMenuOnClick, Button plus)
+        public DropMenu(int w, int h, EventHandler settingsMenuOnClick, EventHandler helpMenuOnClick, EventHandler statisticsMenuOnClick, Button plus)
         {
             // FlatStyle to flat, and the colors of FlatAppearance MouseDownBackColor & MouseOverBackColor to transparent
             ButtonImaged settings = new ButtonImaged(Properties.Resources.Settings_icon);
@@ -134,8 +150,8 @@ namespace IntroProject
             min.BringToFront();
 
             settings.Click += settingsMenuOnClick;
-            statistics.Click += (object o, EventArgs ea) => { }; //click events van statistics en help
-            help.Click += (object o, EventArgs ea) => { };
+            statistics.Click += statisticsMenuOnClick;
+            help.Click += helpMenuOnClick;
             min.Click += (object o, EventArgs ea) => { this.Hide(); plus.Show(); };
 
             this.Controls.Add(min);
@@ -170,6 +186,42 @@ namespace IntroProject
         public SettingsMenu(int w, int h)
         {
             this.BackColor = Color.FromArgb(0, 20, 99);
+            this.Size = new Size(w, h);
+
+            Button exit = new ButtonImaged(Properties.Resources.X_icon);
+            exit.Location = new Point(2, 2);
+            exit.Size = new Size(50, 50);
+            exit.FlatAppearance.BorderColor = Color.FromArgb(0, 20, 99);
+            exit.Click += (object o, EventArgs ea) => { this.Hide(); };
+
+            this.Controls.Add(exit);
+        }
+    }
+
+    class HelpMenu : UserControl
+    {
+
+        public HelpMenu(int w, int h)
+        {
+            this.BackColor = Color.FromArgb(88, 79, 37);
+            this.Size = new Size(w, h);
+
+            Button exit = new ButtonImaged(Properties.Resources.X_icon);
+            exit.Location = new Point(2, 2);
+            exit.Size = new Size(50, 50);
+            exit.FlatAppearance.BorderColor = Color.FromArgb(0, 20, 99);
+            exit.Click += (object o, EventArgs ea) => { this.Hide(); };
+
+            this.Controls.Add(exit);
+        }
+    }
+
+    class StatisticsMenu : UserControl
+    {
+
+        public StatisticsMenu(int w, int h)
+        {
+            this.BackColor = Color.FromArgb(4, 34, 8);
             this.Size = new Size(w, h);
 
             Button exit = new ButtonImaged(Properties.Resources.X_icon);
