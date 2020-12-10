@@ -26,7 +26,8 @@ namespace IntroProject
         {
             Button plus = new ButtonImaged(Properties.Resources.Plus_icon);
             plus.Size = new Size(50, 50);
-            plus.Location = new Point(1800 - 66, 5);
+            plus.Location = new Point(1800 - 75, 5);
+            plus.BackColor = Color.DarkGray;
             plus.Click += (object o, EventArgs ea) => { dropMenu.Show(); plus.Hide(); };
             this.Controls.Add(plus);
 
@@ -59,7 +60,7 @@ namespace IntroProject
                 settingsMenu.Size = new Size(Size.Width, Size.Height);
                 helpMenu.Size = new Size(Size.Width, Size.Height);
                 statisticsMenu.Size = new Size(Size.Width, Size.Height);
-                plus.Location = new Point(Size.Width - maxim - 16, 5);
+                plus.Location = new Point(Size.Width - maxim - 25, 5);
                 plus.Size = new Size(maxim, maxim);
             };
         }

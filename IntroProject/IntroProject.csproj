@@ -7,6 +7,30 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Images\Graph-icon.png" />
+    <None Remove="Resources\Images\Help-icon.png" />
+    <None Remove="Resources\Images\Minus-icon.png" />
+    <None Remove="Resources\Images\Pause-icon.png" />
+    <None Remove="Resources\Images\Play-icon.png" />
+    <None Remove="Resources\Images\Plus-icon.png" />
+    <None Remove="Resources\Images\Settings-icon.png" />
+    <None Remove="Resources\Images\Stop-icon.png" />
+    <None Remove="Resources\Images\X-icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Images\Graph-icon.png" />
+    <EmbeddedResource Include="Resources\Images\Help-icon.png" />
+    <EmbeddedResource Include="Resources\Images\Minus-icon.png" />
+    <EmbeddedResource Include="Resources\Images\Pause-icon.png" />
+    <EmbeddedResource Include="Resources\Images\Play-icon.png" />
+    <EmbeddedResource Include="Resources\Images\Plus-icon.png" />
+    <EmbeddedResource Include="Resources\Images\Settings-icon.png" />
+    <EmbeddedResource Include="Resources\Images\Stop-icon.png" />
+    <EmbeddedResource Include="Resources\Images\X-icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="LibNoise" Version="0.2.0" />
   </ItemGroup>
 
@@ -23,10 +47,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Resources\Images\" />
   </ItemGroup>
 
 </Project>
