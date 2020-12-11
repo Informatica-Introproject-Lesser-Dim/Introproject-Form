@@ -6,7 +6,7 @@ namespace IntroProject
 {
     public partial class Screen : Form
     {
-        DebugScreen debugscr;
+        MapScreen debugscr;
         DropMenu dropMenu;
         SettingsMenu settingsMenu;
         HelpMenu helpMenu;
@@ -23,7 +23,7 @@ namespace IntroProject
             this.Controls.Add(plus);
 
             this.Size = new Size(1800, 1200);
-            debugscr = new DebugScreen(this.Size);
+            debugscr = new MapScreen(this.Size);
             settingsMenu = new SettingsMenu(Size.Width, Size.Height);
             helpMenu = new HelpMenu(Size.Width, Size.Height);
             statisticsMenu = new StatisticsMenu(Size.Width, Size.Height);
@@ -57,7 +57,7 @@ namespace IntroProject
         }
     }
 
-    class DebugScreen : UserControl
+    class MapScreen : UserControl
     {
         Map kaart;
         int[] pos = new int[2] { 0, 0 };
@@ -65,8 +65,8 @@ namespace IntroProject
         int n = 0;
         
 
-        public DebugScreen(Size size) : this(size.Width, size.Height) { }
-        public DebugScreen(int w, int h)
+        public MapScreen(Size size) : this(size.Width, size.Height) { }
+        public MapScreen(int w, int h)
         {
             Button play = new ButtonImaged(Properties.Resources.Play_icon);
             Button stop = new ButtonImaged(Properties.Resources.Stop_icon);
