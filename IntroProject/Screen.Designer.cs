@@ -32,6 +32,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1264, 681);
+            this.BackColor = System.Drawing.Color.DarkGray;
             this.Name = "Debug";
             this.Text = "Test";
             this.ResumeLayout(false);
