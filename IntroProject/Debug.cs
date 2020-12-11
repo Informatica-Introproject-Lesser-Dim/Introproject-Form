@@ -65,18 +65,12 @@ namespace IntroProject
         int n = 0;
         
 
-
         public DebugScreen(Size size) : this(size.Width, size.Height) { }
         public DebugScreen(int w, int h)
         {
-            ToolStrip strip = new ToolStrip();
             Button play = new ButtonImaged(Properties.Resources.Play_icon);
             Button stop = new ButtonImaged(Properties.Resources.Stop_icon);
             Button pause = new ButtonImaged(Properties.Resources.Pause_icon);
-            strip.Dock = DockStyle.Right;
-            ToolStripTextBox box = new ToolStripTextBox();
-
-            strip.Items.Add(box);
 
             Size middel = new Size(60, 60);
             
