@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace IntroProject
 {
-    public partial class Debug : Form
+    public partial class Screen : Form
     {
         DebugScreen debugscr;
         DropMenu dropMenu;
@@ -12,7 +12,7 @@ namespace IntroProject
         HelpMenu helpMenu;
         StatisticsMenu statisticsMenu;
 
-        public Debug()
+        public Screen()
         {
             InitializeComponent();
 

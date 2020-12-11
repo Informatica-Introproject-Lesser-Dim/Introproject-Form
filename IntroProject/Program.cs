@@ -17,7 +17,7 @@ namespace IntroProject
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Debug());
+            Application.Run(new Screen());
         }
     }
 }
