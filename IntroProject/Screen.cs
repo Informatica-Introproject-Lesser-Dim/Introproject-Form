@@ -222,7 +222,27 @@ namespace IntroProject
             exit.FlatAppearance.BorderColor = Color.FromArgb(0, 20, 99);
             exit.Click += (object o, EventArgs ea) => { this.Hide(); };
 
+            TrackBar TrackBarSettingX = new CustomTrackbar(40, 60);
+            TextBox TextBoxSettingX = new TextBox();
+            TrackBarSettingX.Value = 72;
+            TextBoxSettingX.Text = TrackBarSettingX.Value.ToString();
+            TrackBarSettingX.ValueChanged += (object o, EventArgs ea) => { TextBoxSettingX.Text = TrackBarSettingX.Value.ToString(); };
+            TextBoxSettingX.TextChanged += (object o, EventArgs ea) => { TrackBarSettingX.Value = int.Parse(TextBoxSettingX.Text); };
+            TextBoxSettingX.Location = new Point(500, 70);
+
+            TrackBar TrackBarSettingY = new CustomTrackbar(40, 140);
+            TextBox TextBoxSettingY = new TextBox();
+            TrackBarSettingY.Value = 53;
+            TextBoxSettingY.Text = TrackBarSettingY.Value.ToString();
+            TrackBarSettingY.ValueChanged += (object o, EventArgs ea) => { TextBoxSettingY.Text = TrackBarSettingY.Value.ToString(); };
+            TextBoxSettingY.TextChanged += (object o, EventArgs ea) => { TrackBarSettingY.Value = int.Parse(TextBoxSettingY.Text); };
+            TextBoxSettingY.Location = new Point(500, 150);
+
             this.Controls.Add(exit);
+            this.Controls.Add(TrackBarSettingX);
+            this.Controls.Add(TextBoxSettingX);
+            this.Controls.Add(TrackBarSettingY);
+            this.Controls.Add(TextBoxSettingY);
         }
     }
 
@@ -259,6 +279,24 @@ namespace IntroProject
             exit.Click += (object o, EventArgs ea) => { this.Hide(); };
 
             this.Controls.Add(exit);
+        }
+    }
+
+    internal class CustomTrackbar : TrackBar
+    {
+        public CustomTrackbar(int x, int y)
+        {
+            Location = new Point(x, y);
+            Padding = Padding.Empty;
+            Cursor = Cursors.Hand;
+            Size = new Size(400, 40);
+            BackColor = Color.White;
+            Minimum = 0;
+            Maximum = 100;
+            TickFrequency = 10;
+            TickStyle = TickStyle.Both;
+            SmallChange = 1;
+            LargeChange = 10;
         }
     }
 }
