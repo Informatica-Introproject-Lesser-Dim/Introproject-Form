@@ -13,6 +13,7 @@ namespace IntroProject
         private Route route;
         private float speed = 1; //temporary variable untill speed is implemented in the genes
         private bool done = false;
+        private Entity goal;
 
         public Creature()
         {
@@ -78,6 +79,8 @@ namespace IntroProject
             AStar aStar = new AStar(new Point(this.x, this.y), this.chunk, this.gene, this.chunk.size);
             route = aStar.getResult();
             done = route == null;
+            if (!done)
+                goal = aStar.getTarget();
         }
 
         public void activate() {
@@ -87,6 +90,14 @@ namespace IntroProject
                 this.move();
             else
                 this.search();
+        }
+
+        public void checkSurroundings() {
+            //check if target plant has been eaten
+
+            //check if predators are near
+
+            //check if there's a new possible route (if it doesnt have one yet)
         }
 
         public void move() {

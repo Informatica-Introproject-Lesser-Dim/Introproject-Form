@@ -10,7 +10,7 @@ namespace IntroProject
         private RouteList routeList;
         private Route result;
         private static int Tag = 0; //every time you check a hexagon: give it a tag so that if you enter it again you'll know it's already been used in a route
-
+        private Entity target;
         //when you initialize an AStar object it starts calculating hte best route and then you're able to ask for the Route
         public AStar(Point loc, Hexagon chunck, Gene gene, int size) {
             Tag++;
@@ -32,13 +32,22 @@ namespace IntroProject
             Point end = new Point(-100,-100);
             foreach (Entity e in current.endHex.entities)
                 if (e is Planten)
+                {
+                    target = e;
                     end = new Point(e.x, e.y);
+                    break;
+                }
+                    
             current.addEnd(end);
             result = current;
         }
 
         public Route getResult() {
             return result;
+        }
+
+        public Entity getTarget() {
+            return target;
         }
 
         private void addDir(Route r, int dir) {
