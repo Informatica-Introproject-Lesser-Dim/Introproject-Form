@@ -25,10 +25,15 @@ namespace IntroProject
         protected const int r = 10;
         public Hexagon chunk;
         protected Color color;
+        public bool dead = false;
+        public float energyVal = 100;
 
-        public void Sterven()
+        public float Die()
         {
-            //Haal entity weg uit de chunk entitie lijst, door entity met hetzelfde id als deze uit de lijst te halen.
+            dead = true;
+            if (chunk != null)
+                chunk.removeEntity(this);
+            return energyVal;
         }
 
         public virtual void draw(Graphics g, int hexX, int hexY) {

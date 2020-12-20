@@ -21,7 +21,7 @@ namespace IntroProject
             //set the correct values
             jumpHeight = gene.primStat["jumpEffectiveness"];
             energyPerPixel = gene.primStat["velocity"];
-            maxCost = 100000; //default value for now
+            maxCost = 1000000; //default value for now
 
             //add the starting point
             mark(chunck);

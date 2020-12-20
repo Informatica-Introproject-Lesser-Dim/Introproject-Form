@@ -92,11 +92,13 @@ namespace IntroProject
             this.y = y;
         }
 
-        public void moveEntity(Entity e, int dir) {
-            if (!entities.Contains(e))
-                return;
-            this[dir].addEntity(e);
+        public void removeEntity(Entity e) {
             entities.Remove(e);
+        }
+
+        public void moveEntity(Entity e, int dir) {
+            if (entities.Remove(e))
+                this[dir].addEntity(e);
         }
 
         public static Point calcSide(int size, int dir) {
