@@ -23,24 +23,39 @@ namespace IntroProject
         //, {"awarenessVisual", 1.0f}
         //};
 
+        //if mutateScale is at 1 then if your random device gives you a 1 you go all the way to the extreme value (wich happens to be 1) 
+        //if it's 0.5 you end up in the middle of your current pos and the max value
         private float mutateScale = 0.2f;
+
+        //this is  basicly the 3 dimensional Genotype into a 1 dimensional fenotype
+        //because of this you need to specify wich place has the correct gene
+        //this is just an easy fix but it doesnt matter that much since 
+        //you only need to add one line, one value and one mode in the lookup table for every gene you add
         public int Gender { get { return (int)Fenotype[0]; } }
         public float JumpHeight { get { return Fenotype[1]; } }
         public float Velocity { get { return Fenotype[2]; } }
         public float Courage { get { return Fenotype[3]; } }
 
-
+        //0 for the average
+        //1 for the biggest
+        //2 for the biggest but also unable to mutate (only used for the male gene) 
         private int[,] lookupTable = new int[2,2] { { 2, 0 }, { 0, 0 } }; //it's not a bad thing if this is bigger than the actual lists being used
 
         protected Func<bool> willMutate = () => true;
 
         public Gene() {
-            Genotype = new List<float[]>[2] {new List<float[]>(), new List<float[]>() };
+            //you have two parts of the genotype, these two parts do exactly the same and code for the same genes
+            //within that you have the different allels each allel contains a few values and each value decides an attribute
+            //the allels can differ in size, all the genes in one allel are given to the next generation as one
+
+
+            //this later on will have to be replaced with a random function
+            Genotype = new List<float[]>[2] {new List<float[]>(), new List<float[]>() }; 
             Genotype[0].Add(new float[2] { 1.0f, 0.08f });//mannelijk en jumpHeight
             Genotype[0].Add(new float[2] { 0.5f, 0.3f }); //snelheid en courage
             Genotype[1].Add(new float[2] { 0f, 0.08f });//mannelijk en jumpHeight
             Genotype[1].Add(new float[2] { 0.5f, 0.3f }); //snelheid en courage
-            //bedenk hier hoe de genen precies in elkaar gaan zitten
+            //just add random genes here, dont forget to edit the lookup table and create a poperty accordingly
 
             calcFenotype();
         }
@@ -51,6 +66,8 @@ namespace IntroProject
         }
 
         private void calcFenotype() {
+            //this is basicly turning a 3 dimensional array into a one dimensional array
+            
             Fenotype = new List<float>();
             for (int i = 0; i < Genotype[0].Count; i++) {
                 for (int j = 0; j < Genotype[0][i].Length; j++) {
@@ -70,33 +87,20 @@ namespace IntroProject
         } 
 
         private float geneCalc(float a, float b, int mode) {
+            //mode 0 is the average, the others are just the highest gene overpowers the other for now
             if (mode == 0)
-                return (a + b) / 2;
+                return (a + b) / 2; 
             if (a > b)
                 return a;
             return b;
         }
 
-        //public Gene(Dictionary<string, float> primStat, bool isMale)
-        //{
-        //    this.primStat = primStat;
-        //    this.isMale = isMale;
-        //}
-
         public static Gene operator *(Gene a, Gene b) =>
             (a + b).Mutate();
 
-        //public Gene CloneTypedMutated()
-        //{
-        //    Gene clone = CloneTyped();
-
-        //    if (clone.willMutate())
-        //        return ApplyMutation(clone);
-        //    return clone;
-        //}
-
         public Gene Mutate() {
             Random random = new Random();
+            //choosing a random gene wich is to be mutated
             int i;
             int j;
             int k;
@@ -112,6 +116,9 @@ namespace IntroProject
         }
 
         private float Mutate(float x) {
+            //range is the amount of you can go in a certain direction
+            //mutatescale is how much of the range you're allowed to use
+            //val is the actual random number used
             Random random = new Random();
             float val = (float)random.NextDouble() * 2 - 1; //value between -1 and 1
             float range = x + 1; //amount of space left of the x
@@ -127,27 +134,10 @@ namespace IntroProject
         public static Gene operator +(Gene a, Gene b)
         {
             return new Gene(a.getAllel(), b.getAllel());
-          //var combinedPrimStat = new Dictionary<string, float>();
-          //var combinedGenesAsPrimStatPairs =
-          //      a.primStat.Keys.Zip(
-          //        a.primStat.Values.Zip(
-          //          b.primStat.Values,
-          //          (float a, float b) => (a + b) / 2),
-          //        (string key, float value) => new Tuple<string, float>(key, value));
-
-          //foreach (var pair in combinedGenesAsPrimStatPairs)
-          //  combinedPrimStat.Add(pair.Item1, pair.Item2);
-
-          //return new Gene(combinedPrimStat, isMale: false);
         }
 
-        //public static Gene ApplyMutation(Gene toBeMutated)
-        //{
-        //    toBeMutated.primStat["velocity"] -= 0.1f;
-        //    return toBeMutated;
-        //}
-
         public bool Equals(Gene other) {
+            //just basic checking every gene
             for (int i = 0; i < 2; i++)
                 for (int j = 0; j < Genotype[0].Count; j++)
                     for (int k = 0; k < Genotype[0][j].Length; k++)
