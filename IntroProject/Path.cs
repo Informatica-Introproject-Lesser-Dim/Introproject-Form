@@ -69,11 +69,11 @@ namespace IntroProject
 
 
         private static Curve[] calcCurve(double r, int x, int y, double start, double turn) { //start and the amount it turns are in radians
-            double length = 2 * r * Math.PI;
+            double length = 2 * r * Math.PI; //just plain calculating circumfrence of a circle
             length *= turn / (Math.PI * 2);
             List<Point> points = new List<Point>();
 
-            for (int i = (int) (length); i >= 0; i--) {
+            for (int i = (int) (length); i >= 0; i--) { //calculate all the points in this curve
                 int xPos = x + (int)(r * Math.Cos(start + i / r));
                 int yPos = y + (int)(r * Math.Sin(start + i / r));
                 points.Add(new Point(xPos, yPos));
@@ -82,15 +82,15 @@ namespace IntroProject
             return new Curve[2] { new Curve(points, length, false), new Curve(points,length, true) };
         }
         private static Curve calcStraight(int x1, int y1, int x2, int y2) {
-            int dx = x1 - x2;
+            int dx = x1 - x2; //xdistance that needs to be travelled
             int dy = y1 - y2;
-            double length = Math.Sqrt(dx * dx + dy * dy);
-            double sx = dx / length;
+            double length = Math.Sqrt(dx * dx + dy * dy);//total distance
+            double sx = dx / length;//step size
             double sy = dy / length;
 
             List<Point> points = new List<Point>();
 
-            for (int i = 0; i < length; i++) {
+            for (int i = 0; i <= length; i++) {//move along the line with the correct step size
                 points.Add(new Point((int)(x2 + sx * i), (int)(y2 + sy * i)));
             }
 
