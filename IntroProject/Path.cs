@@ -15,14 +15,14 @@ namespace IntroProject
         private static Curve[] ones; //the paths that only have one difference
         private static Curve[] twos; //the paths that have two difference
         private static Curve[] threes; //the paths that have 3 differnce (straight lines)
-        public static Curve getCurve(int start, int end) {
+        public static Curve getCurve(int start, int end) {//start is the side you enter the hexagon from end is the side you exit from
             if (start == end)
                 return null;
             if (start < 0 || start > 5 || end < 0 || end > 5)
                 return null;
             int dx = start - end;
             if (dx < -3)
-                dx += 6;
+                dx += 6; //we want values between -3 and 3
             if (dx > 3)
                 dx -= 6;
             switch (dx) {
@@ -46,13 +46,12 @@ namespace IntroProject
             ones = new Curve[12];
             twos = new Curve[12];
             threes = new Curve[6];
-            for (int i = 0; i < 6; i++) {
+            for (int i = 0; i < 6; i++) {//for each curve in "ones" calculate the appropriate start and end of the curve
                 Curve[] temp = calcCurve(size / 2, (int) (size * Math.Cos(Math.PI * (-1.0 / 3 + i / 3.0))), (int) (size *Math.Sin(Math.PI * (-1.0 / 3 + i / 3.0))), Math.PI * (1.0/3 + i/3.0), Math.PI * 2.0 / 3);
                 ones[i] = temp[0];
                 ones[i + 6] = temp[1];
             }
-            //Math.Sqrt(3*size*size/4.0 + 9.0/4.0*size*size) (misschien nodig)
-            for (int i = 0; i < 6; i++) {
+            for (int i = 0; i < 6; i++) {//for each curve in "twos" calculate the appropriate start and end of the the curve
                 Curve[] temp = calcCurve(size * 3.0 / 2, (int)(size * Hexagon.sqrt3 * Math.Cos(Math.PI * (-1.0 / 6 + i / 3.0))), (int)(size * Hexagon.sqrt3 * Math.Sin(Math.PI * (-1.0 / 6 + i / 3.0))), Math.PI*(2.0/3 + i/3.0),Math.PI/3);
                 twos[i] = temp[0];
                 twos[i + 6] = temp[1];
@@ -94,7 +93,7 @@ namespace IntroProject
                 points.Add(new Point((int)(x2 + sx * i), (int)(y2 + sy * i)));
             }
 
-            return new Curve(points, length, false);
+            return new Curve(points, length, false); 
         }
     }
 }
