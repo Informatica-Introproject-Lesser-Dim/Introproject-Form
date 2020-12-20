@@ -17,6 +17,7 @@ namespace IntroProject
         int size; //hex size
         public Hexagon endHex;
         public int lastDir = -1;
+        public float jumpCount { get { return distances.Count; } }
 
 
         public Route(Point start, int size, Hexagon startHex) {

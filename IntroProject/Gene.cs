@@ -11,10 +11,10 @@ namespace IntroProject
         // All between -1 and 1, will be scaled in their respective dependents
 
         public Dictionary<string, float> primStat = new Dictionary<string, float>()
-        { {"velocity", 0.0f}
+        { {"velocity", 0.5f}
         , {"intelligence", 1.0f}
         , {"courage", 1.0f}
-        , {"jumpEffectiveness", 1.0f}
+        , {"jumpEffectiveness", 0.08f}
         , {"relSize", 1.0f}
         , {"awarenessAuditory", 1.0f}
         , {"awarenessOdor", 1.0f}

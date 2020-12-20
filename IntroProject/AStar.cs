@@ -11,14 +11,24 @@ namespace IntroProject
         private Route result;
         private static int Tag = 0; //every time you check a hexagon: give it a tag so that if you enter it again you'll know it's already been used in a route
         private Entity target;
+        private float jumpHeight;
+        private float energyPerPixel;
+        private float maxCost;
         //when you initialize an AStar object it starts calculating hte best route and then you're able to ask for the Route
         public AStar(Point loc, Hexagon chunck, Gene gene, int size) {
             Tag++;
+
+            //set the correct values
+            jumpHeight = gene.primStat["jumpEffectiveness"];
+            energyPerPixel = gene.primStat["velocity"];
+            maxCost = 100000; //default value for now
+
             //add the starting point
             mark(chunck);
             Route temp = new Route(loc, size, chunck);
             routeList = new RouteList();
             routeList.Add(new RouteElement(0, temp));
+
             //start with the few base routes
             Route current;
             while ((current = routeList.Pop()) != null) { //add a test wether hte current route is null aka no route has been found
@@ -53,13 +63,22 @@ namespace IntroProject
         private void addDir(Route r, int dir) {
             //test if you can even go there etc and then add it to the route list
             Hexagon goal = r.endHex[dir];
+            
+
             if (goal == null)
+                return;
+            if (goal.heightOfTile - r.endHex.heightOfTile > jumpHeight) //if the jumpheight is too high
                 return;
             if (goal.Tag == Tag)
                 return;
-            goal.Tag = Tag; //tag it so we dont use it again
+            goal.Tag = Tag;//tag it so we dont use it again
+            if (goal.heightOfTile < Hexagon.seaLevel) //this needs to be changed if we want to add swimming
+                return;
             Route result = r.addAndClone(dir);
-            routeList.Add(new RouteElement(calcCost(result), result));
+            float cost = calcCost(result);
+            if (cost*energyPerPixel > maxCost)
+                return;
+            routeList.Add(new RouteElement(cost, result));
         }
 
         private float calcCost(Route r) { //lowest cost = best route
