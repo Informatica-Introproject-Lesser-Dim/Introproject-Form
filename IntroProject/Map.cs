@@ -39,7 +39,7 @@ namespace IntroProject
             for(int i = 0; i < n; i++)
                 perlin[i] = new SimplexPerlin(random.Next(), LibNoise.NoiseQuality.Best);
 
-            for (int x = 0; x < width; x++)
+            for (int x = 0; x < width; x++) //creating all the tiles and calculating the correct perlin noise for it
             {
                 int xPos = (int) (x*(size * 3 + margin * Hexagon.sqrt3)/2);
                 int yOff = 0;
@@ -61,7 +61,7 @@ namespace IntroProject
             this.drawBase();
         }
 
-        public void placeEntity(Entity e, int x, int y) {
+        public void placeEntity(Entity e, int x, int y) { //no randomness, just normally placing it here
             if (x < 0 || x >= width || y < 0 || y >= height)
                 return;
             tiles[x, y].addEntity(e);
@@ -77,8 +77,8 @@ namespace IntroProject
 
         private Hexagon[] calcNeighbors(int x, int y) {
             Hexagon[] result = new Hexagon[6];
-            int a = x % 2;
-            result[0] = getHex(x, y - 1);
+            int a = x % 2; //bias for when you're in one of the lower colums
+            result[0] = getHex(x, y - 1); //specifying the specific hex adress for the neighbor in each direction
             result[1] = getHex(x + 1, y - 1 + a);
             result[2] = getHex(x + 1, y + a);
             result[3] = getHex(x, y + 1);
@@ -87,13 +87,14 @@ namespace IntroProject
             return result;
         }
 
-        private Hexagon getHex(int x, int y) {
+        private Hexagon getHex(int x, int y) {//return hex based on hex adress
             if (x >= 0 && x < width && y >= 0 && y < height)
                 return tiles[x, y];
             return null;
         }
 
-        private float calcNoise(float x, float y) {
+        private float calcNoise(float x, float y) { //adding multiple perlin noise functions on top of eachother to make it look more natural
+            //each layer has a smaller size and a contributes less to the overall perlin noise
             float factor = 0.3f;
 
             Func<int, float> scaled = index => (float)Math.Pow(factor, index);
@@ -107,12 +108,14 @@ namespace IntroProject
                     result += factor * scaledPerlinNoise;
                 result += (1 - factor) * scaledPerlinNoise;
             }
-
+            
 
             return Bias(result,x,y);
         }
 
-        private float Bias(float f, float x, float y) {
+        private float Bias(float f, float x, float y) { //a bias is needed so that the edges of the map are always water
+            //not much strange happens here, just deciding wich edge you're closest to and then deciding a bias
+            //based on how far you are from this edge
             x *= size + margin;
             y *= size + margin;
             int w = HexAdressToXY(width - 1, height - 1)[0];
@@ -131,7 +134,7 @@ namespace IntroProject
         }
 
 
-        public void drawBase() {
+        public void drawBase() { //just basic going through all the pixels and deciding in wich hexagon they reside
             mapBase = new Bitmap(tiles[width - 1, height - 1].x + 2 * size, tiles[width - 1, height - 1].y + (int)(size * Hexagon.sqrt3));
             if (margin == 0) {
                 for (int x = 0; x < mapBase.Width; x++)
@@ -145,7 +148,7 @@ namespace IntroProject
                     tiles[x, y].draw(g, size + tiles[x, y].x, (int)(size * Hexagon.sqrt3 / 2) + tiles[x, y].y);
         }
 
-        private Color drawPixel(int x, int y) {
+        private Color drawPixel(int x, int y) { //returns the color of the hexagon at this position
             int[] pos = PosToHexPos(x, y);
             if (pos[0] < 0 || pos[0] >= width || pos[1] < 0 || pos[1] >= height)
                 return Color.FromArgb(0, 0, 0, 0);
@@ -153,14 +156,14 @@ namespace IntroProject
         }
 
         public void draw(Graphics g, int xPos, int yPos, int scrWidth, int scrHeight) {
-            g.DrawImage(mapBase, xPos - size, yPos - (int) (size*Hexagon.sqrt3/2));
+            g.DrawImage(mapBase, xPos - size, yPos - (int) (size*Hexagon.sqrt3/2)); //sticks a copy of the base on the graphics
             int[] start = PosToHexPos(-xPos, -yPos);
             start[0]--;
             start[1]--;
             int[] end = PosToHexPos(-xPos + scrWidth, -yPos + scrHeight);
             end[0]++;
             end[1]++;
-            for (int x = start[0]; x <= end[0]; x++)
+            for (int x = start[0]; x <= end[0]; x++)//for each hexagon within a certain range: draw all the entities within it
                 for (int y = start[1]; y <= end[1]; y++)
                     if (x >= 0 && y >= 0 && x < width && y < height)
                         tiles[x, y].drawEntities(g, xPos, yPos);
@@ -173,23 +176,26 @@ namespace IntroProject
             {
                 x = random.Next(0, width);
                 y = random.Next(0, height);
-            } while (tiles[x, y].heightOfTile < Hexagon.seaLevel);
+            } while (tiles[x, y].heightOfTile < Hexagon.seaLevel); //just keep trying untill you find a position that works
 
             this.placeEntity(e, x, y);
         }
 
         public int[] HexAdressToXY(int x, int y) {
-            int xPos = (int)(x * (size * 3 + margin * Hexagon.sqrt3) / 2);
+            int xPos = (int)(x * (size * 3 + margin * Hexagon.sqrt3) / 2);//just the amount of times you go a hexWidth to the right times hexWidth
             int yOff = 0;
             if (x % 2 == 1)
-                yOff = (int)((size * Hexagon.sqrt3 + margin) / 2);
+                yOff = (int)((size * Hexagon.sqrt3 + margin) / 2); //the even colums are slightly lower therefore an offset is needed
             
-            int yPos = (int)((margin + Hexagon.sqrt3 * size) * y) + yOff;
+            int yPos = (int)((margin + Hexagon.sqrt3 * size) * y) + yOff;//the amount of heights you go down + the offset
             return new int[2] { xPos, yPos };
         }
 
         public int[] PosToHexPos(int x, int y) 
         {
+            //first finds the general area and then specifies more and more
+
+
             int column = (int) (x / (size * 3 + margin * Hexagon.sqrt3)); // 2-wide column which includes this point
             if (x < 0)
                 column--;
@@ -200,18 +206,16 @@ namespace IntroProject
                 row--;
             
             int relYPos = y - (int)((row + 0.5) * (size * Hexagon.sqrt3 + margin)); // y relative to the middle hexagon
-            int rXPos = relXPos;
-            int rYPos = relYPos;
-            if (rXPos < 0)
-                rXPos = -rXPos;
-            if (rYPos < 0)
-                rYPos = -rYPos;
+            int rXPos = Math.Abs(relXPos);//generalizing the positive and negative versions into one
+            int rYPos = Math.Abs(relYPos);
+            
+
             int mSize = (int)(size + (margin) / Hexagon.sqrt3);
-            if (rXPos < mSize - (rYPos / Hexagon.sqrt3))
+            if (rXPos < mSize - (rYPos / Hexagon.sqrt3)) //if you are in the middle hexagon
             {
                 return new int[2] {column * 2 + 1, row };
             }
-            if (relXPos > 0) {
+            if (relXPos > 0) { //outside of the middle hex, two positives mean it's in the top right hex rest of the hexagons work the same as this
                 if (relYPos > 0)
                     return new int[2] { column * 2 + 2 , row + 1};
                 return new int[2] { column * 2 + 2, row};
