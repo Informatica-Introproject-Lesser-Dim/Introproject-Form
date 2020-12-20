@@ -63,6 +63,8 @@ namespace IntroProject
         int[] pos = new int[2] { 0, 0 };
         Font font = new Font("Arial", 12);
         int n = 0;
+        int xCam = 50;
+        int yCam = 50;
         
 
         public MapScreen(Size size) : this(size.Width, size.Height) { }
@@ -106,6 +108,7 @@ namespace IntroProject
             }
 
             this.MouseClick += Klik;
+            
         }
 
         public void Klik(object o, MouseEventArgs mea) {
@@ -121,7 +124,7 @@ namespace IntroProject
 
             }
             pea.Graphics.FillRectangle(new SolidBrush(Color.DarkGray), 0, 0, this.Width, this.Height);
-            kaart.draw(pea.Graphics, 50, 50, this.Width, this.Height);
+            kaart.draw(pea.Graphics, xCam, yCam, this.Width, this.Height);
             pea.Graphics.DrawString(pos[0].ToString() + "," + pos[1].ToString(), font, Brushes.Black, 0, 0);
             n++;
             this.Invalidate();

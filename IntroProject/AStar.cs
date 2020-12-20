@@ -12,15 +12,15 @@ namespace IntroProject
         private static int Tag = 0; //every time you check a hexagon: give it a tag so that if you enter it again you'll know it's already been used in a route
         private Entity target;
         private float jumpHeight;
-        private float energyPerPixel;
+        private float Velocity;
         private float maxCost;
         //when you initialize an AStar object it starts calculating hte best route and then you're able to ask for the Route
         public AStar(Point loc, Hexagon chunck, Gene gene, int size) {
             Tag++;
 
             //set the correct values
-            jumpHeight = gene.primStat["jumpEffectiveness"];
-            energyPerPixel = gene.primStat["velocity"];
+            jumpHeight = gene.JumpHeight;
+            Velocity = gene.Velocity;
             maxCost = 1000000; //default value for now
 
             //add the starting point
@@ -76,14 +76,14 @@ namespace IntroProject
                 return;
             Route result = r.addAndClone(dir);
             float cost = calcCost(result);
-            if (cost*energyPerPixel > maxCost)
+            if (cost > maxCost)
                 return;
             routeList.Add(new RouteElement(cost, result));
         }
 
         private float calcCost(Route r) { //lowest cost = best route
             int expected = Creature.calcDistance2(EntityType.Plant, r.endHex, new Point(r.endHex.x, r.endHex.y));
-            float current = r.Length;
+            float current = r.Length*Calculator.EnergyPerMeter(Velocity) + r.jumpCount*Calculator.JumpCost(jumpHeight);
             return current + expected; //note that expected distance is still squared at this point
         }
 
