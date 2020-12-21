@@ -215,7 +215,7 @@ namespace IntroProject
     {
         public SettingsMenu(int w, int h)
         {
-            this.BackColor = Color.FromArgb(0, 20, 99);
+            this.BackColor = Color.FromArgb(123, 156, 148);
             this.Size = new Size(w, h);
 
             Size sliderTextBoxSize = new Size(30, 20);
@@ -223,7 +223,7 @@ namespace IntroProject
             Button exit = new ButtonImaged(Properties.Resources.X_icon);
             exit.Location = new Point(2, 2);
             exit.Size = new Size(50, 50);
-            exit.FlatAppearance.BorderColor = Color.FromArgb(0, 20, 99);
+            exit.FlatAppearance.BorderColor = Color.FromArgb(123, 156, 148);
             exit.Click += (object o, EventArgs ea) => { this.Hide(); };
 
             //Trackbar x+399 = textbox x
@@ -234,11 +234,14 @@ namespace IntroProject
 
             TrackBar TrackBarSettingX = new CustomTrackbar(40, 60);
             TextBox TextBoxSettingX = new TextBox();
+            TextBoxSettingX.BackColor = Color.FromArgb(123, 156, 148);
+            TextBoxSettingX.BorderStyle = BorderStyle.FixedSingle;
+            TextBoxSettingX.ForeColor = Color.White;
             TrackBarSettingX.Value = 72;
             TextBoxSettingX.Text = TrackBarSettingX.Value.ToString();
             TrackBarSettingX.ValueChanged += (object o, EventArgs ea) => { TextBoxSettingX.Text = TrackBarSettingX.Value.ToString(); };
             TextBoxSettingX.TextChanged += (object o, EventArgs ea) => { TrackBarSettingX.Value = int.Parse(TextBoxSettingX.Text); };
-            TextBoxSettingX.Location = new Point(439, 70);
+            TextBoxSettingX.Location = new Point(440, 70);
             TextBoxSettingX.Size = sliderTextBoxSize;
 
             Label LabelSettingsY = new Label();
@@ -248,11 +251,14 @@ namespace IntroProject
 
             TrackBar TrackBarSettingY = new CustomTrackbar(40, 140);
             TextBox TextBoxSettingY = new TextBox();
+            TextBoxSettingY.BackColor = Color.FromArgb(123, 156, 148);
+            TextBoxSettingY.BorderStyle = BorderStyle.FixedSingle;
+            TextBoxSettingY.ForeColor = Color.White;
             TrackBarSettingY.Value = 53;
             TextBoxSettingY.Text = TrackBarSettingY.Value.ToString();
             TrackBarSettingY.ValueChanged += (object o, EventArgs ea) => { TextBoxSettingY.Text = TrackBarSettingY.Value.ToString(); };
             TextBoxSettingY.TextChanged += (object o, EventArgs ea) => { TrackBarSettingY.Value = int.Parse(TextBoxSettingY.Text); };
-            TextBoxSettingY.Location = new Point(439, 150);
+            TextBoxSettingY.Location = new Point(440, 150);
             TextBoxSettingY.Size = sliderTextBoxSize;
 
             this.Controls.Add(exit);
@@ -270,13 +276,13 @@ namespace IntroProject
 
         public HelpMenu(int w, int h)
         {
-            this.BackColor = Color.FromArgb(88, 79, 37);
+            this.BackColor = Color.FromArgb(123, 156, 148);
             this.Size = new Size(w, h);
 
             Button exit = new ButtonImaged(Properties.Resources.X_icon);
             exit.Location = new Point(2, 2);
             exit.Size = new Size(50, 50);
-            exit.FlatAppearance.BorderColor = Color.FromArgb(0, 20, 99);
+            exit.FlatAppearance.BorderColor = Color.FromArgb(123, 156, 148);
             exit.Click += (object o, EventArgs ea) => { this.Hide(); };
 
             this.Controls.Add(exit);
@@ -288,13 +294,13 @@ namespace IntroProject
 
         public StatisticsMenu(int w, int h)
         {
-            this.BackColor = Color.FromArgb(4, 34, 8);
+            this.BackColor = Color.FromArgb(123, 156, 148);
             this.Size = new Size(w, h);
 
             Button exit = new ButtonImaged(Properties.Resources.X_icon);
             exit.Location = new Point(2, 2);
             exit.Size = new Size(50, 50);
-            exit.FlatAppearance.BorderColor = Color.FromArgb(0, 20, 99);
+            exit.FlatAppearance.BorderColor = Color.FromArgb(123, 156, 148);
             exit.Click += (object o, EventArgs ea) => { this.Hide(); };
 
             this.Controls.Add(exit);
@@ -346,6 +352,7 @@ namespace IntroProject
             TickStyle = TickStyle.Both;
             SmallChange = 1;
             LargeChange = 10;
+            BackColor = Color.FromArgb(123, 156, 148);
         }
     }
 }
