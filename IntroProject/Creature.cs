@@ -27,8 +27,10 @@ namespace IntroProject
 
         public static int calcDistance2(EntityType type, Hexagon place, Point point) { //enter the world relative position for point
             List<Entity> targets = new List<Entity>();
-            for (int l = 0; targets.Count == 0; l++)
+            for (int l = 0; targets.Count == 0 && l < 10; l++)
                 targets = place.searchPoint(l, type);
+            if (targets.Count == 0)
+                return 10000000; //just a big number so stuff doesnt break
             int dist = calcDist2(targets[0], point);
             foreach (Entity e in targets)
                 if (calcDist2(e,point) < dist)

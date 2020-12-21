@@ -95,7 +95,7 @@ namespace IntroProject
             this.Paint += drawScreen;
             kaart = new Map(50, 30, 20, 0);
             Path.initializePaths(20);
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 0; i++) {
                 kaart.placeRandom(new Planten(-10, 0, 5));
             }
 
