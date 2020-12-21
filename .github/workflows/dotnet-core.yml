@@ -18,7 +18,7 @@ jobs:
       with:
         dotnet-version: 3.1.301
     - name: Install dependencies
-      run: dotnet restore -v diag
+      run: dotnet restore --use-lock-file -v diag
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: Test
