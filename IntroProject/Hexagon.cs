@@ -137,7 +137,7 @@ namespace IntroProject
                     result.AddRange(entities.Where(entityIsType<Herbivore>()));
                     return result;
                 case EntityType.Plant:
-                    result.AddRange(entities.Where(entityIsType<Planten>()));
+                    result.AddRange(entities.Where(entityIsType<Plants>()));
                     return result;
                 case EntityType.Carnivore:
                     result.AddRange(entities.Where(entityIsType<Carnivore>()));

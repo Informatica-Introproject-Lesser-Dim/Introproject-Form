@@ -31,7 +31,7 @@ namespace IntroProject
                 return;
             Point end = new Point(-100,-100);
             foreach (Entity e in current.endHex.entities)
-                if (e is Planten)
+                if (e is Plants)
                     end = new Point(e.x, e.y);
             current.addEnd(end);
             result = current;
@@ -72,7 +72,7 @@ namespace IntroProject
         private bool isDone(Route r) {
             Hexagon end = r.endHex;
             foreach (Entity e in end.entities)
-                if (e is Planten)
+                if (e is Plants)
                     return true;
             return false;
         }
