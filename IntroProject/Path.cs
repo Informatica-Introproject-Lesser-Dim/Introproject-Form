@@ -72,7 +72,7 @@ namespace IntroProject
             length *= turn / (Math.PI * 2);
             List<Point> points = new List<Point>();
 
-            for (int i = (int) (length); i >= 0; i--) { //calculate all the points in this curve
+            for (double i = length; i >= 0; i -= 0.5) { //calculate all the points in this curve
                 int xPos = x + (int)(r * Math.Cos(start + i / r));
                 int yPos = y + (int)(r * Math.Sin(start + i / r));
                 points.Add(new Point(xPos, yPos));
@@ -89,7 +89,7 @@ namespace IntroProject
 
             List<Point> points = new List<Point>();
 
-            for (int i = 0; i <= length; i++) {//move along the line with the correct step size
+            for (double i = 0; i <= length; i += 0.5) {//move along the line with the correct step size
                 points.Add(new Point((int)(x2 + sx * i), (int)(y2 + sy * i)));
             }
 

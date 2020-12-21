@@ -112,25 +112,27 @@ namespace IntroProject
         public Point getPos() {
             if (hex == distances.Count)
                 return end; //already done with the route
-            if (hex == distances.Count - 1)
-            {//last part of the route
-                Point temp = Hexagon.calcSide(size, (points[hex - 1] + 3) % 6);
-                Point delta = end - (Size)temp;
-                double scale = pos / distances[0];
-                return temp + new Size((int)(delta.X * scale), (int)(delta.Y * scale));
-            }
             if (hex == 0)
             {//start of the route
                 Point delta;
                 if (distances.Count == 1)
                 {
-                    delta = end + (Size)start;
-                } else {
+                    delta = end - (Size)start;
+                }
+                else
+                {
                     Point temp = Hexagon.calcSide(size, points[0]);
-                    delta = temp + (Size)start;
+                    delta = temp - (Size)start;
                 }
                 double scale = pos / distances[0];
                 return start + new Size((int)(delta.X * scale), (int)(delta.Y * scale));
+            }
+            if (hex == distances.Count - 1)
+            {//last part of the route
+                Point temp = Hexagon.calcSide(size, (points[hex - 1] + 3) % 6);
+                Point delta = end - (Size)temp;
+                double scale = pos / distances[distances.Count - 1];
+                return temp + new Size((int)(delta.X * scale), (int)(delta.Y * scale));
             }
             //otherwise: just use one of the preset curves
             Curve curve = Path.getCurve((points[hex - 1] + 3)%6, points[hex]);
