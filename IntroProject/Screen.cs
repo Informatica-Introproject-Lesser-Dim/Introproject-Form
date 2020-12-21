@@ -216,11 +216,19 @@ namespace IntroProject
             this.BackColor = Color.FromArgb(0, 20, 99);
             this.Size = new Size(w, h);
 
+            Size sliderTextBoxSize = new Size(30, 20);
+
             Button exit = new ButtonImaged(Properties.Resources.X_icon);
             exit.Location = new Point(2, 2);
             exit.Size = new Size(50, 50);
             exit.FlatAppearance.BorderColor = Color.FromArgb(0, 20, 99);
             exit.Click += (object o, EventArgs ea) => { this.Hide(); };
+
+            //Trackbar x+399 = textbox x
+            Label LabelSettingsX = new Label();
+            LabelSettingsX.Text = "settingsX";
+            LabelSettingsX.ForeColor = Color.White;
+            LabelSettingsX.Location = new Point(40, 40);
 
             TrackBar TrackBarSettingX = new CustomTrackbar(40, 60);
             TextBox TextBoxSettingX = new TextBox();
@@ -228,7 +236,13 @@ namespace IntroProject
             TextBoxSettingX.Text = TrackBarSettingX.Value.ToString();
             TrackBarSettingX.ValueChanged += (object o, EventArgs ea) => { TextBoxSettingX.Text = TrackBarSettingX.Value.ToString(); };
             TextBoxSettingX.TextChanged += (object o, EventArgs ea) => { TrackBarSettingX.Value = int.Parse(TextBoxSettingX.Text); };
-            TextBoxSettingX.Location = new Point(500, 70);
+            TextBoxSettingX.Location = new Point(439, 70);
+            TextBoxSettingX.Size = sliderTextBoxSize;
+
+            Label LabelSettingsY = new Label();
+            LabelSettingsY.Text = "settingsY";
+            LabelSettingsY.ForeColor = Color.White;
+            LabelSettingsY.Location = new Point(40, 120);
 
             TrackBar TrackBarSettingY = new CustomTrackbar(40, 140);
             TextBox TextBoxSettingY = new TextBox();
@@ -236,13 +250,16 @@ namespace IntroProject
             TextBoxSettingY.Text = TrackBarSettingY.Value.ToString();
             TrackBarSettingY.ValueChanged += (object o, EventArgs ea) => { TextBoxSettingY.Text = TrackBarSettingY.Value.ToString(); };
             TextBoxSettingY.TextChanged += (object o, EventArgs ea) => { TrackBarSettingY.Value = int.Parse(TextBoxSettingY.Text); };
-            TextBoxSettingY.Location = new Point(500, 150);
+            TextBoxSettingY.Location = new Point(439, 150);
+            TextBoxSettingY.Size = sliderTextBoxSize;
 
             this.Controls.Add(exit);
             this.Controls.Add(TrackBarSettingX);
             this.Controls.Add(TextBoxSettingX);
             this.Controls.Add(TrackBarSettingY);
             this.Controls.Add(TextBoxSettingY);
+            this.Controls.Add(LabelSettingsX);
+            this.Controls.Add(LabelSettingsY);
         }
     }
 
