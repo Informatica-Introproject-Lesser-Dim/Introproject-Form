@@ -63,8 +63,9 @@ namespace IntroProject
         int[] pos = new int[2] { 0, 0 };
         Font font = new Font("Arial", 12);
         int n = 0;
-        int xCam = 50;
-        int yCam = 50;
+        int xCam = 0;
+        int yCam = 0;
+        public const int size = 40;
         
 
         public MapScreen(Size size) : this(size.Width, size.Height) { }
@@ -93,9 +94,9 @@ namespace IntroProject
 
             this.Size = new Size(w, h);
             this.Paint += drawScreen;
-            kaart = new Map(50, 30, 20, 0);
-            Path.initializePaths(20);
-            for (int i = 0; i < 0; i++) {
+            kaart = new Map(50, 30, size, 0);
+            Path.initializePaths(size);
+            for (int i = 0; i < 8; i++) {
                 kaart.placeRandom(new Planten(-10, 0, 5));
             }
 
@@ -112,8 +113,28 @@ namespace IntroProject
         }
 
         public void Klik(object o, MouseEventArgs mea) {
-            int[] adress = kaart.PosToHexPos(mea.X - 50, mea.Y - 50);
+            int[] adress = kaart.PosToHexPos(mea.X - xCam, mea.Y - yCam);
             this.Invalidate();
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            switch (keyData) {
+                case Keys.Up:
+                    this.yCam += (int) (size * (0.5*Hexagon.sqrt3));
+                    break;
+                case Keys.Down:
+                    this.yCam -= (int)(size * (0.5 * Hexagon.sqrt3));
+                    break;
+                case Keys.Left:
+                    this.xCam += (int) (size*(3.0/2));
+                    break;
+                case Keys.Right:
+                    this.xCam -= (int) (size*(3.0/2));
+                    break;
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
         }
 
         public void drawScreen(object o, PaintEventArgs pea) 
