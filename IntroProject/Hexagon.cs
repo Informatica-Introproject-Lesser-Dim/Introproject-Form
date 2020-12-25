@@ -18,6 +18,8 @@ namespace IntroProject
         private Hexagon[] neighbors;
         public List<Entity> entities;
         public int Tag = -1;
+
+        public Vegetation vegetation;
         public Hexagon this[int a, int b] { //the a is wether you want the neighbor to the left or right, b is wether you want the neighbour up or down
             get {
                 if (a == 0 && b == 0)
@@ -72,7 +74,7 @@ namespace IntroProject
                                                                     , new ColorScale(Color.FromArgb(108, 116, 150), Color.FromArgb(184, 204, 222))
                                                                     , new ColorScale(Color.FromArgb(227, 225, 191), Color.FromArgb(212, 208, 171))
                                                                     , new ColorScale(Color.FromArgb(155, 184, 147), Color.FromArgb(109, 135, 105))
-                                                                    , new ColorScale(Color.FromArgb(158, 163, 157), Color.FromArgb(223, 227, 222))
+                                                                    , new ColorScale(Color.FromArgb(143, 143, 136), Color.FromArgb(212, 212, 201))
                                                                     };
         public static float seaLevel = -0.15f; //corresponds to the height below wich the colours are blue
         private static float[] heights = new float[6] {-1f,-0.4f, -0.15f, 0.1f, 0.7f, 1f};
@@ -91,6 +93,7 @@ namespace IntroProject
 
             this.x = x;
             this.y = y;
+            vegetation = new Vegetation(heightOfTile, size);
         }
 
         public void removeEntity(Entity e) {
@@ -160,6 +163,10 @@ namespace IntroProject
                 if (neighbors[i%6] != null)
                     result = result.Concat(neighbors[i%6].searchLine(i%6, l - 1, type)).ToList();
             return result;
+        }
+
+        public void activate(int time) {
+            vegetation.actvate(time);
         }
 
         public List<Entity> searchPoint(int l, EntityType type) { //from this point onward search for the closest entity

@@ -65,7 +65,7 @@ namespace IntroProject
         int n = 0;
         int xCam = 0;
         int yCam = 0;
-        public const int size = 40;
+        public const int size = 35;
         
 
         public MapScreen(Size size) : this(size.Width, size.Height) { }
@@ -94,7 +94,7 @@ namespace IntroProject
 
             this.Size = new Size(w, h);
             this.Paint += drawScreen;
-            kaart = new Map(50, 30, size, 0);
+            kaart = new Map(100, 70, size, 0);
             Path.initializePaths(size);
             for (int i = 0; i < 8; i++) {
                 kaart.placeRandom(new Planten(-10, 0, 5));

@@ -15,6 +15,7 @@ namespace IntroProject
         private int size;
         private int margin;
         private List<Entity> entities;
+        private int time = 0;
 
         private Hexagon[,] tiles;
         public Hexagon this[int x, int y] {
@@ -72,6 +73,13 @@ namespace IntroProject
             foreach (Entity e in entities)
                 if (e is Creature)
                     ((Creature)e).activate();
+        }
+
+        public void TimeStep() {
+            time++; //the map keeps the time so that not each hexagon has to keep the time for itself
+            this.activateEntities(); //activating all the entities
+            foreach (Hexagon hexagon in tiles)
+                hexagon.activate(time); //letting each hexagon grow it's plants
         }
 
 
