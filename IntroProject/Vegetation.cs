@@ -11,8 +11,6 @@ namespace IntroProject
     public class Vegetation
     {
         //"Constants" (dont usually change while the program is running)
-        double height;
-        int size;
         int min = 50, max = 10000; //how much time it usually takes before a new bit of vegetation is grown
         int maxPlants = 8; 
         double plantBoost = 0.2;
@@ -21,21 +19,20 @@ namespace IntroProject
         int targetTime = 0;
         int currentTime = 0;
         List<Grass> grass;
-        BerryBush bush;
+        Hexagon tile;
         double fertillity = 1; //this is gonna depend on height later on
 
-        public Vegetation(double height, int size) {
-            this.height = height;
-            this.size = size;
-            if (height < Hexagon.sand) {
+        public Vegetation(Hexagon tile) {
+            if (tile.heightOfTile < Hexagon.sand) {
                 maxPlants = 1;
-                if (height > Hexagon.deepSea && height < Hexagon.seaLevel)
+                if (tile.heightOfTile > Hexagon.deepSea && tile.heightOfTile < Hexagon.seaLevel)
                     maxPlants = 3;
+                else if (tile.heightOfTile > Hexagon.seaLevel && tile.heightOfTile < Hexagon.sand - 0.5)
+                    maxPlants = 0;
             }
             grass = new List<Grass>();
             for (int i = 0; i < maxPlants; i++) //all the plants are already created but not visible yet
-                grass.Add(new Grass(size));
-            bush = new BerryBush(size);
+                grass.Add(new Grass(tile.size));
             Random random = new Random();
             targetTime = random.Next(min, max);
         }
@@ -47,39 +44,50 @@ namespace IntroProject
                 return; //you basicly dont have to do anything untill you hit the target time
 
             //adding one plant
+            this.Grow(true);
+        }
 
-            bool temp = grass.Count == 8; //if this stays true then a berrybush will need to grow (if it's not already there)
+        public void Grow() {
+            Grow(false);
+        }
+
+        private void Grow(bool x) {
+            if (maxPlants == 0)
+                return;
+            bool temp = maxPlants > 1 && x; //if this stays true then a berrybush will need to grow (if it's not already there)
             double boost = 1;
             foreach (Grass g in grass)
             {
-                if (g.visible) {
+                if (g.visible)
+                {
                     boost += plantBoost;
                     continue;
                 }
-                    
+
                 g.visible = true;
-                g.start(time);
+                g.start(currentTime);
                 temp = false;
                 break;
             }
 
-            if (temp && !bush.visible)
-            {
-                bush.visible = true;
-                bush.start(time);
-            }
-            
-
             Random random = new Random();
-            targetTime = time +(int) (random.Next((int) (min/fertillity),(int) (max/fertillity))/boost); //when this is reached a new plant will grow
+
+            if (temp)
+            {
+                //try to put grass on neighbor tiles
+                Hexagon neighborTile = tile[random.Next(0, 6)];
+                if (neighborTile != null)
+                    neighborTile.Grow();
+
+                boost = boost / 4; //putting grass on neighbor tiles happens but slower
+            }
+
+            targetTime = currentTime + (int)(random.Next((int)(min / fertillity), (int)(max / fertillity)) / boost); //when this is reached a new plant will grow
         }
         public void draw(Graphics g, int x, int y) {
             foreach (Grass gr in grass)
                 if (gr.visible)
                     gr.draw(g, x, y);
-            if (bush.visible)
-                bush.draw(g, x, y);
-        
         }//TO DO
 
         //general method for when you want to know an estamete of how "good" a chunck is without examining each individual piece of food in it
@@ -98,8 +106,6 @@ namespace IntroProject
             foreach (Grass g in grass)
                 if (g.visible)
                     result.Add(g);
-            if (bush.visible)
-                result.Add(bush);
             return result;
         } 
     }
@@ -121,6 +127,9 @@ namespace IntroProject
         public bool visible = false;
         
         public Grass(int size) { //random creation
+
+            //random location is decided by a random radius and angle
+            //because of this the points are on average closer to the middle than the edge
             Random random = new Random();
             double r = random.NextDouble() * size * Hexagon.sqrt3 * 0.5;
             double d = random.NextDouble() * 2 * Math.PI;
@@ -153,15 +162,6 @@ namespace IntroProject
             if (added > growRange)
                 added = growRange;
             return foodStart + added;
-        }
-    }
-
-    class BerryBush : Grass
-    {
-        private const int min = 10, max = 30;
-        private const int growRange = 200; //starts smaller but grows till much more
-        public BerryBush(int size) : base(size)
-        {
         }
     }
 }

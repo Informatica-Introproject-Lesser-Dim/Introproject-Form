@@ -39,10 +39,10 @@ namespace IntroProject
             get { return this.neighbors[a]; }
         }
 
-        public int width { //width of a single tile
+        private int width { //width of a single tile
             get { return size * 2; }
         }
-        public int height { //height of a tile
+        private int height { //height of a tile
             get { return (int) (size * sqrt3); }
         }
 
@@ -95,7 +95,11 @@ namespace IntroProject
 
             this.x = x;
             this.y = y;
-            vegetation = new Vegetation(heightOfTile, size);
+            vegetation = new Vegetation(this);
+        }
+
+        public void Grow() {
+            this.vegetation.Grow();
         }
 
         public void removeEntity(Entity e) {
