@@ -6,19 +6,26 @@ using System.Text;
 namespace IntroProject
 {
     class AStar
-    { //this is where every entity saves it's jumpheight and speed etc you 
+    { //this is where every entity saves it's jumpheight and speed etc 
         private RouteList routeList;
         private Route result;
         private static int Tag = 0; //every time you check a hexagon: give it a tag so that if you enter it again you'll know it's already been used in a route
+        private Entity target; 
+        private Gene gene;
+        private float maxCost;
 
-        //when you initialize an AStar object it starts calculating hte best route and then you're able to ask for the Route
+        //when you initialize an AStar object it starts calculating the best route and then you're able to ask for the Route
         public AStar(Point loc, Hexagon chunck, Gene gene, int size) {
             Tag++;
+            maxCost = 1000000; //default value for now
+
+            this.gene = gene;
             //add the starting point
             mark(chunck);
             Route temp = new Route(loc, size, chunck);
             routeList = new RouteList();
             routeList.Add(new RouteElement(0, temp));
+
             //start with the few base routes
             Route current;
             while ((current = routeList.Pop()) != null) { //add a test wether hte current route is null aka no route has been found
@@ -31,31 +38,54 @@ namespace IntroProject
                 return;
             Point end = new Point(-100,-100);
             foreach (Entity e in current.endHex.entities)
+
                 if (e is Plants)
+                {
+                    target = e;
                     end = new Point(e.x, e.y);
+                    break;
+                }
+                    
             current.addEnd(end);
             result = current;
         }
-
         public Route getResult() {
             return result;
+        }
+
+        public Entity getTarget() {
+            return target;
         }
 
         private void addDir(Route r, int dir) {
             //test if you can even go there etc and then add it to the route list
             Hexagon goal = r.endHex[dir];
+            
+
             if (goal == null)
+                return;
+            if (goal.heightOfTile - r.endHex.heightOfTile > gene.JumpHeight) //if the jumpheight is too high
                 return;
             if (goal.Tag == Tag)
                 return;
-            goal.Tag = Tag; //tag it so we dont use it again
+            goal.Tag = Tag;//tag it so we dont use it again
+            if (goal.heightOfTile < Hexagon.seaLevel) //this needs to be changed if we want to add swimming
+                return;
             Route result = r.addAndClone(dir);
-            routeList.Add(new RouteElement(calcCost(result), result));
+            float cost = calcCost(result);
+            if (cost > maxCost)
+                return;
+            routeList.Add(new RouteElement(cost, result));
         }
 
         private float calcCost(Route r) { //lowest cost = best route
+            //distance squared to the closest bit of food
             int expected = Creature.calcDistance2(EntityType.Plant, r.endHex, new Point(r.endHex.x, r.endHex.y));
-            float current = r.Length;
+
+            //current cost is only based on energy cost for now, will need more things such as fear later on
+            float current = r.Length*Calculator.EnergyPerMeter(gene.Velocity) + r.jumpCount*Calculator.JumpCost(gene.JumpHeight);
+
+            //later on we also need to add a "reward" amount so that the entity targets the best bit of food/a partner to procreate with
             return current + expected; //note that expected distance is still squared at this point
         }
 
@@ -82,7 +112,8 @@ namespace IntroProject
         }
     }
 
-    //How to use: every time you want to add a route to the list you must initialize a routeElement and 
+
+    //How to use: every time you want to add a route to the list you must initialize a routeElement and add the cost
     class RouteList
     {
         public int Length = 0;
@@ -93,14 +124,14 @@ namespace IntroProject
 
         public void Add(RouteElement n) {
             Length++;
-            if (first == null) { first = n; return; }
-            if (first.cost < n.cost) { first.Add(n); return; }
-            n.next = first;
+            if (first == null) { first = n; return; } //become the first element if there are no elements
+            if (first.cost < n.cost) { first.Add(n); return; } //if you have a higher cost then you get passed down the list
+            n.next = first; //replacing the first element
             first = n;
 
         }
 
-        public Route Pop() {
+        public Route Pop() { //pop the best route from the list
             if (first == null)
                 return null;
             Length--;

@@ -13,11 +13,13 @@ namespace IntroProject
         public static double sqrt2 = Math.Sqrt(2);
         public int x, y;
         public Color color;
-        public double heightOfTile;
+        public double heightOfTile; //the height between -1  and 1
         public double longitudeOnMap;
         private Hexagon[] neighbors;
         public List<Entity> entities;
         public int Tag = -1;
+
+        public Vegetation vegetation;
         public Hexagon this[int a, int b] { //the a is wether you want the neighbor to the left or right, b is wether you want the neighbour up or down
             get {
                 if (a == 0 && b == 0)
@@ -37,10 +39,10 @@ namespace IntroProject
             get { return this.neighbors[a]; }
         }
 
-        public int width {
+        public int width { //width of a single tile
             get { return size * 2; }
         }
-        public int height {
+        public int height { //height of a tile
             get { return (int) (size * sqrt3); }
         }
 
@@ -67,14 +69,17 @@ namespace IntroProject
             }
         }
 
+        //just an array of different colours, tied into the "heights" private array
         private static ColorScale[] heightColors = new ColorScale[5]{ new ColorScale(Color.FromArgb(108, 116, 150), Color.FromArgb(108, 116, 150))
                                                                     , new ColorScale(Color.FromArgb(108, 116, 150), Color.FromArgb(184, 204, 222))
                                                                     , new ColorScale(Color.FromArgb(227, 225, 191), Color.FromArgb(212, 208, 171))
                                                                     , new ColorScale(Color.FromArgb(155, 184, 147), Color.FromArgb(109, 135, 105))
-                                                                    , new ColorScale(Color.FromArgb(158, 163, 157), Color.FromArgb(223, 227, 222))
+                                                                    , new ColorScale(Color.FromArgb(109, 135, 105), Color.FromArgb(62, 89, 63))
                                                                     };
-        public static float seaLevel = -0.15f;
-        private static float[] heights = new float[6] {-1f,-0.4f, -0.15f, 0.1f, 0.7f, 1f};
+        public static float seaLevel = -0.15f; //corresponds to the height below wich the colours are blue
+        public static float deepSea = -0.4f;
+        public static float sand = 0.1f;
+        private static float[] heights = new float[6] {-1f, deepSea, seaLevel, sand, 0.7f, 1f};
         
 
 
@@ -90,33 +95,36 @@ namespace IntroProject
 
             this.x = x;
             this.y = y;
+            vegetation = new Vegetation(heightOfTile, size);
+        }
+
+        public void removeEntity(Entity e) {
+            entities.Remove(e);
         }
 
         public void moveEntity(Entity e, int dir) {
-            if (!entities.Contains(e))
-                return;
-            this[dir].addEntity(e);
-            entities.Remove(e);
+            if (entities.Remove(e))
+                this[dir].addEntity(e);
         }
 
         public static Point calcSide(int size, int dir) {
             int x, y;
             switch (dir % 3)
             {
-                case 1:
+                case 1: //up right or down left
                     x = 3 * size / 4; y = -(int)(size * Hexagon.sqrt3 / 4);
                     break;
-                case 0:
+                case 0: //through the middle
                     x = 0; y = -(int)(size * Hexagon.sqrt3 / 2);
                     break;
-                case 2:
+                case 2: //down right or up left
                     x = -3 * size / 4; y = -(int)(size * Hexagon.sqrt3 / 4);
                     break;
                 default:
                     x = -5; y = -6;
                     break;
             }
-            if (dir >= 2 && dir <= 4)
+            if (dir >= 2 && dir <= 4) //if it's one of these direction: mirror it
             {
                 x *= -1; y *= -1;
             }
@@ -125,7 +133,7 @@ namespace IntroProject
 
         private Func<Entity, bool> entityIsType<T>() =>
             (Entity entity) => (entity is T);
-        public List<Entity> getByType(EntityType type) {
+        public List<Entity> getByType(EntityType type) { //get a list of all the entities of this type within the hexagon
             List<Entity> result = new List<Entity>();
             switch (type) {
                 case EntityType.Entity:
@@ -146,24 +154,28 @@ namespace IntroProject
             }
         }
 
-        public List<Entity> searchLine(int dir, int l, EntityType type) {
-            if (l == 0)
+        public List<Entity> searchLine(int dir, int l, EntityType type) {//continue the search line in this direction
+            if (l == 0) //end of the line
                 return this.getByType(type);
-            if (dir % 2 == 1)
+            if (dir % 2 == 1) //one of the normal lines
                 if (neighbors[dir] != null)
                     return neighbors[dir].searchLine(dir, l - 1, type);
             List<Entity> result = new List<Entity>();
-            for (int i = dir + 5; i <= dir + 7; i++)
+            for (int i = dir + 5; i <= dir + 7; i++) //split off in 3 directions
                 if (neighbors[i%6] != null)
                     result = result.Concat(neighbors[i%6].searchLine(i%6, l - 1, type)).ToList();
             return result;
         }
 
-        public List<Entity> searchPoint(int l, EntityType type) {
+        public void activate(int time) {
+            vegetation.actvate(time);
+        }
+
+        public List<Entity> searchPoint(int l, EntityType type) { //from this point onward search for the closest entity
             if (l == 0)
                 return this.getByType(type);
             List<Entity> result = new List<Entity>();
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 6; i++) //search all three possible directions
                 if (neighbors[i] != null)
                     result = result.Concat(neighbors[i].searchLine(i, l - 1, type)).ToList();
             return result;
@@ -179,11 +191,12 @@ namespace IntroProject
         }
 
         public void drawEntities(Graphics g, int xPos, int yPos) {
+            vegetation.draw(g, x + xPos, y + yPos);
             foreach (Entity e in entities)
                 e.draw(g, x + xPos, y + yPos);
         }
 
-        private void calcColor(float f) {
+        private void calcColor(float f) { 
             int layer = 0;
             for (int i = 1; i < heights.Length - 1; i++)
               if (heights[i] < f)
@@ -207,11 +220,13 @@ namespace IntroProject
 
 
         public void draw(Graphics g, int sx, int sy) { //center of the hexagon is at sx,sy
+            //goes through all pixels around the hexagon and colours the ones within it
             Bitmap bm = new Bitmap(width + 1, height + 1);
             for (int x = 0; x < bm.Width; x++)
                 for (int y = 0; y < bm.Height; y++)
                     if (inHex(x - width / 2, y - height / 2))
-                        bm.SetPixel(x, y, color);
+                        bm.SetPixel(x, y, color); 
+            
             
             g.DrawImage(bm, -width /2 + sx, -height/2 + sy);
         }

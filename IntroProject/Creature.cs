@@ -13,6 +13,9 @@ namespace IntroProject
         private Route route;
         private float speed = 1; //temporary variable untill speed is implemented in the genes
         private bool done = false;
+        private Entity goal;
+        private int sleep = 0;
+        
 
         public Creature()
         {
@@ -24,8 +27,10 @@ namespace IntroProject
 
         public static int calcDistance2(EntityType type, Hexagon place, Point point) { //enter the world relative position for point
             List<Entity> targets = new List<Entity>();
-            for (int l = 0; targets.Count == 0; l++)
+            for (int l = 0; targets.Count == 0 && l < 10; l++)
                 targets = place.searchPoint(l, type);
+            if (targets.Count == 0)
+                return 10000000; //just a big number so stuff doesnt break
             int dist = calcDist2(targets[0], point);
             foreach (Entity e in targets)
                 if (calcDist2(e,point) < dist)
@@ -52,7 +57,14 @@ namespace IntroProject
 
         public Creature(Gene parentA, Gene parentB) {}
 
-        public void eat(Entity entity) { }
+        public void eat(Entity entity) {
+            if (entity == null)
+                return;
+            if (entity.dead)
+                return;
+            this.energyVal += entity.Die();
+            this.sleep = 30;
+        }
 
         // Assuming this is the same type as wezen: we don't want Herbivores mating Carnivores
         public virtual void MatingSuccess()
@@ -77,20 +89,45 @@ namespace IntroProject
         public void search() {
             AStar aStar = new AStar(new Point(this.x, this.y), this.chunk, this.gene, this.chunk.size);
             route = aStar.getResult();
-            done = route == null;
+
+            if (route != null) {
+                goal = aStar.getTarget();
+            } else { sleep = 20; }
+                
         }
 
         public void activate() {
-            if (done)
+            if (sleep > 0) {
+                sleep--;
                 return;
+            }
+
+
             if (route != null)
                 this.move();
             else
+            {
                 this.search();
+            }
+                
         }
+
+        public void checkSurroundings() {
+            //check if target plant has been eaten
+
+            //check if predators are near
+
+            //check if there's a new possible route (if it doesnt have one yet)
+        }
+
 
         public void move() {
             if (route != null) {
+                if (goal.dead)
+                {   route = null;
+                    return;
+                }
+
                 Point temp;
                 if (route.move(speed)) {
                     temp = route.getPos();
@@ -98,6 +135,7 @@ namespace IntroProject
                     y = temp.Y;
                     if (route.isDone()) {
                         route = null; //put any functions wich are to activate when the route is done here
+                        eat(goal);
                         return;
                     }
                     this.chunk.moveEntity(this, route.getDir());

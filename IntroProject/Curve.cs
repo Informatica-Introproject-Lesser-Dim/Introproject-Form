@@ -23,7 +23,7 @@ namespace IntroProject
         }
 
         public double Length { get { return length; } }
-        public Point go(double place) {
+        public Point go(double place) { //the percentage this "place" is of the length is rounded towards one of the points
             int num = (int)((points.Count * (place / length)) + 0.5f);
             if (num >= points.Count)
                 num = points.Count - 1;
