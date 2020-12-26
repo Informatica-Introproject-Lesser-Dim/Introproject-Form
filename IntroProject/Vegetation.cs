@@ -23,6 +23,7 @@ namespace IntroProject
         double fertillity = 1; //this is gonna depend on height later on
 
         public Vegetation(Hexagon tile) {
+            this.tile = tile;
             if (tile.heightOfTile < Hexagon.sand) {
                 maxPlants = 1;
                 if (tile.heightOfTile > Hexagon.deepSea && tile.heightOfTile < Hexagon.seaLevel)
@@ -113,7 +114,7 @@ namespace IntroProject
     //random creation of each piece of grass would probably take up a load of performance
     //therefore my idea was to create all the random locations at the beginning
     //and when the plants "grow" you change the visible variable to true
-    public class Grass {
+    public class Grass {//I suppose that since it can also grow in water it should be called algea or smthn else
         //constants
         private const int min = 20, max = 60;//these numbers are up for discussion, right now it's just temporary placeholders
         private const int growRange = 50;
