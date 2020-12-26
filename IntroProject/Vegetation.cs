@@ -13,7 +13,7 @@ namespace IntroProject
         //"Constants" (dont usually change while the program is running)
         double height;
         int size;
-        int min = 2000, max = 4000; //how much time it usually takes before a new bit of vegetation is grown
+        int min = 50, max = 10000; //how much time it usually takes before a new bit of vegetation is grown
         int maxPlants = 8; //
 
         //normal variables
@@ -31,6 +31,8 @@ namespace IntroProject
             for (int i = 0; i < maxPlants; i++) //all the plants are already created but not visible yet
                 grass.Add(new Grass(size));
             bush = new BerryBush(size);
+            Random random = new Random();
+            targetTime = random.Next(min, max);
         }
 
         //just call this every step in "hexagon"
@@ -61,14 +63,22 @@ namespace IntroProject
             Random random = new Random();
             targetTime = time + random.Next(min, max); //when this is reached a new plant will grow
         }
-        public void draw(Graphics g) { }//TO DO
+        public void draw(Graphics g, int x, int y) {
+            foreach (Grass gr in grass)
+                if (gr.visible)
+                    gr.draw(g, x, y);
+            if (bush.visible)
+                bush.draw(g, x, y);
+        
+        }//TO DO
 
         //general method for when you want to know an estamete of how "good" a chunck is without examining each individual piece of food in it
-        public void FoodValue() {
+        public int FoodValue() {
             int result = 0;
             foreach (Grass g in grass)
                 if (g.visible)
                     result += g.getVal(currentTime);
+            return result;
         } 
 
         //clones by reference so watch out with the result
@@ -92,6 +102,7 @@ namespace IntroProject
         private const int min = 20, max = 60;//these numbers are up for discussion, right now it's just temporary placeholders
         private const int growRange = 50;
         private const int growthTime = 10; //how much time to grow one bit
+        private const int radius = 5; //temporary and used for drawing the grass (will later on probably be replaced by some actual pictures)
         //normal variables
 
         public Point loc;
@@ -120,6 +131,13 @@ namespace IntroProject
         public void start(int time) {
             this.time = time;
         }
+
+        public void draw(Graphics g, int x, int y) {
+            if (!visible)
+                return;
+            g.FillEllipse(new SolidBrush(Color.FromArgb(70, 60, 255, 0)), loc.X + x - radius, loc.Y + y - radius, radius * 2, radius * 2);
+        }
+
         public int getVal(int time) {
             int added = (time - this.time) / growthTime;
             if (added > growRange)
@@ -133,14 +151,6 @@ namespace IntroProject
         private const int min = 10, max = 30;
         private const int growRange = 200; //starts smaller but grows till much more
         public BerryBush(int size) : base(size)
-        {
-        }
-
-        public BerryBush(Point loc) : base(loc)
-        {
-        }
-
-        public BerryBush(Point loc, int foodValue) : base(loc, foodValue)
         {
         }
     }

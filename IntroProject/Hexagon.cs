@@ -189,6 +189,7 @@ namespace IntroProject
         }
 
         public void drawEntities(Graphics g, int xPos, int yPos) {
+            vegetation.draw(g, x + xPos, y + yPos);
             foreach (Entity e in entities)
                 e.draw(g, x + xPos, y + yPos);
         }

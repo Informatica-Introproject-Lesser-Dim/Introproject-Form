@@ -140,7 +140,7 @@ namespace IntroProject
         public void drawScreen(object o, PaintEventArgs pea) 
         {
             if (n > 4) {
-                kaart.activateEntities();
+                kaart.TimeStep();
                 n = 0;
 
             }

@@ -69,7 +69,7 @@ namespace IntroProject
             entities.Add(e);
         }
 
-        public void activateEntities() {
+        private void activateEntities() {
             foreach (Entity e in entities)
                 if (e is Creature)
                     ((Creature)e).activate();
