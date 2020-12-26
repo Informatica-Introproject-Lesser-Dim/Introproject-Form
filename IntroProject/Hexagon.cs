@@ -74,10 +74,12 @@ namespace IntroProject
                                                                     , new ColorScale(Color.FromArgb(108, 116, 150), Color.FromArgb(184, 204, 222))
                                                                     , new ColorScale(Color.FromArgb(227, 225, 191), Color.FromArgb(212, 208, 171))
                                                                     , new ColorScale(Color.FromArgb(155, 184, 147), Color.FromArgb(109, 135, 105))
-                                                                    , new ColorScale(Color.FromArgb(143, 143, 136), Color.FromArgb(212, 212, 201))
+                                                                    , new ColorScale(Color.FromArgb(109, 135, 105), Color.FromArgb(62, 89, 63))
                                                                     };
         public static float seaLevel = -0.15f; //corresponds to the height below wich the colours are blue
-        private static float[] heights = new float[6] {-1f,-0.4f, -0.15f, 0.1f, 0.7f, 1f};
+        public static float deepSea = -0.4f;
+        public static float sand = 0.1f;
+        private static float[] heights = new float[6] {-1f, deepSea, seaLevel, sand, 0.7f, 1f};
         
 
 

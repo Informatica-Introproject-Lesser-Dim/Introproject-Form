@@ -14,19 +14,24 @@ namespace IntroProject
         double height;
         int size;
         int min = 50, max = 10000; //how much time it usually takes before a new bit of vegetation is grown
-        int maxPlants = 8; //
+        int maxPlants = 8; 
+        double plantBoost = 0.2;
 
         //normal variables
         int targetTime = 0;
         int currentTime = 0;
         List<Grass> grass;
         BerryBush bush;
+        double fertillity = 1; //this is gonna depend on height later on
 
         public Vegetation(double height, int size) {
             this.height = height;
             this.size = size;
-            if (height < Hexagon.seaLevel)
-                maxPlants = 3;
+            if (height < Hexagon.sand) {
+                maxPlants = 1;
+                if (height > Hexagon.deepSea && height < Hexagon.seaLevel)
+                    maxPlants = 3;
+            }
             grass = new List<Grass>();
             for (int i = 0; i < maxPlants; i++) //all the plants are already created but not visible yet
                 grass.Add(new Grass(size));
@@ -44,10 +49,14 @@ namespace IntroProject
             //adding one plant
 
             bool temp = grass.Count == 8; //if this stays true then a berrybush will need to grow (if it's not already there)
-            foreach(Grass g in grass)
+            double boost = 1;
+            foreach (Grass g in grass)
             {
-                if (g.visible)
+                if (g.visible) {
+                    boost += plantBoost;
                     continue;
+                }
+                    
                 g.visible = true;
                 g.start(time);
                 temp = false;
@@ -59,9 +68,10 @@ namespace IntroProject
                 bush.visible = true;
                 bush.start(time);
             }
+            
 
             Random random = new Random();
-            targetTime = time + random.Next(min, max); //when this is reached a new plant will grow
+            targetTime = time +(int) (random.Next((int) (min/fertillity),(int) (max/fertillity))/boost); //when this is reached a new plant will grow
         }
         public void draw(Graphics g, int x, int y) {
             foreach (Grass gr in grass)
