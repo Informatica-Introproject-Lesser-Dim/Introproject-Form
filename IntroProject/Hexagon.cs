@@ -162,6 +162,33 @@ namespace IntroProject
             return this.vegetation.FoodValue();
         }
 
+        public Grass bestFood(Point point)
+        {//gives you the number of the piece of food you should aim for first
+            List<Grass> grass = this.vegetation.FoodLocations();
+            if (grass.Count == 0)
+                return null;
+            Grass result = grass[0];
+            double val = calcGrassVal(point, result, vegetation.currentTime);
+
+            for (int i = 1; i < grass.Count; i++) {
+                double newVal = calcGrassVal(point, grass[i], vegetation.currentTime);
+                if (newVal > val) {
+                    result = grass[i];
+                    val = newVal;
+                }
+            }
+
+            return result;
+        }
+
+        private double calcGrassVal(Point point, Grass grass, int time) {
+            int dx = point.X - grass.loc.X;
+            int dy = point.Y - grass.loc.Y;
+            double dist = Math.Sqrt(dx * dx + dy * dy);
+            return grass.getVal(time) / dist;
+        }
+
+
         public double Passive(double bias, double hunger) { //bias has to be within 1 and 0, hunger can be anything bigger than 0
             return searchPoint(0.5 + 0.5*bias, hunger, 1);
         }

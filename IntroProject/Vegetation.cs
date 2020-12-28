@@ -14,10 +14,11 @@ namespace IntroProject
         int min = 50, max = 10000; //how much time it usually takes before a new bit of vegetation is grown
         int maxPlants = 8; 
         double plantBoost = 0.2;
+        public Grass this[int n] { get { return grass[n]; } }
 
         //normal variables
         int targetTime = 0;
-        int currentTime = 0;
+        public int currentTime = 0;
         List<Grass> grass;
         Hexagon tile;
         double fertillity = 1; //this is gonna depend on height later on

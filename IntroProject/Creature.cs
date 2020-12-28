@@ -111,27 +111,29 @@ namespace IntroProject
             //check wether the place you are is ok
             if (passiveCheck(this.chunk))
             {
-                //if so go to one of the food bits in it
+                Route route = new Route(new Point(this.x, this.y), this.chunk.size, this.chunk);
+                Grass g = chunk.bestFood(new Point(this.x, this.y));
+                //set it as your target and make the route towards it your own
                 return;
             }
 
             //check wether any of the places around you are ok
-            Hexagon hex = null;
+            int dir = -1;
             double val = 0;
             double temp;
             for (int i = 0; i < 6; i++) //try to find one of the neighbors that's good enough
                 if (this.chunk[i] != null)
                     if (passiveCheck(this.chunk[i])) {
                         temp = passiveVal(this.chunk[i]);
-                        if (hex == null || temp > val) {
-                            hex = this.chunk[i];
+                        if (dir == -1 || temp > val) {
+                            dir = i;
                             val = temp;
                             continue;
                         }
                          
                             
                     }
-            if (hex != null) {
+            if (dir != -1) {
                 //if so go there and eat in there
 
                 return;
@@ -140,6 +142,8 @@ namespace IntroProject
         }
 
         private bool passiveCheck(Hexagon hex) {
+            if (hex.vegetation.FoodLocations().Count < 1)
+                return false;
             return gene.PassiveBias < passiveVal(hex);
         }
 
@@ -149,7 +153,7 @@ namespace IntroProject
             return hex.Passive(hunger, gene.DistanceBias);
         }
 
-        public void activeSearch() {
+        public void activeSearch() { //right now this is still normal Astar, this needs to change to the new vegetation update
             AStar aStar = new AStar(new Point(this.x, this.y), this.chunk, this.gene, this.chunk.size);
             route = aStar.getResult();
 
