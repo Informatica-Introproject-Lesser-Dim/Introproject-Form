@@ -19,6 +19,8 @@ namespace IntroProject
         public bool isReadyToMate = true;
         private Route route;
         private Entity target;
+
+        private Grass myFood;
         private int sleep = 0;
         private Goal goal = Goal.Nothing;
         private bool passive = false;
@@ -112,7 +114,10 @@ namespace IntroProject
             if (passiveCheck(this.chunk))
             {
                 Route route = new Route(new Point(this.x, this.y), this.chunk.size, this.chunk);
-                Grass g = chunk.bestFood(new Point(this.x, this.y));
+                myFood = chunk.bestFood(new Point(this.x, this.y));
+
+                route.addEnd(new Point(myFood.loc.X, myFood.loc.Y));
+                this.route = route;
                 //set it as your target and make the route towards it your own
                 return;
             }
@@ -135,7 +140,13 @@ namespace IntroProject
                     }
             if (dir != -1) {
                 //if so go there and eat in there
+                Route route = new Route(new Point(this.x, this.y), this.chunk.size, this.chunk);
+                route.addDirection(dir);
 
+                myFood = chunk[dir].bestFood(Hexagon.calcSide(chunk.size, (dir + 3)%6));
+
+                route.addEnd(new Point(myFood.loc.X, myFood.loc.Y));
+                this.route = route;
                 return;
             }
             activeSearch();
