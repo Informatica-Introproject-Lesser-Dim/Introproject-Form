@@ -26,7 +26,7 @@ namespace IntroProject
         //if mutateScale is at 1 then if your random device gives you a 1 you go all the way to the extreme value (wich happens to be 1) 
         //if it's 0.5 you end up in the middle of your current pos and the max value
         private float mutateScale = 0.2f;
-
+        private float extraSensitivity = 0.1f;
         //this is  basicly the 3 dimensional Genotype into a 1 dimensional fenotype
         //because of this you need to specify wich place has the correct gene
         //this is just an easy fix but it doesnt matter that much since 
@@ -39,6 +39,7 @@ namespace IntroProject
         //0 for the average
         //1 for the biggest
         //2 for the biggest but also unable to mutate (only used for the male gene) 
+        //3 extra sensitivity with mutation
         private int[,] lookupTable = new int[2,2] { { 2, 0 }, { 0, 0 } }; //it's not a bad thing if this is bigger than the actual lists being used
 
         protected Func<bool> willMutate = () => true;
@@ -88,7 +89,7 @@ namespace IntroProject
 
         private float geneCalc(float a, float b, int mode) {
             //mode 0 is the average, the others are just the highest gene overpowers the other for now
-            if (mode == 0)
+            if (mode == 0 || mode >= 3)
                 return (a + b) / 2; 
             if (a > b)
                 return a;
@@ -110,12 +111,12 @@ namespace IntroProject
                 j = random.Next(0, Genotype[i].Count);
                 k = random.Next(0, Genotype[i][j].Length);
             } while (lookupTable[j,k] != 2); //if it's 2 then you're on the male gene wich cannot be mutated
-            Genotype[i][j][k] = Mutate(Genotype[i][j][k]);
+            Genotype[i][j][k] = Mutate(Genotype[i][j][k], lookupTable[j,k]);
             this.calcFenotype();
             return this;
         }
 
-        private float Mutate(float x) {
+        private float Mutate(float x, int n) {
             //range is the amount of you can go in a certain direction
             //mutatescale is how much of the range you're allowed to use
             //val is the actual random number used
@@ -124,7 +125,10 @@ namespace IntroProject
             float range = x + 1; //amount of space left of the x
             if (val > 0) 
                 range = 2 - range; //amount of space to the right
+            if (n >= 3)
+                val *= extraSensitivity; //value is decreased depending on the extra sensitivity if necessary
             x += val * range * mutateScale; //mutatescale is basicly what part of the entire range you move if you get a one
+            
             return x;
         }
 

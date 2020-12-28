@@ -26,9 +26,10 @@ namespace IntroProject
             this.tile = tile;
             if (tile.heightOfTile < Hexagon.sand) {
                 maxPlants = 1;
+                fertillity = 0.5;
                 if (tile.heightOfTile > Hexagon.deepSea && tile.heightOfTile < Hexagon.seaLevel)
                     maxPlants = 3;
-                else if (tile.heightOfTile > Hexagon.seaLevel && tile.heightOfTile < Hexagon.sand - 0.5)
+                else if (tile.heightOfTile > Hexagon.seaLevel && tile.heightOfTile < Hexagon.sand - 0.05)
                     maxPlants = 0;
             }
             grass = new List<Grass>();
