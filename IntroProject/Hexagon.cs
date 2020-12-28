@@ -162,22 +162,19 @@ namespace IntroProject
             return this.vegetation.FoodValue();
         }
 
-
-
-
         public double Passive(double bias, double hunger) { //bias has to be within 1 and 0, hunger can be anything bigger than 0
-            double result = this.FoodValue();
-            for (int i = 0; i < 6; i++)
-                if (this[i] != null)
-                    result += (bias * 0.5 + 0.5) * this[i].FoodValue();
-            return result * hunger; //later on also account for carnivore distance
+            return searchPoint(0.5 + 0.5*bias, hunger, 0);
         }
 
         public double active(double bias, double hunger) {
+            return searchPoint(bias, hunger, 2);
+        }
+
+        private double searchPoint(double bias, double hunger, int l) { //later on account for distance of different creatures
             double result = this.FoodValue();
             for (int i = 0; i < 6; i++)
                 if (this[i] != null)
-                    result += bias * this[i].searchLine(i, 2, bias);
+                    result += bias * this[i].searchLine(i, l, bias);
             return result * hunger;
         }
 
