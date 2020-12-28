@@ -5,6 +5,12 @@ using System.Drawing;
 
 namespace IntroProject
 {
+    enum CreatureMode {
+        Searching,
+        Passive,
+        Mating
+    }
+
     public abstract class Creature : Entity
     {
         public Gene gene { get; protected set; }
@@ -52,7 +58,7 @@ namespace IntroProject
             int dy = p.Y - y2;
             return dx * dx + dy * dy;
         }
-
+        
         public Creature(Creature parentA, Creature parentB) : this(parentA.gene, parentB.gene) { }
 
         public Creature(Gene parentA, Gene parentB) {}
@@ -80,10 +86,6 @@ namespace IntroProject
             this.MatingSuccess();
             other.MatingSuccess();
             return this;
-        }
-
-        public void changePath(Route r) {
-            route = r;
         }
 
         public void search() {
