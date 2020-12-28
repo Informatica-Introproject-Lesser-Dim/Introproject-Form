@@ -109,10 +109,44 @@ namespace IntroProject
 
         public void passiveSearch() {
             //check wether the place you are is ok
-            //if so go to one of the food bits in it
+            if (passiveCheck(this.chunk))
+            {
+                //if so go to one of the food bits in it
+                return;
+            }
+
             //check wether any of the places around you are ok
-            //if so go there and eat in there
+            Hexagon hex = null;
+            double val = 0;
+            double temp;
+            for (int i = 0; i < 6; i++) //try to find one of the neighbors that's good enough
+                if (this.chunk[i] != null)
+                    if (passiveCheck(this.chunk[i])) {
+                        temp = passiveVal(this.chunk[i]);
+                        if (hex == null || temp > val) {
+                            hex = this.chunk[i];
+                            val = temp;
+                            continue;
+                        }
+                         
+                            
+                    }
+            if (hex != null) {
+                //if so go there and eat in there
+
+                return;
+            }
             activeSearch();
+        }
+
+        private bool passiveCheck(Hexagon hex) {
+            return gene.PassiveBias < passiveVal(hex);
+        }
+
+        private double passiveVal(Hexagon hex) {
+            float hunger = (gene.Size - energyVal) * gene.HungerBias;
+
+            return hex.Passive(hunger, gene.DistanceBias);
         }
 
         public void activeSearch() {
