@@ -5,10 +5,11 @@ using System.Drawing;
 
 namespace IntroProject
 {
-    enum CreatureMode {
-        Searching,
-        Passive,
-        Mating
+    enum Goal {
+        Food,
+        Mate,
+        Water, //might be implemented later
+        Nothing
     }
 
     public abstract class Creature : Entity
@@ -17,10 +18,10 @@ namespace IntroProject
         public int isAlive;
         public bool isReadyToMate = true;
         private Route route;
-        private float speed = 1; //temporary variable untill speed is implemented in the genes
-        private bool done = false;
-        private Entity goal;
+        private Entity target;
         private int sleep = 0;
+        private Goal goal = Goal.Nothing;
+        private bool passive = false;
         
 
         public Creature()
@@ -89,12 +90,7 @@ namespace IntroProject
         }
 
         public void search() {
-            AStar aStar = new AStar(new Point(this.x, this.y), this.chunk, this.gene, this.chunk.size);
-            route = aStar.getResult();
-
-            if (route != null) {
-                goal = aStar.getTarget();
-            } else { sleep = 20; }
+            
                 
         }
 
@@ -104,14 +100,30 @@ namespace IntroProject
                 return;
             }
 
+            if (route != null) //just move along the road if you have one, otherwise search for a new route
+                this.move();
+            else {
+                passiveSearch();
+            }
+        }
+
+        public void passiveSearch() {
+            //check wether the place you are is ok
+            //if so go to one of the food bits in it
+            //check wether any of the places around you are ok
+            //if so go there and eat in there
+            activeSearch();
+        }
+
+        public void activeSearch() {
+            AStar aStar = new AStar(new Point(this.x, this.y), this.chunk, this.gene, this.chunk.size);
+            route = aStar.getResult();
 
             if (route != null)
-                this.move();
-            else
             {
-                this.search();
+                target = aStar.getTarget();
             }
-                
+            else { sleep = 20; }
         }
 
         public void checkSurroundings() {
@@ -123,21 +135,21 @@ namespace IntroProject
         }
 
 
-        public void move() {
+        public void move() { //needs a rework cus the target wont be an entity
             if (route != null) {
-                if (goal.dead)
+                if (target.dead)
                 {   route = null;
                     return;
                 }
 
                 Point temp;
-                if (route.move(speed)) {
+                if (route.move(gene.Velocity)) {
                     temp = route.getPos();
                     x = temp.X;
                     y = temp.Y;
                     if (route.isDone()) {
                         route = null; //put any functions wich are to activate when the route is done here
-                        eat(goal);
+                        eat(target);
                         return;
                     }
                     this.chunk.moveEntity(this, route.getDir());
