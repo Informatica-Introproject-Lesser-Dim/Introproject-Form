@@ -158,6 +158,42 @@ namespace IntroProject
             }
         }
 
+        public int FoodValue() {
+            return this.vegetation.FoodValue();
+        }
+
+
+
+
+        public double Passive(double bias, double hunger) { //bias has to be within 1 and 0, hunger can be anything bigger than 0
+            double result = this.FoodValue();
+            for (int i = 0; i < 6; i++)
+                if (this[i] != null)
+                    result += (bias * 0.5 + 0.5) * this[i].FoodValue();
+            return result * hunger; //later on also account for carnivore distance
+        }
+
+        public double active(double bias, double hunger) {
+            double result = this.FoodValue();
+            for (int i = 0; i < 6; i++)
+                if (this[i] != null)
+                    result += bias * this[i].searchLine(i, 2, bias);
+            return result * hunger;
+        }
+
+        public double searchLine(int dir, int l, double bias) { //new version of searchline that specifically searches for plants
+            double result = this.FoodValue();
+            if (l <= 0)
+                return result;
+            if (dir % 2 == 1)
+                if (this[dir] != null)
+                    return result + bias * this[dir].searchLine(dir,l - 1, bias);
+            for (int i = dir + 5; i <= dir + 7; i++)
+                if (this[i % 6] != null)
+                    result += bias * this[i % 6].searchLine(i % 6, l - 1, bias);
+            return result;
+        }
+
         public List<Entity> searchLine(int dir, int l, EntityType type) {//continue the search line in this direction
             if (l == 0) //end of the line
                 return this.getByType(type);
@@ -171,10 +207,6 @@ namespace IntroProject
             return result;
         }
 
-        public void activate(int time) {
-            vegetation.actvate(time);
-        }
-
         public List<Entity> searchPoint(int l, EntityType type) { //from this point onward search for the closest entity
             if (l == 0)
                 return this.getByType(type);
@@ -183,6 +215,11 @@ namespace IntroProject
                 if (neighbors[i] != null)
                     result = result.Concat(neighbors[i].searchLine(i, l - 1, type)).ToList();
             return result;
+        }
+
+        public void activate(int time)
+        {
+            vegetation.actvate(time);
         }
 
         public void setNeighbors(Hexagon[] h) { //start at the top and go around through all the neighbors
