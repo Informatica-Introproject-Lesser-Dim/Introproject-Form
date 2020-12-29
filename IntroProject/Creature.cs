@@ -124,16 +124,22 @@ namespace IntroProject
             double temp;
             for (int i = 0; i < 6; i++) //try to find one of the neighbors that's good enough
                 if (this.chunk[i] != null)
-                    if (passiveCheck(this.chunk[i])) {
+                {
+                    if (this.gene.JumpHeight < this.chunk[i].heightOfTile - this.chunk.heightOfTile)
+                        continue; //check wether you can even move there
+                    if (passiveCheck(this.chunk[i]))
+                    {
                         temp = passiveVal(this.chunk[i]);
-                        if (dir == -1 || temp > val) {
+                        if (dir == -1 || temp > val)
+                        {
                             dir = i;
                             val = temp;
                             continue;
                         }
-                         
-                            
+
+
                     }
+                }
             if (dir != -1) {
                 //if so go there and eat in there
                 Route route = new Route(new Point(this.x, this.y), this.chunk.size, this.chunk);

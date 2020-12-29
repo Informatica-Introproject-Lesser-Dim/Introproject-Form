@@ -20,7 +20,7 @@ namespace IntroProject
         public AStar(Point loc, Hexagon chunck, Gene gene, int size, double energy) {
             Tag++;
             this.energy = energy;
-            maxCost = Math.Pow(10,3) * energy; //default value for now
+            maxCost = Math.Pow(10,3) + energy; //default value for now
 
             this.gene = gene;
             //add the starting point
