@@ -20,7 +20,7 @@ namespace IntroProject
         public AStar(Point loc, Hexagon chunck, Gene gene, int size, double energy) {
             Tag++;
             this.energy = energy;
-            maxCost = Math.Pow(10,10) * energy; //default value for now
+            maxCost = Math.Pow(10,3) * energy; //default value for now
 
             this.gene = gene;
             //add the starting point
@@ -93,6 +93,8 @@ namespace IntroProject
             float current = r.Length*Calculator.EnergyPerMeter(gene.Velocity) + r.jumpCount*Calculator.JumpCost(gene.JumpHeight);
 
             //later on we also need to add a "reward" amount so that the entity targets the best bit of food/a partner to procreate with
+            if (current > maxCost)
+                return current;
             return current - (float)quality; //note that expected distance is still squared at this point
         }
 

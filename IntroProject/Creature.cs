@@ -28,6 +28,7 @@ namespace IntroProject
 
         public Creature()
         {
+            energyVal = 50;
             gene = new Gene();
             
             gene.@class = this.GetType().Name;
