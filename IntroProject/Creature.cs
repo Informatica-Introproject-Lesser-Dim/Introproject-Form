@@ -24,13 +24,13 @@ namespace IntroProject
         private int sleep = 0;
         private Goal goal = Goal.Nothing;
         private bool passive = false;
-        
+
 
         public Creature()
         {
             energyVal = 50;
             gene = new Gene();
-            
+
             gene.@class = this.GetType().Name;
             // gene should be random at first
         }
@@ -43,13 +43,13 @@ namespace IntroProject
                 return 10000000; //just a big number so stuff doesnt break
             int dist = calcDist2(targets[0], point);
             foreach (Entity e in targets)
-                if (calcDist2(e,point) < dist)
-                    dist = calcDist2(e,point);
+                if (calcDist2(e, point) < dist)
+                    dist = calcDist2(e, point);
             return dist;
         }
 
         public void calcFoodDist() {
-            int dist = (int) (Math.Sqrt(calcDistance2(EntityType.Plant, this.chunk, new Point(x + this.chunk.x,y + this.chunk.y))));
+            int dist = (int)(Math.Sqrt(calcDistance2(EntityType.Plant, this.chunk, new Point(x + this.chunk.x, y + this.chunk.y))));
             if (dist > 255)
                 dist = 255;
             this.color = Color.FromArgb(255 - dist, 50, 50);
@@ -62,10 +62,10 @@ namespace IntroProject
             int dy = p.Y - y2;
             return dx * dx + dy * dy;
         }
-        
+
         public Creature(Creature parentA, Creature parentB) : this(parentA.gene, parentB.gene) { }
 
-        public Creature(Gene parentA, Gene parentB) {}
+        public Creature(Gene parentA, Gene parentB) { }
 
         public void eat(Entity entity) {
             if (entity == null)
@@ -149,7 +149,7 @@ namespace IntroProject
                 Route route = new Route(new Point(this.x, this.y), this.chunk.size, this.chunk);
                 route.addDirection(dir);
 
-                myFood = chunk[dir].bestFood(Hexagon.calcSide(chunk.size, (dir + 3)%6));
+                myFood = chunk[dir].bestFood(Hexagon.calcSide(chunk.size, (dir + 3) % 6));
 
                 route.addEnd(new Point(myFood.loc.X, myFood.loc.Y));
                 this.route = route;
@@ -167,6 +167,10 @@ namespace IntroProject
             return gene.PassiveBias < passiveVal(hex);
         }
 
+        private bool matingSearch() { //returns true if it's succesfull
+            return false;
+        }
+
         private double passiveVal(Hexagon hex) {
             float hunger = (gene.Size - energyVal) * gene.HungerBias;
 
@@ -174,7 +178,8 @@ namespace IntroProject
         }
 
         public void activeSearch() { //right now this is still normal Astar, this needs to change to the new vegetation update
-
+            if (matingSearch())
+                return;
             //check if it's possible to mate first
             AStar aStar = new AStar(new Point(this.x, this.y), this.chunk, this.gene, this.chunk.size,this.energyVal);
             route = aStar.getResult();

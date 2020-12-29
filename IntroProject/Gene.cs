@@ -25,18 +25,21 @@ namespace IntroProject
         public float Size { get { return (Fenotype[1]/2 + 0.5f) * 900 + 100; } } //within certain max and min values (right now between 100 and 1000)
 
         public float HungerBias { get { return ToInfinity(Fenotype[2]/2 + 0.5f); } }//positive and to infinity
-        //Second Allel
-        public float PassivePreference { get { return ToInfinity(Fenotype[3] / 2 + 0.5f)/5; } }
-        public float PassiveBias { get { return Fenotype[4]/3 + 2.0f/3; } }// positive and to infinity
-        public float ActiveBias { get { return (Fenotype[5]/2 + 0.5f) * (1 - PassiveBias) + this.PassiveBias; } } //active must be higher than passive
-        public float ActivePreference { get { return ToInfinity(Fenotype[6] / 2 + 0.5f) / 15 + this.PassiveBias; } }
-        //Third Allel
-        public float Velocity { get { return (Fenotype[7] / 2 + 0.5f) * 4.5f + 0.5f; } } //within certain max and min values
-        public float JumpHeight { get { return Fenotype[8]/2 + 0.5f; } } //only positive values
-        
-        public float Courage { get { return Fenotype[9]; } }//not implemented anywhere yet
 
-        public float DistanceBias { get { return ToInfinity(Fenotype[10] / 2 + 0.5f); } } //it's in the name dummy
+        public float sexualPreference { get { return ToInfinity(Fenotype[3] / 2 + 0.5f) + 50; } } //to infinity but still needs to have at least 50
+        public float energyDistribution { get { return Fenotype[4] / 2 + 0.5f; } } //just a percentage between 0 and 1
+        //Second Allel
+        public float PassivePreference { get { return ToInfinity(Fenotype[5] / 2 + 0.5f)/5; } }
+        public float PassiveBias { get { return Fenotype[6]/3 + 2.0f/3; } }// positive and to infinity
+        public float ActiveBias { get { return (Fenotype[7]/2 + 0.5f) * (1 - PassiveBias) + this.PassiveBias; } } //active must be higher than passive
+        public float ActivePreference { get { return ToInfinity(Fenotype[8] / 2 + 0.5f) / 15 + this.PassiveBias; } }
+        //Third Allel
+        public float Velocity { get { return (Fenotype[9] / 2 + 0.5f) * 4.5f + 0.5f; } } //within certain max and min values
+        public float JumpHeight { get { return Fenotype[10]/2 + 0.5f; } } //only positive values
+        
+        public float Courage { get { return Fenotype[11]; } }//not implemented anywhere yet
+
+        public float DistanceBias { get { return ToInfinity(Fenotype[12] / 2 + 0.5f); } } //it's in the name dummy
 
         //-1 for "gene isnt used"
         //0 for the average
@@ -44,7 +47,7 @@ namespace IntroProject
         //2 for the biggest but also unable to mutate (only used for the male gene) 
         //3 extra sensitivity with mutation
         //4 sensitive + biggest
-        private int[,] lookupTable = new int[3,4] { { 2, 4, 4, -1}, { 3, 3, 3,3 }, {0, 0, 0, 3 } }; //it's not a bad thing if this is bigger than the actual lists being used
+        private int[,] lookupTable = new int[3,5] { { 2, 3, 3, 3, 0}, { 3, 3, 3,3 , -1}, {0, 0, 0, 3, -1 } }; //it's not a bad thing if this is bigger than the actual lists being used
 
         protected Func<bool> willMutate = () => true;
 
@@ -95,7 +98,21 @@ namespace IntroProject
             //this is basicly turning a 3 dimensional array into a one dimensional array
             
             Fenotype = new List<float>();
-            for (int i = 0; i < Genotype[0].Count; i++) {
+            int start = 0;
+
+            float[] dominant = null; //the male gene is the "dominant" gene
+            if (Genotype[0][1][1] == 1)
+                dominant = Genotype[0][1];
+            else if (Genotype[1][1][1] == 1)
+                dominant = Genotype[1][1];
+
+            if (dominant != null) {
+                start = 1; //if this gene is already added it needs to be skipped in the main for loop
+                for (int j = 0; j < dominant.Length; j++)
+                    Fenotype.Add(dominant[j]);
+            }
+
+            for (int i = start; i < Genotype[0].Count; i++) {
                 for (int j = 0; j < Genotype[0][i].Length; j++) {
                     Fenotype.Add(geneCalc(Genotype[0][i][j], Genotype[1][i][j],lookupTable[i,j]));
                 }
