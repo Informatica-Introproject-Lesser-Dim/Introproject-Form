@@ -19,12 +19,13 @@ namespace IntroProject
         public int isAlive;
         public bool isReadyToMate = true;
         private Route route;
-        private Entity target;
+        private Creature target;
 
         private Grass myFood;
         private int sleep = 0;
         private Goal goal = Goal.Nothing;
         private bool passive = false;
+        public int coolDown = 200; //cooldown so the creature doesnt continuously attempt mating
 
         public Point GlobalLoc {
             get {
@@ -84,22 +85,45 @@ namespace IntroProject
         }
 
         // Assuming this is the same type as wezen: we don't want Herbivores mating Carnivores
-        public virtual void MatingSuccess()
-        {
-            isReadyToMate = false;
-        }
+        //public virtual void MatingSuccess()
+        //{
+        //    isReadyToMate = false;
+        //}
 
-        public virtual Creature? MateWith(Creature other)
-        {
-            if (!this.isReadyToMate || !other.isReadyToMate)
-                throw new UnreadyForMating();
+        //public virtual Creature? MateWith(Creature other)
+        //{
+        //    if (!this.isReadyToMate || !other.isReadyToMate)
+        //        throw new UnreadyForMating();
 
-            this.MatingSuccess();
-            other.MatingSuccess();
-            return this;
+        //    this.MatingSuccess();
+        //    other.MatingSuccess();
+        //    return this;
+        //}
+
+        public virtual void MateWith(Creature other) {
+            //create a new creature, remove energy accordingly and set a "cooldown timer" for both the creatures
+            this.coolDown = 1000;
+            other.coolDown = 1000;
         }
 
         public void activate() {
+            if (this.coolDown > 0)
+                coolDown--;
+
+            if (this.goal == Goal.Mate) {
+                if (this.gene.Gender != 1) //if it is female 
+                {
+                    if (this.sleep > 0)
+                        sleep--; //waiting untill a partner gets here
+                    else {
+                        this.goal = Goal.Nothing;
+                        this.route = null;
+                    }
+                    return;
+                }
+                    
+            }
+
             if (sleep > 0) {
                 sleep--;
                 this.color = Color.FromArgb(50, 50, 150);
@@ -175,6 +199,8 @@ namespace IntroProject
         }
 
         private bool matingSearch() { //returns true if it's succesfull
+            if (this.coolDown > 0)
+                return false;
             if (this.gene.Gender == 1)
                 return false;
             if (this.energyVal < this.gene.energyDistribution * this.gene.Size / 2 + 50)
@@ -201,11 +227,16 @@ namespace IntroProject
                 return false;
 
             this.goal = Goal.Mate;
+            this.color = Color.Pink;
+            this.sleep = 10;
             return true;
         }
 
         public bool available(Creature creature) { // call this method to "spread your feromones"
             //both tells you wether the entity is interested and makes the entity go towards you
+            if (this.coolDown > 0)
+                return false;
+
             if (this.gene.Gender != 1) //females arent interested
                 return false;
 
@@ -223,7 +254,14 @@ namespace IntroProject
                 return false;
 
             //Pathfinding...
+            SingleTargetAStar aStar = new SingleTargetAStar(new Point(this.x, this.y), this.chunk, this.gene, this.chunk.size, this.energyVal, creature);
+            route = aStar.getResult();
 
+            if (route != null) {
+                goal = Goal.Mate;
+                this.color = Color.Pink;
+                this.target = creature;
+            }
             return true;
         }
 
@@ -265,7 +303,14 @@ namespace IntroProject
 
         public void move() { //needs a rework cus the target wont be an entity
             if (route != null) {
-                if (myFood != null)
+                if (goal == Goal.Mate) {
+                    if (target.goal != Goal.Mate) {
+                        this.route = null;
+                        this.goal = Goal.Nothing;
+                        return;
+                    }
+                }
+                else if (myFood != null)
                 {
                     if (!myFood.visible) {
                         route = null;
@@ -282,6 +327,9 @@ namespace IntroProject
                         route = null; //put any functions wich are to activate when the route is done here
                         if (goal == Goal.Food)
                             eat(myFood);
+                        if (goal == Goal.Mate)
+                            MateWith(target);
+                        myFood = null;
                         sleep += 30;
                         return;
                     }
