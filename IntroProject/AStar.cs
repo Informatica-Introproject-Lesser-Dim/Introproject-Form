@@ -40,18 +40,16 @@ namespace IntroProject
                 expandPoint(current);
             }
             //now put the end point into current and have it as a result
-            if (current == null)
-                return;
-            Point end = new Point(-100,-100);
-            foreach (Entity e in current.endHex.entities)
-
-                if (e is Plants)
-                {
-                    target = e;
-                    end = new Point(e.x, e.y);
-                    break;
-                }
-                    
+            if (current == null) {
+                if (best == null)
+                    return;
+                current = best;
+            }
+            Point end = new Point(0,0);
+            if (current.endHex.vegetation.FoodLocations().Count > 0) {
+                goal = current.endHex.bestFood(Hexagon.calcSide(size, (current.lastDir + 3)%6));
+                end = goal.loc;
+            }
             current.addEnd(end);
             result = current;
         }
@@ -59,8 +57,8 @@ namespace IntroProject
             return result;
         }
 
-        public Entity getTarget() {
-            return target;
+        public Grass getTarget() {
+            return goal;
         }
 
         private void addDir(Route r, int dir) {
