@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace IntroProject
 {
@@ -168,7 +169,37 @@ namespace IntroProject
         }
 
         private bool matingSearch() { //returns true if it's succesfull
-            return false;
+            if (this.gene.Gender == 1)
+                return false;
+            if (this.energyVal < this.gene.energyDistribution * this.gene.Size / 2 + 50)
+                return false;
+
+            List<Entity> herbivores = new List<Entity>();//find all creatures
+            for (int i = 0; i < 8; i++)
+                herbivores =  herbivores.Concat(chunk.searchPoint(i, EntityType.Herbivore)).ToList();
+
+
+            List<Creature> creatures = new List<Creature>(); 
+
+            foreach (Entity e in herbivores) //select the few that exceed your preference 
+                if (((Creature)e).gene.Gender == 1 && ((Creature)e).energyVal > this.gene.sexualPreference)
+                    creatures.Add((Creature)e);
+
+            if (creatures.Count == 0)
+                return false;
+
+            bool temp = false;
+            foreach (Entity e in herbivores)
+                temp = temp || ((Creature) e).available(this); //turns into true if at least one says yes
+            if (!temp)
+                return false;
+
+            this.goal = Goal.Mate;
+            return true;
+        }
+
+        public bool available(Creature creature) { // call this method to "spread your feromones"
+            //both tells you wether the entity is interested and makes the entity go towards you
         }
 
         private double passiveVal(Hexagon hex) {
