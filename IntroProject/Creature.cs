@@ -91,11 +91,6 @@ namespace IntroProject
             return this;
         }
 
-        public void search() {
-            
-                
-        }
-
         public void activate() {
             if (sleep > 0) {
                 sleep--;
@@ -149,6 +144,7 @@ namespace IntroProject
                 this.route = route;
                 return;
             }
+            //if the passive search has failed
             activeSearch();
         }
 
@@ -165,6 +161,8 @@ namespace IntroProject
         }
 
         public void activeSearch() { //right now this is still normal Astar, this needs to change to the new vegetation update
+
+            //check if it's possible to mate first
             AStar aStar = new AStar(new Point(this.x, this.y), this.chunk, this.gene, this.chunk.size);
             route = aStar.getResult();
 

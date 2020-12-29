@@ -10,14 +10,18 @@ namespace IntroProject
         private RouteList routeList;
         private Route result;
         private static int Tag = 0; //every time you check a hexagon: give it a tag so that if you enter it again you'll know it's already been used in a route
-        private Entity target; 
+        private Entity target;
+        private Grass goal;
         private Gene gene;
-        private float maxCost;
+        private double maxCost;
+        private double energy;
+        private Route best;
 
         //when you initialize an AStar object it starts calculating the best route and then you're able to ask for the Route
-        public AStar(Point loc, Hexagon chunck, Gene gene, int size) {
+        public AStar(Point loc, Hexagon chunck, Gene gene, int size, double energy) {
             Tag++;
-            maxCost = 1000000; //default value for now
+            this.energy = energy;
+            maxCost = Math.Pow(10,10) * energy; //default value for now
 
             this.gene = gene;
             //add the starting point
@@ -31,6 +35,8 @@ namespace IntroProject
             while ((current = routeList.Pop()) != null) { //add a test wether hte current route is null aka no route has been found
                 if (isDone(current))
                     break;
+                if (current.quality > best.quality)//save it if it's better than the best route
+                    best = current;
                 expandPoint(current);
             }
             //now put the end point into current and have it as a result
@@ -80,13 +86,15 @@ namespace IntroProject
 
         private float calcCost(Route r) { //lowest cost = best route
             //distance squared to the closest bit of food
-            int expected = Creature.calcDistance2(EntityType.Plant, r.endHex, new Point(r.endHex.x, r.endHex.y));
+            double quality = calcQuality(r);
+
+            //Creature.calcDistance2(EntityType.Plant, r.endHex, new Point(r.endHex.x, r.endHex.y));
 
             //current cost is only based on energy cost for now, will need more things such as fear later on
             float current = r.Length*Calculator.EnergyPerMeter(gene.Velocity) + r.jumpCount*Calculator.JumpCost(gene.JumpHeight);
 
             //later on we also need to add a "reward" amount so that the entity targets the best bit of food/a partner to procreate with
-            return current + expected; //note that expected distance is still squared at this point
+            return current - (float)quality; //note that expected distance is still squared at this point
         }
 
         private void expandPoint(Route r) {
@@ -100,11 +108,18 @@ namespace IntroProject
         }
 
         private bool isDone(Route r) {
-            Hexagon end = r.endHex;
-            foreach (Entity e in end.entities)
-                if (e is Plants)
-                    return true;
-            return false;
+            double val = r.quality;
+            if (val < gene.ActiveBias)
+                return false;
+            if (r.endHex.vegetation.FoodLocations().Count < 1)
+                return false;
+            return true;
+        }
+
+        private double calcQuality(Route r) {
+            double val = r.endHex.active(gene.ActiveBias, (gene.Size - energy) * gene.HungerBias);
+            r.quality = val;
+            return val;
         }
 
         private void mark(Hexagon hex) {
