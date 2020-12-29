@@ -50,7 +50,7 @@ namespace IntroProject
                 {
                     int yPos = (int)((margin + Hexagon.sqrt3 * size)*y) + yOff;
 
-                    tiles[x, y] = new Hexagon(size, calcNoise((xPos * 1.0f) / (size + margin), (yPos * 1.0f) / (size + margin)), xPos, yPos, (double)y / height);
+                    tiles[x, y] = new Hexagon(size, calcNoise((xPos * 1.0f) / (size + margin), (yPos * 1.0f) / (size + margin)), xPos, yPos, (double)y / height, this);
                 }
                 
             }

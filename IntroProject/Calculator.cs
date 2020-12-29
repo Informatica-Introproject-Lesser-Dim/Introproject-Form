@@ -7,7 +7,7 @@ namespace IntroProject
     static class Calculator
     {
         private const float jumpBias = 20.0f;
-        private const float moveBias = 1.0f; //mess a bit with these values when we got everything else set up correctly
+        private const float moveBias = 0.1f; //mess a bit with these values when we got everything else set up correctly
 
         public static float JumpCost(float jumpHeight) {
             return jumpHeight * jumpHeight * jumpBias;

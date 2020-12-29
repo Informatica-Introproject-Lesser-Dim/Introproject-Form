@@ -26,6 +26,12 @@ namespace IntroProject
         private Goal goal = Goal.Nothing;
         private bool passive = false;
 
+        public Point GlobalLoc {
+            get {
+                return new Point(chunk.x + this.x, chunk.y + this.y);
+            }
+        }
+
 
         public Creature()
         {
@@ -200,6 +206,25 @@ namespace IntroProject
 
         public bool available(Creature creature) { // call this method to "spread your feromones"
             //both tells you wether the entity is interested and makes the entity go towards you
+            if (this.gene.Gender != 1) //females arent interested
+                return false;
+
+            //does need to be someone of your preference
+            if (creature.energyVal < this.gene.sexualPreference)
+                return false;
+
+            //do you have enough energy yourself
+            Point a = creature.GlobalLoc;
+            Point b = this.GlobalLoc;
+            int dx = a.X - b.X;
+            int dy = a.Y - b.Y;
+            double dist = Math.Sqrt(dx * dx + dy * dy); //straight distance towards creature
+            if (energyVal - dist * Calculator.EnergyPerMeter(this.gene.Velocity) < this.gene.sexualPreference)
+                return false;
+
+            //Pathfinding...
+
+            return true;
         }
 
         private double passiveVal(Hexagon hex) {

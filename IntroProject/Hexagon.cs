@@ -18,6 +18,7 @@ namespace IntroProject
         private Hexagon[] neighbors;
         public List<Entity> entities;
         public int Tag = -1;
+        public Map parent;
 
         public Vegetation vegetation;
         public Hexagon this[int a, int b] { //the a is wether you want the neighbor to the left or right, b is wether you want the neighbour up or down
@@ -83,8 +84,9 @@ namespace IntroProject
         
 
 
-        public Hexagon(int size, double c, int x, int y, double longitudeOnMap) //size is the length of each side
+        public Hexagon(int size, double c, int x, int y, double longitudeOnMap, Map map) //size is the length of each side
         {
+            parent = map;
             this.longitudeOnMap = longitudeOnMap;
             heightOfTile = c;
             calcColor((float)c);
