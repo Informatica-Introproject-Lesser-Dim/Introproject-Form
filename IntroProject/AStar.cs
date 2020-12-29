@@ -9,9 +9,10 @@ namespace IntroProject
     { //this is where every entity saves it's jumpheight and speed etc 
         private RouteList routeList;
         private Route result;
+        protected Route current;
         private static int Tag = 0; //every time you check a hexagon: give it a tag so that if you enter it again you'll know it's already been used in a route
         private Grass goal;
-        private Gene gene;
+        protected Gene gene;
         private double maxCost;
         private double energy;
         private Route best;
@@ -46,6 +47,7 @@ namespace IntroProject
                     return;
                 current = best;
             }
+            this.current = current.Clone();
             Point end = new Point(0,0);
             if (current.endHex.vegetation.FoodLocations().Count > 0) {
                 goal = current.endHex.bestFood(Hexagon.calcSide(size, (current.lastDir + 3)%6));
@@ -54,7 +56,7 @@ namespace IntroProject
             current.addEnd(end);
             result = current;
         }
-        public Route getResult() {
+        public virtual Route getResult() {
             return result;
         }
 
@@ -83,7 +85,7 @@ namespace IntroProject
             routeList.Add(new RouteElement(cost, result));
         }
 
-        private float calcCost(Route r) { //lowest cost = best route
+        protected virtual float calcCost(Route r) { //lowest cost = best route
             //distance squared to the closest bit of food
             double quality = calcQuality(r);
 
@@ -108,7 +110,7 @@ namespace IntroProject
                     addDir(r, i);
         }
 
-        private bool isDone(Route r) {
+        protected virtual bool isDone(Route r) {
             double val = r.quality;
             if (val < gene.ActivePreference)
                 return false;
@@ -125,6 +127,43 @@ namespace IntroProject
 
         private void mark(Hexagon hex) {
             hex.Tag = Tag;
+        }
+    }
+
+    class SingleTargetAStar : AStar  //the same mechanism except you're aiming towards a specific target now
+    {
+        private Creature theTarget;
+        public SingleTargetAStar(Point loc, Hexagon chunck, Gene gene, int size, double energy, Creature theTarget) : base(loc,chunck,gene,size,energy){
+            this.theTarget = theTarget;
+        }
+
+        public Creature GetCreature() 
+        {
+            return theTarget; 
+        }
+
+        public override Route getResult()
+        {
+            //test of het result wel naar het einde gaat
+            if (!isDone(current))
+                return null;
+            this.current.addEnd(new Point(theTarget.x, theTarget.y));
+
+            return this.current;
+        }
+
+        protected override float calcCost(Route r)
+        {
+            float current = r.Length * Calculator.EnergyPerMeter(gene.Velocity) + r.jumpCount * Calculator.JumpCost(gene.JumpHeight);
+            float dx = theTarget.x - r.endHex.x;
+            float dy = theTarget.y - r.endHex.y;
+            double expected = Calculator.EnergyPerMeter(gene.Velocity) * Math.Sqrt(dx * dx + dy * dy);
+            return (float)expected + current;
+        }
+
+        protected override bool isDone(Route r)
+        {
+            return r.endHex == theTarget.chunk; //done when you land in  the same chunk
         }
     }
 
