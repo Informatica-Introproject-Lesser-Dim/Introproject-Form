@@ -163,12 +163,12 @@ namespace IntroProject
         public void activeSearch() { //right now this is still normal Astar, this needs to change to the new vegetation update
 
             //check if it's possible to mate first
-            AStar aStar = new AStar(new Point(this.x, this.y), this.chunk, this.gene, this.chunk.size);
+            AStar aStar = new AStar(new Point(this.x, this.y), this.chunk, this.gene, this.chunk.size,this.energyVal);
             route = aStar.getResult();
 
             if (route != null)
             {
-                target = aStar.getTarget();
+                myFood = aStar.getTarget();
             }
             else { sleep = 20; }
         }
@@ -184,9 +184,12 @@ namespace IntroProject
 
         public void move() { //needs a rework cus the target wont be an entity
             if (route != null) {
-                if (target.dead)
-                {   route = null;
-                    return;
+                if (myFood != null)
+                {
+                    if (!myFood.visible) {
+                        route = null;
+                        return;
+                    }
                 }
 
                 Point temp;
@@ -196,7 +199,7 @@ namespace IntroProject
                     y = temp.Y;
                     if (route.isDone()) {
                         route = null; //put any functions wich are to activate when the route is done here
-                        eat(target);
+                        //change this to the new eating...
                         return;
                     }
                     this.chunk.moveEntity(this, route.getDir());

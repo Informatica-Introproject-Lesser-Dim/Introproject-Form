@@ -10,7 +10,6 @@ namespace IntroProject
         private RouteList routeList;
         private Route result;
         private static int Tag = 0; //every time you check a hexagon: give it a tag so that if you enter it again you'll know it's already been used in a route
-        private Entity target;
         private Grass goal;
         private Gene gene;
         private double maxCost;
@@ -35,7 +34,9 @@ namespace IntroProject
             while ((current = routeList.Pop()) != null) { //add a test wether hte current route is null aka no route has been found
                 if (isDone(current))
                     break;
-                if (current.quality > best.quality)//save it if it's better than the best route
+                if (best == null)
+                    best = current;
+                else if (current.quality > best.quality)//save it if it's better than the best route
                     best = current;
                 expandPoint(current);
             }
