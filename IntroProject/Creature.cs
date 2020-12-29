@@ -95,6 +95,7 @@ namespace IntroProject
         public void activate() {
             if (sleep > 0) {
                 sleep--;
+                this.color = Color.FromArgb(50, 50, 150);
                 return;
             }
 
@@ -115,6 +116,8 @@ namespace IntroProject
 
                 route.addEnd(new Point(myFood.loc.X, myFood.loc.Y));
                 this.route = route;
+                this.goal = Goal.Food;
+                Color.FromArgb(50, 100, 50);
                 //set it as your target and make the route towards it your own
                 return;
             }
@@ -150,6 +153,8 @@ namespace IntroProject
 
                 route.addEnd(new Point(myFood.loc.X, myFood.loc.Y));
                 this.route = route;
+                this.goal = Goal.Food;
+                this.color = Color.FromArgb(50, 100, 50);
                 return;
             }
             //if the passive search has failed
@@ -178,8 +183,12 @@ namespace IntroProject
             {
                 myFood = aStar.getTarget();
                 goal = Goal.Food;
-                if (route.quality < gene.ActivePreference)
+                this.color = Color.FromArgb(150, 50, 50);
+                if (route.quality < gene.ActivePreference) {
+                    this.color = Color.FromArgb(50, 50, 50);
                     goal = Goal.Nothing;
+                }
+                    
             }
             else { sleep = 20; }
         }
@@ -212,6 +221,7 @@ namespace IntroProject
                         route = null; //put any functions wich are to activate when the route is done here
                         if (goal == Goal.Food)
                             eat(myFood);
+                        sleep += 30;
                         return;
                     }
                     this.chunk.moveEntity(this, route.getDir());

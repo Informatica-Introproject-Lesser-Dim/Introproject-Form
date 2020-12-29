@@ -27,8 +27,8 @@ namespace IntroProject
         public float HungerBias { get { return ToInfinity(Fenotype[2]/2 + 0.5f); } }//positive and to infinity
         //Second Allel
         public float PassivePreference { get { return ToInfinity(Fenotype[3] / 2 + 0.5f)/5; } }
-        public float PassiveBias { get { return ToInfinity(Fenotype[4]/2 + 0.5f); } }// positive and to infinity
-        public float ActiveBias { get { return ToInfinity(Fenotype[5]/2 + 0.5f)/3 + this.PassiveBias; } } //active must be higher than passive
+        public float PassiveBias { get { return Fenotype[4]/3 + 2.0f/3; } }// positive and to infinity
+        public float ActiveBias { get { return (Fenotype[5]/2 + 0.5f) * (1 - PassiveBias) + this.PassiveBias; } } //active must be higher than passive
         public float ActivePreference { get { return ToInfinity(Fenotype[6] / 2 + 0.5f) / 15 + this.PassiveBias; } }
         //Third Allel
         public float Velocity { get { return (Fenotype[7] / 2 + 0.5f) * 4.5f + 0.5f; } } //within certain max and min values
