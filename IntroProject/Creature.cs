@@ -107,6 +107,7 @@ namespace IntroProject
 
         public void passiveSearch() {
             //check wether the place you are is ok
+            goal = Goal.Food;
             if (passiveCheck(this.chunk))
             {
                 Route route = new Route(new Point(this.x, this.y), this.chunk.size, this.chunk);
@@ -176,6 +177,9 @@ namespace IntroProject
             if (route != null)
             {
                 myFood = aStar.getTarget();
+                goal = Goal.Food;
+                if (route.quality < gene.ActivePreference)
+                    goal = Goal.Nothing;
             }
             else { sleep = 20; }
         }
@@ -206,7 +210,8 @@ namespace IntroProject
                     y = temp.Y;
                     if (route.isDone()) {
                         route = null; //put any functions wich are to activate when the route is done here
-                        //change this to the new eating...
+                        if (goal == Goal.Food)
+                            eat(myFood);
                         return;
                     }
                     this.chunk.moveEntity(this, route.getDir());
@@ -219,5 +224,13 @@ namespace IntroProject
             }
             //do whatever and entity should do when it doesnt have a route
         }
+        private void eat(Grass grass)
+        {
+            if (grass == null)
+                return;
+            grass.visible = false;
+            this.energyVal += grass.getVal(this.chunk.vegetation.currentTime);
+        }
     }
+
 }
