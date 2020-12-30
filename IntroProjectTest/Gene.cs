@@ -67,11 +67,9 @@ namespace IntroProjectTest
                 public void TestCombiningSameGenesResultsInDifferentGenes()
                 {
                     Gene mutatedGeneA = unstableGeneSetA * unstableGeneSetA;
-                    mutatedGeneA.primStat["velocity"] += 3;
                     Assert.AreNotEqual(mutatedGeneA, unstableGeneSetA);
 
                     Gene mutatedGeneB = unstableGeneSetB * unstableGeneSetB;
-                    mutatedGeneB.primStat["velocity"] += 3;
                     Assert.AreNotEqual(mutatedGeneB, unstableGeneSetB);
                 }
 
