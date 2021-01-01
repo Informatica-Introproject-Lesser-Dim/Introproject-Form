@@ -62,6 +62,10 @@ namespace IntroProject
             this.drawBase();
         }
 
+        public void EntityForceAdd(Entity e) {
+            entities.Add(e);
+        }
+
         public void placeEntity(Entity e, int x, int y) { //no randomness, just normally placing it here
             if (x < 0 || x >= width || y < 0 || y >= height)
                 return;

@@ -13,7 +13,7 @@ namespace IntroProject
         Nothing
     }
 
-    public abstract class Creature : Entity
+    public class Creature : Entity
     {
         public Gene gene { get; protected set; }
         public int isAlive;
@@ -40,7 +40,13 @@ namespace IntroProject
             gene = new Gene();
 
             gene.@class = this.GetType().Name;
-            // gene should be random at first
+        }
+
+        public Creature(Gene gene, int energy) {
+            this.gene = gene;
+            this.energyVal = energy;
+
+            gene.@class = this.GetType().Name;
         }
 
         public static int calcDistance2(EntityType type, Hexagon place, Point point) { //enter the world relative position for point
@@ -110,8 +116,11 @@ namespace IntroProject
         }
 
         public void Mate(Creature other) {//this is the female mating method, will be called from within the male mating method
-            //steps: creating a new creature with your genes and the other's genes
-            //transferring the correct amount of energy
+            int transferredEnergy = (int) (this.energyVal * this.gene.energyDistribution);
+            energyVal -= transferredEnergy;
+            Creature child = new Creature(this.gene * other.gene, transferredEnergy);
+            this.chunk.EntityBirth(child);
+            //Now we only need to put this child in the entity list
 
             this.goalReset();
         }

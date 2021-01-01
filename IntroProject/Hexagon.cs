@@ -100,6 +100,11 @@ namespace IntroProject
             vegetation = new Vegetation(this);
         }
 
+        public void EntityBirth(Entity e) {
+            this.entities.Add(e);
+            this.parent.EntityForceAdd(e);
+        }
+
         public void Grow() {
             this.vegetation.Grow();
         }
