@@ -100,29 +100,25 @@ namespace IntroProject
         //    return this;
         //}
 
-        public virtual void MateWith(Creature other) {
+        private void MateWith(Creature other) { //this is the mating method called by the males
             //create a new creature, remove energy accordingly and set a "cooldown timer" for both the creatures
             this.coolDown = 1000;
             other.coolDown = 1000;
+            other.MateWith(this);
+            this.energyVal -= (int) (this.gene.Size * 0.05); //the males barely lose any energy
+            this.goalReset();
+        }
+
+        public void Mate(Creature other) {//this is the female mating method, will be called from within the male mating method
+            //steps: creating a new creature with your genes and the other's genes
+            //transferring the correct amount of energy
+
+            this.goalReset();
         }
 
         public void activate() {
             if (this.coolDown > 0)
                 coolDown--;
-
-            if (this.goal == Goal.Mate) {
-                if (this.gene.Gender != 1) //if it is female 
-                {
-                    if (this.sleep > 0)
-                        sleep--; //waiting untill a partner gets here
-                    else {
-                        this.goal = Goal.Nothing;
-                        this.route = null;
-                    }
-                    return;
-                }
-                    
-            }
 
             if (sleep > 0) {
                 sleep--;
@@ -130,11 +126,36 @@ namespace IntroProject
                 return;
             }
 
+            if (this.goal == Goal.Mate) 
+                this.mateActive();
+
             if (route != null) //just move along the road if you have one, otherwise search for a new route
                 this.move();
             else {
                 passiveSearch();
             }
+        }
+
+        private void mateActive() {
+            if (this.gene.Gender != 1) { //if a female reaches this point then that means her "sleep" hasnt continuously been resetted, aka no one's interested anymore
+                this.goalReset();
+                return;
+            }
+            if (target == null) {
+                this.goalReset();
+                return;
+            }
+            if (target.goal != Goal.Mate) //if the female has moved on he will do something else
+                this.goalReset();
+
+            this.target.sleep = 10; //ensures the female keeps patiently waiting for their mate
+
+            return;
+        }
+
+        private void goalReset() {
+            this.route = null;
+            this.goal = Goal.Nothing;
         }
 
         public void passiveSearch() {
