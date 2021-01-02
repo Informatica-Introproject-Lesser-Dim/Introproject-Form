@@ -283,7 +283,7 @@ namespace IntroProject
             int dx = a.X - b.X;
             int dy = a.Y - b.Y;
             double dist = Math.Sqrt(dx * dx + dy * dy); //straight distance towards creature
-            if (energyVal - dist * Calculator.EnergyPerMeter(this.gene.Velocity)/10 < this.gene.sexualPreference) 
+            if (energyVal - dist * Calculator.EnergyPerMeter(this.gene) < this.gene.sexualPreference) 
                 return false; //stopping if it costs too much energy
 
             //Pathfinding...

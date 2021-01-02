@@ -108,7 +108,7 @@ namespace IntroProject
             //Creature.calcDistance2(EntityType.Plant, r.endHex, new Point(r.endHex.x, r.endHex.y));
 
             //current cost is only based on energy cost for now, will need more things such as fear later on
-            float current = r.Length*Calculator.EnergyPerMeter(gene.Velocity) + r.jumpCount*Calculator.JumpCost(gene.JumpHeight);
+            float current = r.Length*Calculator.EnergyPerMeter(gene) + r.jumpCount*Calculator.JumpCost(gene);
 
             //later on we also need to add a "reward" amount so that the entity targets the best bit of food/a partner to procreate with
             if (current > maxCost)
@@ -173,10 +173,10 @@ namespace IntroProject
 
         protected override float calcCost(Route r)
         {
-            float current = r.Length * Calculator.EnergyPerMeter(gene.Velocity) + r.jumpCount * Calculator.JumpCost(gene.JumpHeight);
+            float current = r.Length * Calculator.EnergyPerMeter(gene) + r.jumpCount * Calculator.JumpCost(gene);
             float dx = theTarget.x - r.endHex.x;
             float dy = theTarget.y - r.endHex.y;
-            double expected = Calculator.EnergyPerMeter(gene.Velocity) * Math.Sqrt(dx * dx + dy * dy);
+            double expected = Calculator.EnergyPerMeter(gene) * Math.Sqrt(dx * dx + dy * dy);
             return (float)expected + current;
         }
 
