@@ -22,7 +22,7 @@ namespace IntroProject
         //you only need to add one line, one value and one mode in the lookup table for every gene you add
         public int Gender { get { return (int)Fenotype[0]; } }// either 0 or 1
 
-        public float Size { get { return (Fenotype[1]/2 + 0.5f) * 900 + 100; } } //within certain max and min values (right now between 100 and 1000)
+        public float Size { get { return (Fenotype[1]/2 + 0.5f) * 9700 + 300; } } //within certain max and min values (right now between 100 and 1000)
 
         public float HungerBias { get { return ToInfinity(Fenotype[2]/2 + 0.5f); } }//positive and to infinity
 

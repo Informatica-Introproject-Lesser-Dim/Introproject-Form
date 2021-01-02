@@ -128,6 +128,7 @@ namespace IntroProject
         }
 
         public void activate() {
+            this.energyVal -= Calculator.StandardEnergyCost(gene);
             if (this.coolDown > 0)
                 coolDown--;
 
@@ -337,6 +338,9 @@ namespace IntroProject
 
 
         public void move() { //needs a rework cus the target wont be an entity
+
+            this.energyVal -= Calculator.EnergyPerTic(gene);
+
             if (route != null) {
                 if (goal == Goal.Mate) {
                     if (target.goal != Goal.Mate) {
