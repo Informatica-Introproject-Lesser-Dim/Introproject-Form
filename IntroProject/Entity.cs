@@ -26,7 +26,7 @@ namespace IntroProject
         public Hexagon chunk;
         protected Color color;
         public bool dead = false;
-        public float energyVal = 100;
+        public double energyVal = 100;
 
         public float Die()
         {

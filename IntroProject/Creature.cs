@@ -36,13 +36,13 @@ namespace IntroProject
 
         public Creature()
         {
-            energyVal = 50;
+            energyVal = 400; //start with quite a lot so they dont die too quickly
             gene = new Gene();
 
             gene.@class = this.GetType().Name;
         }
 
-        public Creature(Gene gene, int energy) {
+        public Creature(Gene gene, double energy) {
             this.gene = gene;
             this.energyVal = energy;
 
@@ -116,7 +116,7 @@ namespace IntroProject
         }
 
         public void Mate(Creature other) {//this is the female mating method, will be called from within the male mating method
-            int transferredEnergy = (int) (this.energyVal * this.gene.energyDistribution);
+            double transferredEnergy =  this.energyVal * this.gene.energyDistribution;
             energyVal -= transferredEnergy;
             Creature child = new Creature(this.gene * other.gene, transferredEnergy);
             child.x = this.x;
@@ -301,7 +301,7 @@ namespace IntroProject
         }
 
         private double passiveVal(Hexagon hex) {
-            float hunger = (gene.Size - energyVal) * gene.HungerBias;
+            double hunger = (gene.Size - energyVal) * gene.HungerBias;
 
             return hex.Passive(hunger, gene.DistanceBias);
         }
