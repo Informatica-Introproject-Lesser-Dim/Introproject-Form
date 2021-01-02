@@ -267,7 +267,7 @@ namespace IntroProject
 
         public bool available(Creature creature) { // call this method to "spread your feromones"
             //both tells you wether the entity is interested and makes the entity go towards you
-            if (this.coolDown > 0)
+            if (this.coolDown > 0 || this.goal == Goal.Mate)
                 return false;
 
             if (this.gene.Gender != 1) //females arent interested
@@ -283,10 +283,11 @@ namespace IntroProject
             int dx = a.X - b.X;
             int dy = a.Y - b.Y;
             double dist = Math.Sqrt(dx * dx + dy * dy); //straight distance towards creature
-            if (energyVal - dist * Calculator.EnergyPerMeter(this.gene.Velocity) < this.gene.sexualPreference)
-                return false;
+            if (energyVal - dist * Calculator.EnergyPerMeter(this.gene.Velocity)/10 < this.gene.sexualPreference) 
+                return false; //stopping if it costs too much energy
 
             //Pathfinding...
+            this.color = Color.Pink;
             SingleTargetAStar aStar = new SingleTargetAStar(new Point(this.x, this.y), this.chunk, this.gene, this.chunk.size, this.energyVal, creature);
             route = aStar.getResult();
 

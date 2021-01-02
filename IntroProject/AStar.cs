@@ -34,7 +34,7 @@ namespace IntroProject
 
             Tag++;
             this.energy = energy;
-            maxCost = Math.Pow(10, 3); //default value for now
+            maxCost = Math.Pow(10, 3) + energy; //default value for now
 
             this.gene = gene;
             //add the starting point
@@ -152,7 +152,7 @@ namespace IntroProject
         public SingleTargetAStar(Point loc, Hexagon chunck, Gene gene, int size, double energy, Creature theTarget) : base() {
 
             this.theTarget = theTarget;
-            this.InitializeEverything(loc, chunck, gene, size, energy);
+            this.InitializeEverything(loc, chunck, gene, size, energy*3);
 
         }
 
