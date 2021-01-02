@@ -55,8 +55,21 @@ namespace IntroProject
             //you have two parts of the genotype, these two parts do exactly the same and code for the same genes
             //within that you have the different allels each allel contains a few values and each value decides an attribute
             //the allels can differ in size, all the genes in one allel are given to the next generation as one
-            Genotype = new List<float[]>[2] {GenotypeRandom(), GenotypeRandom()}; 
+            Genotype = new List<float[]>[2] {GenotypeRandom(), GenotypeRandom()};
             //just add random genes here, dont forget to edit the lookup table and create a poperty accordingly
+
+            Random random = new Random();
+            int isMale = random.Next(0, 2);
+            if (isMale == 1)
+            {
+                Genotype[0][0][0] = 1;
+                Genotype[1][0][0] = 0;
+            }
+            else {
+                Genotype[0][0][0] = 0;
+                Genotype[1][0][0] = 0;
+            }
+
 
             calcFenotype();
         }
