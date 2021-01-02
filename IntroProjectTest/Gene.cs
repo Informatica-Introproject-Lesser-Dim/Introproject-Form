@@ -46,6 +46,11 @@ namespace IntroProjectTest
                 }
 
                 [Test]
+                public void TestCloneIsEqual() {
+                    Assert.AreEqual(stableGeneSetA, stableGeneSetA.CloneTyped());
+                }
+
+                [Test]
                 public void TestCombineSameGenesStableAddEqMult()
                 {
                     Gene idemGeneAPlus = stableGeneSetA + stableGeneSetA;
@@ -91,6 +96,7 @@ namespace IntroProjectTest
                     Assert.AreNotEqual(idemGeneBPlus, idemGeneBMult);
                 }
 
+
                 [Test]
                 public void TestOriginalGeneNotAffectedByMutationOperation()
                 {
@@ -102,6 +108,12 @@ namespace IntroProjectTest
                     var cloneB = unstableGeneSetB.CloneTyped();
                     _ =  unstableGeneSetB * unstableGeneSetB;
                     Assert.AreEqual(unstableGeneSetB, cloneB);
+                }
+
+                [Test]
+                public void TestGeneChangesWhenMutating()
+                {
+                    Assert.AreNotEqual(unstableGeneSetA.CloneTyped().Mutate(), unstableGeneSetA);
                 }
             }
         }
