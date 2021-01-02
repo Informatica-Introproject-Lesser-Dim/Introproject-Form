@@ -19,9 +19,22 @@ namespace IntroProject
 
         //when you initialize an AStar object it starts calculating the best route and then you're able to ask for the Route
         public AStar(Point loc, Hexagon chunck, Gene gene, int size, double energy) {
+
+            this.InitializeEverything(loc,chunck,gene,size,energy);
+
+        }
+
+        protected AStar()
+        {
+            //just a default constructor that should not normally be used
+        }
+
+
+        protected void InitializeEverything(Point loc, Hexagon chunck, Gene gene, int size, double energy) {
+
             Tag++;
             this.energy = energy;
-            maxCost = Math.Pow(10,3); //default value for now
+            maxCost = Math.Pow(10, 3); //default value for now
 
             this.gene = gene;
             //add the starting point
@@ -32,7 +45,8 @@ namespace IntroProject
 
             //start with the few base routes
             Route current;
-            while ((current = routeList.Pop()) != null) { //add a test wether hte current route is null aka no route has been found
+            while ((current = routeList.Pop()) != null)
+            { //add a test wether hte current route is null aka no route has been found
                 if (isDone(current))
                     break;
                 if (best == null)
@@ -42,15 +56,17 @@ namespace IntroProject
                 expandPoint(current);
             }
             //now put the end point into current and have it as a result
-            if (current == null) {
+            if (current == null)
+            {
                 if (best == null)
                     return;
                 current = best;
             }
             this.current = current.Clone();
-            Point end = new Point(0,0);
-            if (current.endHex.vegetation.FoodLocations().Count > 0) {
-                goal = current.endHex.bestFood(Hexagon.calcSide(size, (current.lastDir + 3)%6));
+            Point end = new Point(0, 0);
+            if (current.endHex.vegetation.FoodLocations().Count > 0)
+            {
+                goal = current.endHex.bestFood(Hexagon.calcSide(size, (current.lastDir + 3) % 6));
                 end = goal.loc;
             }
             current.addEnd(end);
@@ -133,8 +149,11 @@ namespace IntroProject
     class SingleTargetAStar : AStar  //the same mechanism except you're aiming towards a specific target now
     {
         private Creature theTarget;
-        public SingleTargetAStar(Point loc, Hexagon chunck, Gene gene, int size, double energy, Creature theTarget) : base(loc,chunck,gene,size,energy){
+        public SingleTargetAStar(Point loc, Hexagon chunck, Gene gene, int size, double energy, Creature theTarget) : base() {
+
             this.theTarget = theTarget;
+            this.InitializeEverything(loc, chunck, gene, size, energy);
+
         }
 
         public Creature GetCreature() 
