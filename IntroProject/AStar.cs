@@ -9,15 +9,32 @@ namespace IntroProject
     { //this is where every entity saves it's jumpheight and speed etc 
         private RouteList routeList;
         private Route result;
+        protected Route current;
         private static int Tag = 0; //every time you check a hexagon: give it a tag so that if you enter it again you'll know it's already been used in a route
-        private Entity target; 
-        private Gene gene;
-        private float maxCost;
+        private Grass goal;
+        protected Gene gene;
+        private double maxCost;
+        private double energy;
+        private Route best;
 
         //when you initialize an AStar object it starts calculating the best route and then you're able to ask for the Route
-        public AStar(Point loc, Hexagon chunck, Gene gene, int size) {
+        public AStar(Point loc, Hexagon chunck, Gene gene, int size, double energy) {
+
+            this.InitializeEverything(loc,chunck,gene,size,energy);
+
+        }
+
+        protected AStar()
+        {
+            //just a default constructor that should not normally be used
+        }
+
+
+        protected void InitializeEverything(Point loc, Hexagon chunck, Gene gene, int size, double energy) {
+
             Tag++;
-            maxCost = 1000000; //default value for now
+            this.energy = energy;
+            maxCost = Math.Pow(10, 3) + energy; //default value for now
 
             this.gene = gene;
             //add the starting point
@@ -28,33 +45,39 @@ namespace IntroProject
 
             //start with the few base routes
             Route current;
-            while ((current = routeList.Pop()) != null) { //add a test wether hte current route is null aka no route has been found
+            while ((current = routeList.Pop()) != null)
+            { //add a test wether hte current route is null aka no route has been found
                 if (isDone(current))
                     break;
+                if (best == null)
+                    best = current;
+                else if (current.quality > best.quality)//save it if it's better than the best route
+                    best = current;
                 expandPoint(current);
             }
             //now put the end point into current and have it as a result
             if (current == null)
-                return;
-            Point end = new Point(-100,-100);
-            foreach (Entity e in current.endHex.entities)
-
-                if (e is Plants)
-                {
-                    target = e;
-                    end = new Point(e.x, e.y);
-                    break;
-                }
-                    
+            {
+                if (best == null)
+                    return;
+                current = best;
+            }
+            this.current = current.Clone();
+            Point end = new Point(0, 0);
+            if (current.endHex.vegetation.FoodLocations().Count > 0)
+            {
+                goal = current.endHex.bestFood(Hexagon.calcSide(size, (current.lastDir + 3) % 6));
+                end = goal.loc;
+            }
             current.addEnd(end);
             result = current;
         }
-        public Route getResult() {
+        public virtual Route getResult() {
             return result;
         }
 
-        public Entity getTarget() {
-            return target;
+        public Grass getTarget() {
+            return goal;
         }
 
         private void addDir(Route r, int dir) {
@@ -78,15 +101,19 @@ namespace IntroProject
             routeList.Add(new RouteElement(cost, result));
         }
 
-        private float calcCost(Route r) { //lowest cost = best route
+        protected virtual float calcCost(Route r) { //lowest cost = best route
             //distance squared to the closest bit of food
-            int expected = Creature.calcDistance2(EntityType.Plant, r.endHex, new Point(r.endHex.x, r.endHex.y));
+            double quality = calcQuality(r);
+
+            //Creature.calcDistance2(EntityType.Plant, r.endHex, new Point(r.endHex.x, r.endHex.y));
 
             //current cost is only based on energy cost for now, will need more things such as fear later on
             float current = r.Length*Calculator.EnergyPerMeter(gene.Velocity) + r.jumpCount*Calculator.JumpCost(gene.JumpHeight);
 
             //later on we also need to add a "reward" amount so that the entity targets the best bit of food/a partner to procreate with
-            return current + expected; //note that expected distance is still squared at this point
+            if (current > maxCost)
+                return current;
+            return current - (float)quality; //note that expected distance is still squared at this point
         }
 
         private void expandPoint(Route r) {
@@ -99,16 +126,63 @@ namespace IntroProject
                     addDir(r, i);
         }
 
-        private bool isDone(Route r) {
-            Hexagon end = r.endHex;
-            foreach (Entity e in end.entities)
-                if (e is Plants)
-                    return true;
-            return false;
+        protected virtual bool isDone(Route r) {
+            double val = r.quality;
+            if (val < gene.ActivePreference)
+                return false;
+            if (r.endHex.vegetation.FoodLocations().Count < 1)
+                return false;
+            return true;
+        }
+
+        private double calcQuality(Route r) {
+            double val = r.endHex.active(gene.ActiveBias, (gene.Size - energy) * gene.HungerBias);
+            r.quality = val;
+            return val;
         }
 
         private void mark(Hexagon hex) {
             hex.Tag = Tag;
+        }
+    }
+
+    class SingleTargetAStar : AStar  //the same mechanism except you're aiming towards a specific target now
+    {
+        private Creature theTarget;
+        public SingleTargetAStar(Point loc, Hexagon chunck, Gene gene, int size, double energy, Creature theTarget) : base() {
+
+            this.theTarget = theTarget;
+            this.InitializeEverything(loc, chunck, gene, size, energy*3);
+
+        }
+
+        public Creature GetCreature() 
+        {
+            return theTarget; 
+        }
+
+        public override Route getResult()
+        {
+            //test of het result wel naar het einde gaat
+            if (!isDone(current))
+                return null;
+            this.current.addEnd(new Point(theTarget.x, theTarget.y));
+
+            return this.current;
+        }
+
+        protected override float calcCost(Route r)
+        {
+            float current = r.Length * Calculator.EnergyPerMeter(gene.Velocity) + r.jumpCount * Calculator.JumpCost(gene.JumpHeight);
+            float dx = theTarget.x - r.endHex.x;
+            float dy = theTarget.y - r.endHex.y;
+            double expected = Calculator.EnergyPerMeter(gene.Velocity) * Math.Sqrt(dx * dx + dy * dy);
+            return (float)expected + current;
+        }
+
+        protected override bool isDone(Route r)
+        {
+            return r.endHex == theTarget.chunk; //done when you land in  the same chunk
         }
     }
 

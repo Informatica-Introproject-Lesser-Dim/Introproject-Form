@@ -73,6 +73,8 @@ namespace IntroProject
         public MapScreen(Size size) : this(size.Width, size.Height) { }
         public MapScreen(int w, int h)
         {
+            Path.initializePaths(size); //THIS NEEDS TO BE CALLED BEFORE ANY CREATURES ARE MOVED OR PATHS CREATED ETC
+
             Button play = new ButtonImaged(Properties.Resources.Play_icon);
             Button stop = new ButtonImaged(Properties.Resources.Stop_icon);
             Button pause = new ButtonImaged(Properties.Resources.Pause_icon);
@@ -98,12 +100,9 @@ namespace IntroProject
             this.Paint += drawScreen;
 
             kaart = new Map(100, 70, size, 0);
-            Path.initializePaths(size);
-            for (int i = 0; i < 8; i++) {
-                kaart.placeRandom(new Plants(-10, 0, 5));
-            }
+            
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 20; i++)
             {
                 Herbivore herbivore = new Herbivore();
                 herbivore.x = 0;

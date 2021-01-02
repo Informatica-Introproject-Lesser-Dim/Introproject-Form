@@ -12,34 +12,42 @@ namespace IntroProject
         private List<float> Fenotype;
         // All between -1 and 1, will be scaled in their respective dependents
 
-        //public Dictionary<string, float> primStat = new Dictionary<string, float>()
-        //{ {"velocity", 0.5f}
-        //, {"intelligence", 1.0f}
-        //, {"courage", 1.0f}
-        //, {"jumpEffectiveness", 0.08f}
-        //, {"relSize", 1.0f}
-        //, {"awarenessAuditory", 1.0f}
-        //, {"awarenessOdor", 1.0f}
-        //, {"awarenessVisual", 1.0f}
-        //};
-
         //if mutateScale is at 1 then if your random device gives you a 1 you go all the way to the extreme value (wich happens to be 1) 
         //if it's 0.5 you end up in the middle of your current pos and the max value
         private float mutateScale = 0.2f;
-
+        private float extraSensitivity = 0.1f;
         //this is  basicly the 3 dimensional Genotype into a 1 dimensional fenotype
         //because of this you need to specify wich place has the correct gene
         //this is just an easy fix but it doesnt matter that much since 
         //you only need to add one line, one value and one mode in the lookup table for every gene you add
-        public int Gender { get { return (int)Fenotype[0]; } }
-        public float JumpHeight { get { return Fenotype[1]; } }
-        public float Velocity { get { return Fenotype[2]; } }
-        public float Courage { get { return Fenotype[3]; } }
+        public int Gender { get { return (int)Fenotype[0]; } }// either 0 or 1
 
+        public float Size { get { return (Fenotype[1]/2 + 0.5f) * 900 + 100; } } //within certain max and min values (right now between 100 and 1000)
+
+        public float HungerBias { get { return ToInfinity(Fenotype[2]/2 + 0.5f); } }//positive and to infinity
+
+        public float sexualPreference { get { return ToInfinity(Fenotype[3] / 2 + 0.5f) + 50; } } //to infinity but still needs to have at least 50
+        public float energyDistribution { get { return Fenotype[4] / 2 + 0.5f; } } //just a percentage between 0 and 1
+        //Second Allel
+        public float PassivePreference { get { return ToInfinity(Fenotype[5] / 2 + 0.5f)/5; } }
+        public float PassiveBias { get { return Fenotype[6]/3 + 2.0f/3; } }// positive and to infinity
+        public float ActiveBias { get { return (Fenotype[7]/2 + 0.5f) * (1 - PassiveBias) + this.PassiveBias; } } //active must be higher than passive
+        public float ActivePreference { get { return ToInfinity(Fenotype[8] / 2 + 0.5f) / 15 + this.PassiveBias; } }
+        //Third Allel
+        public float Velocity { get { return (Fenotype[9] / 2 + 0.5f) * 4.5f + 0.5f; } } //within certain max and min values
+        public float JumpHeight { get { return Fenotype[10]/2 + 0.5f; } } //only positive values
+        
+        public float Courage { get { return Fenotype[11]; } }//not implemented anywhere yet
+
+        public float DistanceBias { get { return ToInfinity(Fenotype[12] / 2 + 0.5f); } } //it's in the name dummy
+
+        //-1 for "gene isnt used"
         //0 for the average
         //1 for the biggest
         //2 for the biggest but also unable to mutate (only used for the male gene) 
-        private int[,] lookupTable = new int[2,2] { { 2, 0 }, { 0, 0 } }; //it's not a bad thing if this is bigger than the actual lists being used
+        //3 extra sensitivity with mutation
+        //4 sensitive + biggest
+        private int[,] lookupTable = new int[3,5] { { 2, 3, 3, 3, 0}, { 3, 3, 3,3 , -1}, {0, 0, 0, 3, -1 } }; //it's not a bad thing if this is bigger than the actual lists being used
 
         protected Func<bool> willMutate = () => true;
 
@@ -47,17 +55,38 @@ namespace IntroProject
             //you have two parts of the genotype, these two parts do exactly the same and code for the same genes
             //within that you have the different allels each allel contains a few values and each value decides an attribute
             //the allels can differ in size, all the genes in one allel are given to the next generation as one
-
-
-            //this later on will have to be replaced with a random function
-            Genotype = new List<float[]>[2] {new List<float[]>(), new List<float[]>() }; 
-            Genotype[0].Add(new float[2] { 1.0f, 0.08f });//mannelijk en jumpHeight
-            Genotype[0].Add(new float[2] { 0.5f, 0.3f }); //snelheid en courage
-            Genotype[1].Add(new float[2] { 0f, 0.08f });//mannelijk en jumpHeight
-            Genotype[1].Add(new float[2] { 0.5f, 0.3f }); //snelheid en courage
+            Genotype = new List<float[]>[2] {GenotypeRandom(), GenotypeRandom()}; 
             //just add random genes here, dont forget to edit the lookup table and create a poperty accordingly
 
             calcFenotype();
+        }
+
+        private float ToInfinity(float x) {
+            if (x == 1 || x == -1)
+                return 0;
+            return x / (1 - Math.Abs(x));
+        }
+
+        private List<float[]> GenotypeRandom() {
+            Random random = new Random();
+            List<float[]> result = new List<float[]>();
+            for (int i = 0; i < lookupTable.GetLength(0); i++) {
+                List<float> temp = new List<float>();
+                for (int j = 0; j < lookupTable.GetLength(1); j++)
+                    if (lookupTable[i, j] != -1) {
+                        if (lookupTable[i, j] == 2)
+                            temp.Add(random.Next(0, 3)%2);
+                        else
+                            temp.Add((float)(random.NextDouble() - 0.5));
+                    }
+                if (temp.Count == 0)
+                    continue;
+                float[] temp2 = new float[temp.Count]; //List to array conversion
+                for (int j = 0; j < temp.Count; j++)
+                    temp2[j] = temp[j];
+                result.Add(temp2);
+            }   
+            return result;
         }
 
         public Gene(List<float[]> a, List<float[]> b) {
@@ -69,7 +98,21 @@ namespace IntroProject
             //this is basicly turning a 3 dimensional array into a one dimensional array
             
             Fenotype = new List<float>();
-            for (int i = 0; i < Genotype[0].Count; i++) {
+            int start = 0;
+
+            float[] dominant = null; //the male gene is the "dominant" gene
+            if (Genotype[0][1][1] == 1)
+                dominant = Genotype[0][1];
+            else if (Genotype[1][1][1] == 1)
+                dominant = Genotype[1][1];
+
+            if (dominant != null) {
+                start = 1; //if this gene is already added it needs to be skipped in the main for loop
+                for (int j = 0; j < dominant.Length; j++)
+                    Fenotype.Add(dominant[j]);
+            }
+
+            for (int i = start; i < Genotype[0].Count; i++) {
                 for (int j = 0; j < Genotype[0][i].Length; j++) {
                     Fenotype.Add(geneCalc(Genotype[0][i][j], Genotype[1][i][j],lookupTable[i,j]));
                 }
@@ -81,14 +124,14 @@ namespace IntroProject
             Random random = new Random();
             for (int i = 0; i < Genotype[0].Count; i++)
             {
-                result.Add(Genotype[random.Next(0, 2)][i]); //here could be a cloning by reference problem but it's probably fi
+                result.Add(Genotype[random.Next(0, 2)][i]); //here could be a cloning by reference problem but it's probably fine
             }
             return result;
         } 
 
         private float geneCalc(float a, float b, int mode) {
             //mode 0 is the average, the others are just the highest gene overpowers the other for now
-            if (mode == 0)
+            if (mode == 0 || mode == 3)
                 return (a + b) / 2; 
             if (a > b)
                 return a;
@@ -110,12 +153,12 @@ namespace IntroProject
                 j = random.Next(0, Genotype[i].Count);
                 k = random.Next(0, Genotype[i][j].Length);
             } while (lookupTable[j,k] != 2); //if it's 2 then you're on the male gene wich cannot be mutated
-            Genotype[i][j][k] = Mutate(Genotype[i][j][k]);
+            Genotype[i][j][k] = Mutate(Genotype[i][j][k], lookupTable[j,k]);
             this.calcFenotype();
             return this;
         }
 
-        private float Mutate(float x) {
+        private float Mutate(float x, int n) {
             //range is the amount of you can go in a certain direction
             //mutatescale is how much of the range you're allowed to use
             //val is the actual random number used
@@ -124,7 +167,10 @@ namespace IntroProject
             float range = x + 1; //amount of space left of the x
             if (val > 0) 
                 range = 2 - range; //amount of space to the right
+            if (n >= 3)
+                val *= extraSensitivity; //value is decreased depending on the extra sensitivity if necessary
             x += val * range * mutateScale; //mutatescale is basicly what part of the entire range you move if you get a one
+            
             return x;
         }
 

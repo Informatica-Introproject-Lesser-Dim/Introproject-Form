@@ -14,10 +14,11 @@ namespace IntroProject
         int min = 50, max = 10000; //how much time it usually takes before a new bit of vegetation is grown
         int maxPlants = 8; 
         double plantBoost = 0.2;
+        public Grass this[int n] { get { return grass[n]; } }
 
         //normal variables
         int targetTime = 0;
-        int currentTime = 0;
+        public int currentTime = 0;
         List<Grass> grass;
         Hexagon tile;
         double fertillity = 1; //this is gonna depend on height later on
@@ -26,9 +27,10 @@ namespace IntroProject
             this.tile = tile;
             if (tile.heightOfTile < Hexagon.sand) {
                 maxPlants = 1;
+                fertillity = 0.5;
                 if (tile.heightOfTile > Hexagon.deepSea && tile.heightOfTile < Hexagon.seaLevel)
                     maxPlants = 3;
-                else if (tile.heightOfTile > Hexagon.seaLevel && tile.heightOfTile < Hexagon.sand - 0.5)
+                else if (tile.heightOfTile > Hexagon.seaLevel && tile.heightOfTile < Hexagon.sand - 0.05)
                     maxPlants = 0;
             }
             grass = new List<Grass>();
@@ -116,7 +118,7 @@ namespace IntroProject
     //and when the plants "grow" you change the visible variable to true
     public class Grass {//I suppose that since it can also grow in water it should be called algea or smthn else
         //constants
-        private const int min = 20, max = 60;//these numbers are up for discussion, right now it's just temporary placeholders
+        private const int min = 40, max = 60;//these numbers are up for discussion, right now it's just temporary placeholders
         private const int growRange = 50;
         private const int growthTime = 10; //how much time to grow one bit
         private const int radius = 5; //temporary and used for drawing the grass (will later on probably be replaced by some actual pictures)

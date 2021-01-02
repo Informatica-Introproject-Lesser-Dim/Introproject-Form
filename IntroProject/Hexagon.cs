@@ -18,6 +18,7 @@ namespace IntroProject
         private Hexagon[] neighbors;
         public List<Entity> entities;
         public int Tag = -1;
+        public Map parent;
 
         public Vegetation vegetation;
         public Hexagon this[int a, int b] { //the a is wether you want the neighbor to the left or right, b is wether you want the neighbour up or down
@@ -83,8 +84,9 @@ namespace IntroProject
         
 
 
-        public Hexagon(int size, double c, int x, int y, double longitudeOnMap) //size is the length of each side
+        public Hexagon(int size, double c, int x, int y, double longitudeOnMap, Map map) //size is the length of each side
         {
+            parent = map;
             this.longitudeOnMap = longitudeOnMap;
             heightOfTile = c;
             calcColor((float)c);
@@ -96,6 +98,12 @@ namespace IntroProject
             this.x = x;
             this.y = y;
             vegetation = new Vegetation(this);
+        }
+
+        public void EntityBirth(Entity e) {
+            e.chunk = this;
+            this.entities.Add(e);
+            this.parent.EntityForceAdd(e);
         }
 
         public void Grow() {
@@ -158,6 +166,68 @@ namespace IntroProject
             }
         }
 
+        public int FoodValue() {
+            return this.vegetation.FoodValue();
+        }
+
+        public Grass bestFood(Point point)
+        {//gives you the number of the piece of food you should aim for first
+            List<Grass> grass = this.vegetation.FoodLocations();
+            if (grass.Count == 0)
+                return null;
+            Grass result = grass[0];
+            double val = calcGrassVal(point, result, vegetation.currentTime);
+
+            for (int i = 1; i < grass.Count; i++) {
+                double newVal = calcGrassVal(point, grass[i], vegetation.currentTime);
+                if (newVal > val) {
+                    result = grass[i];
+                    val = newVal;
+                }
+            }
+
+            return result;
+        }
+
+        private double calcGrassVal(Point point, Grass grass, int time) {
+            int dx = point.X - grass.loc.X;
+            int dy = point.Y - grass.loc.Y;
+            double dist = Math.Sqrt(dx * dx + dy * dy);
+            return grass.getVal(time) / dist;
+        }
+
+
+        public double Passive(double bias, double hunger) { //bias has to be within 1 and 0, hunger can be anything bigger than 0
+            return searchPoint(0.5 + 0.5*bias, hunger, 1);
+        }
+
+        public double active(double bias, double hunger) {
+            return searchPoint(bias, hunger, 3);
+        }
+
+        private double searchPoint(double bias, double hunger, int l) { //later on account for distance of different creatures
+            double result = this.FoodValue();
+            if (l == 0)
+                return result * hunger;
+            for (int i = 0; i < 6; i++)
+                if (this[i] != null)
+                    result += bias * this[i].searchLine(i, l-1, bias);
+            return result * hunger;
+        }
+
+        public double searchLine(int dir, int l, double bias) { //new version of searchline that specifically searches for plants
+            double result = this.FoodValue();
+            if (l <= 0)
+                return result;
+            if (dir % 2 == 1)
+                if (this[dir] != null)
+                    return result + bias * this[dir].searchLine(dir,l - 1, bias);
+            for (int i = dir + 5; i <= dir + 7; i++)
+                if (this[i % 6] != null)
+                    result += bias * this[i % 6].searchLine(i % 6, l - 1, bias);
+            return result;
+        }
+
         public List<Entity> searchLine(int dir, int l, EntityType type) {//continue the search line in this direction
             if (l == 0) //end of the line
                 return this.getByType(type);
@@ -171,10 +241,6 @@ namespace IntroProject
             return result;
         }
 
-        public void activate(int time) {
-            vegetation.actvate(time);
-        }
-
         public List<Entity> searchPoint(int l, EntityType type) { //from this point onward search for the closest entity
             if (l == 0)
                 return this.getByType(type);
@@ -183,6 +249,11 @@ namespace IntroProject
                 if (neighbors[i] != null)
                     result = result.Concat(neighbors[i].searchLine(i, l - 1, type)).ToList();
             return result;
+        }
+
+        public void activate(int time)
+        {
+            vegetation.actvate(time);
         }
 
         public void setNeighbors(Hexagon[] h) { //start at the top and go around through all the neighbors
