@@ -15,6 +15,7 @@ namespace IntroProject
         private int size;
         private int margin;
         private List<Entity> entities;
+        private List<Entity> children;
         private int time = 0;
 
         private Hexagon[,] tiles;
@@ -35,6 +36,7 @@ namespace IntroProject
             this.size = size;
             this.margin = margin;
             entities = new List<Entity>();
+            children = new List<Entity>();
             tiles = new Hexagon[width, height];
             perlin = new SimplexPerlin[4];
             for(int i = 0; i < n; i++)
@@ -63,7 +65,7 @@ namespace IntroProject
         }
 
         public void EntityForceAdd(Entity e) {
-            entities.Add(e);
+            children.Add(e);
         }
 
         public void placeEntity(Entity e, int x, int y) { //no randomness, just normally placing it here
@@ -74,6 +76,12 @@ namespace IntroProject
         }
 
         private void activateEntities() {
+            if (children.Count > 0) {
+                foreach (Entity Child in children)
+                    entities.Add(Child);
+                children = new List<Entity>();
+            }
+
             foreach (Entity e in entities)
                 if (e is Creature)
                     ((Creature)e).activate();
