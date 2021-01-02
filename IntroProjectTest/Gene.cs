@@ -2,6 +2,7 @@
 using NUnit.Framework;
 
 using IntroProject;
+using System.Collections.Generic;
 
 namespace IntroProjectTest
 {
@@ -33,10 +34,15 @@ namespace IntroProjectTest
                 }
 
                 [Test]
-                public void TestCombiningSameGenesResultsInSameGenes()
+                public void TestOrderOfAddingGenesResultsInSameFenotype() 
                 {
-                    Gene idemGeneAPlus = stableGeneSetA + stableGeneSetA;
-                    Assert.AreEqual(idemGeneAPlus, stableGeneSetA);
+                    List<float[]> a = stableGeneSetA.getAllel();
+                    List<float[]> b = stableGeneSetB.getAllel();
+
+                    Gene childA = new Gene(a, b);
+                    Gene childB = new Gene(b, a);
+
+                    Assert.IsTrue(childA.EqualFenoType(childB));
                 }
 
                 [Test]

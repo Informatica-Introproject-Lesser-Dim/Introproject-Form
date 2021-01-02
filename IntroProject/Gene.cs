@@ -191,5 +191,18 @@ namespace IntroProject
                             return false;
             return true;
         }
+
+        public bool EqualFenoType(Gene other) {
+            return other.EqualFenoType(this.Fenotype);
+        }
+
+        public bool EqualFenoType(List<float> other) {
+            if (other.Count != Fenotype.Count)
+                return false;
+            for (int i = 0; i < other.Count; i++)
+                if (Fenotype[i] != other[i])
+                    return false;
+            return true;
+        }
     }
 }
