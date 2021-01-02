@@ -101,6 +101,7 @@ namespace IntroProject
         }
 
         public void EntityBirth(Entity e) {
+            e.chunk = this;
             this.entities.Add(e);
             this.parent.EntityForceAdd(e);
         }
