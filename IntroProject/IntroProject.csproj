@@ -30,4 +30,10 @@
     <Folder Include="Resources\Images\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="dataFiles\translations.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
