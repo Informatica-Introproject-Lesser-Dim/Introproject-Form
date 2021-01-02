@@ -110,7 +110,7 @@ namespace IntroProject
             //create a new creature, remove energy accordingly and set a "cooldown timer" for both the creatures
             this.coolDown = 1000;
             other.coolDown = 1000;
-            other.MateWith(this);
+            other.Mate(this);
             this.energyVal -= (int) (this.gene.Size * 0.05); //the males barely lose any energy
             this.goalReset();
         }
