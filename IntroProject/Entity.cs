@@ -28,7 +28,7 @@ namespace IntroProject
         public bool dead = false;
         public double energyVal = 100;
 
-        public float Die()
+        public double PerishToEnergyPile()
         {
             dead = true;
             if (chunk != null)

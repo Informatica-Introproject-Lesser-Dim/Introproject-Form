@@ -86,7 +86,7 @@ namespace IntroProject
                 return;
             if (entity.dead)
                 return;
-            this.energyVal += entity.Die();
+            this.energyVal += entity.PerishToEnergyPile();
             this.sleep = 30;
         }
 
