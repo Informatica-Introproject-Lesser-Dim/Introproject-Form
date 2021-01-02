@@ -119,6 +119,8 @@ namespace IntroProject
             int transferredEnergy = (int) (this.energyVal * this.gene.energyDistribution);
             energyVal -= transferredEnergy;
             Creature child = new Creature(this.gene * other.gene, transferredEnergy);
+            child.x = this.x;
+            child.y = this.y;
             this.chunk.EntityBirth(child);
             //Now we only need to put this child in the entity list
 
@@ -131,7 +133,8 @@ namespace IntroProject
 
             if (sleep > 0) {
                 sleep--;
-                this.color = Color.FromArgb(50, 50, 150);
+                if (goal != Goal.Mate)
+                    this.color = Color.FromArgb(50, 50, 150);
                 return;
             }
 
