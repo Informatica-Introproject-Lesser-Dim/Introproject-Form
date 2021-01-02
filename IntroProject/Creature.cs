@@ -90,22 +90,6 @@ namespace IntroProject
             this.sleep = 30;
         }
 
-        // Assuming this is the same type as wezen: we don't want Herbivores mating Carnivores
-        //public virtual void MatingSuccess()
-        //{
-        //    isReadyToMate = false;
-        //}
-
-        //public virtual Creature? MateWith(Creature other)
-        //{
-        //    if (!this.isReadyToMate || !other.isReadyToMate)
-        //        throw new UnreadyForMating();
-
-        //    this.MatingSuccess();
-        //    other.MatingSuccess();
-        //    return this;
-        //}
-
         private void MateWith(Creature other) { //this is the mating method called by the males
             //create a new creature, remove energy accordingly and set a "cooldown timer" for both the creatures
             this.coolDown = 1000;
