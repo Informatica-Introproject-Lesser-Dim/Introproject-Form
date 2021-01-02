@@ -17,7 +17,7 @@ namespace IntroProject
     {
         public Gene gene { get; protected set; }
         public int isAlive;
-        public bool isReadyToMate = true;
+        public bool isReadyToMate { get => coolDown == 0; }
         private Route route;
         private Creature target;
 
@@ -90,16 +90,18 @@ namespace IntroProject
             this.sleep = 30;
         }
 
-        private void MateWith(Creature other) { //this is the mating method called by the males
+        private void MateWithFemale(Creature other)
+        {
             //create a new creature, remove energy accordingly and set a "cooldown timer" for both the creatures
             this.coolDown = 1000;
             other.coolDown = 1000;
-            other.Mate(this);
+            other.MateWithMale(this);
             this.energyVal -= (int) (this.gene.Size * 0.05); //the males barely lose any energy
             this.goalReset();
         }
 
-        public void Mate(Creature other) {//this is the female mating method, will be called from within the male mating method
+        public void MateWithMale(Creature other)
+        {
             double transferredEnergy =  this.energyVal * this.gene.energyDistribution;
             energyVal -= transferredEnergy;
             Creature child = new Creature(this.gene * other.gene, transferredEnergy);
@@ -351,7 +353,7 @@ namespace IntroProject
                         if (goal == Goal.Food)
                             eat(myFood);
                         if (goal == Goal.Mate)
-                            MateWith(target);
+                            MateWithFemale(target);
                         myFood = null;
                         sleep += 30;
                         return;
