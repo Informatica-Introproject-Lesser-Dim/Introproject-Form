@@ -294,8 +294,9 @@ namespace IntroProject
                 goal = Goal.Mate;
                 this.color = Color.Pink;
                 this.target = creature;
+                return true;
             }
-            return true;
+            return false;
         }
 
         private double passiveVal(Hexagon hex) {
