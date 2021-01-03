@@ -18,11 +18,6 @@ namespace IntroProject
         {
             InitializeComponent();
 
-            Button plus = new ButtonImaged(Properties.Resources.Plus_icon);
-            plus.Size = new Size(50, 50);
-            plus.Location = new Point(1800 - 66, 5);
-            plus.Click += (object o, EventArgs ea) => { dropMenu.Show(); plus.Hide(); };
-            this.Controls.Add(plus);
 
             this.Size = new Size(1800, 1200);
             debugscr = new MapScreen(this.Size);
@@ -33,7 +28,7 @@ namespace IntroProject
                                    (object o, EventArgs ea) => { settingsMenu.Show(); settingsMenu.BringToFront(); }, 
                                    (object o, EventArgs ea) => { helpMenu.Show(); helpMenu.BringToFront(); }, 
                                    (object o, EventArgs ea) => { statisticsMenu.Show(); statisticsMenu.BringToFront(); },
-                                    plus);
+                                    debugscr.plus);
             dropMenu.Dock = DockStyle.Right;
             this.Controls.Add(dropMenu);
             this.Controls.Add(debugscr);
@@ -53,9 +48,11 @@ namespace IntroProject
                 settingsMenu.Size = new Size(Size.Width, Size.Height);
                 helpMenu.Size = new Size(Size.Width, Size.Height);
                 statisticsMenu.Size = new Size(Size.Width, Size.Height);
-                plus.Location = new Point(Size.Width - maxim - 16, 5);
-                plus.Size = new Size(maxim, maxim);
+                debugscr.plus.Location = new Point(Size.Width - maxim - 16, 5);
+                debugscr.plus.Size = new Size(maxim, maxim);
             };
+
+            debugscr.plus.Click += (object o, EventArgs ea) => { dropMenu.Show(); debugscr.plus.Hide(); };
         }
     }
 
@@ -68,7 +65,8 @@ namespace IntroProject
         int xCam = 0;
         int yCam = 0;
         public const int size = 35;
-        
+        public Button plus = new ButtonImaged(Properties.Resources.Plus_icon);
+
 
         public MapScreen(Size size) : this(size.Width, size.Height) { }
         public MapScreen(int w, int h)
@@ -78,6 +76,10 @@ namespace IntroProject
             Button play = new ButtonImaged(Properties.Resources.Play_icon);
             Button stop = new ButtonImaged(Properties.Resources.Stop_icon);
             Button pause = new ButtonImaged(Properties.Resources.Pause_icon);
+
+            plus.Size = new Size(50, 50);
+            plus.Location = new Point(1800 - 66, 5);
+            this.Controls.Add(plus);
 
             Size middel = new Size(60, 60);
             
