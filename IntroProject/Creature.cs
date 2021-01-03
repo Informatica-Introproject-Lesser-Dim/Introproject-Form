@@ -36,7 +36,7 @@ namespace IntroProject
 
         public Creature()
         {
-            energyVal = 400; //start with quite a lot so they dont die too quickly
+            energyVal = 600; //start with quite a lot so they dont die too quickly
             gene = new Gene();
 
             gene.@class = this.GetType().Name;
@@ -114,6 +114,9 @@ namespace IntroProject
         }
 
         public void activate() {
+            if (this.energyVal < 0)
+                this.color = Color.Orange;
+
             this.energyVal -= Calculator.StandardEnergyCost(gene);
             if (this.coolDown > 0)
                 coolDown--;
@@ -303,15 +306,25 @@ namespace IntroProject
             if (route != null)
             {
                 myFood = aStar.getTarget();
-                goal = Goal.Food;
-                this.color = Color.FromArgb(150, 50, 50);
+                if (myFood != null)
+                {
+                    goal = Goal.Food;
+                    this.color = Color.FromArgb(150, 50, 50);
+                }
+                else {
+                    goal = Goal.Nothing;
+                }
+                
+                
                 if (route.quality < gene.ActivePreference) {
                     this.color = Color.FromArgb(50, 50, 50);
                     goal = Goal.Nothing;
                 }
                     
             }
-            else { sleep = 20; }
+            else { sleep = 20;
+                this.color = Color.Purple;
+            }
         }
 
         public void checkSurroundings() {
