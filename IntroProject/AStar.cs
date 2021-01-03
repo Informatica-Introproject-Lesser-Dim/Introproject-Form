@@ -41,7 +41,7 @@ namespace IntroProject
             mark(chunck);
             Route temp = new Route(loc, size, chunck);
             routeList = new RouteList();
-            routeList.Add(new RouteElement(0, temp));
+            expandPoint(temp);
 
             //start with the few base routes
             Route current;
