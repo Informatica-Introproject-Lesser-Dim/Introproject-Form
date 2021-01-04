@@ -252,28 +252,42 @@ namespace IntroProject
 
             //Trackbar x+399 = textbox x
             (Label LabelSpeed, TrackBar TrackBarSpeed, TextBox TextBoxSpeed) = MakeSlider(40, 60, "Speed", 1, 25, 200, 100);
-            TrackBarSpeed.ValueChanged += (object o, EventArgs ea) => { LabelSpeed.Text = "haha LOL"; };
-            TextBoxSpeed.TextChanged += (object o, EventArgs ea) => { LabelSpeed.Text = "UwU"; };
+            TrackBarSpeed.ValueChanged += (object o, EventArgs ea) => { LabelSpeed.Text = "Lests"; };
+            TextBoxSpeed.TextChanged += (object o, EventArgs ea) => { LabelSpeed.Text = "Rests"; };
 
             (Label LabelTotalEntities, TrackBar TrackBarTotalEntities, TextBox TextBoxTotalEntities) = MakeSlider(40, 140, "Total number of Entities", 20, 10, 50, 1);
-            TrackBarTotalEntities.ValueChanged += (object o, EventArgs ea) => { LabelTotalEntities.Text = "haha LOL"; };
-            TextBoxTotalEntities.TextChanged += (object o, EventArgs ea) => { LabelTotalEntities.Text = "UwU"; };
+            TrackBarTotalEntities.ValueChanged += (object o, EventArgs ea) => { LabelTotalEntities.Text = "Teeests"; };
+            TextBoxTotalEntities.TextChanged += (object o, EventArgs ea) => { LabelTotalEntities.Text = "Tests"; };
 
-            (Label LabelSpawnRate, TrackBar TrackBarSpawnRate, TextBox TextBoxSpawnRate) = MakeSlider(40, 220, "Spawn Rate", 5, 10, 100, 10);
+            (Label LabelStartEntities, TrackBar TrackBarStartEntities, TextBox TextBoxStartEntities) = MakeSlider(40, 220, "Begin number of Entities", 20, 10, 40, 1);
 
-            (Label LabelHightScale, TrackBar TrackBarHightScale, TextBox TextBoxHightScale) = MakeSlider(40, 300, "HightScale", 8, 0, 8, 1);
+            (Label LabelSpawnRate, TrackBar TrackBarSpawnRate, TextBox TextBoxSpawnRate) = MakeSlider(40, 300, "Spawn Rate", 5, 10, 100, 10);
+
+            (Label LabelHightScale, TrackBar TrackBarHightScale, TextBox TextBoxHightScale) = MakeSlider(40, 380, "HightScale", 8, 0, 8, 1);
+
+            (Label LabelGrassFoodMin, TrackBar TrackBarGrassFoodMin, TextBox TextBoxGrassFoodMin) = MakeSlider(40, 500, "Grass Feed Min", 5, 10, 100, 10);
+
+            (Label LabelGrassFoodMax, TrackBar TrackBarGrassFoodMax, TextBox TextBoxGrassFoodMax) = MakeSlider(40, 580, "Grass Feed Max", 5, 10, 100, 10);
+
+            (Label LabelGrassGrowth, TrackBar TrackBarGrassGrowth, TextBox TextBoxGrassGrowth) = MakeSlider(40, 660, "Grass Growth Speed", 5, 10, 100, 10);
+
+            (Label LabelGrassFoodScale, TrackBar TrackBarGrassFoodScale, TextBox TextBoxGrassFoodScale) = MakeSlider(40, 740, "Grass Feed Scale", 5, 10, 100, 10);
 
             this.Controls.Add(exit);
             this.Controls.Add(TrackBarSpeed);
             this.Controls.Add(TextBoxSpeed);
             this.Controls.Add(TrackBarTotalEntities);
             this.Controls.Add(TextBoxTotalEntities);
+            this.Controls.Add(TrackBarStartEntities);
+            this.Controls.Add(TextBoxStartEntities);
             this.Controls.Add(TextBoxSpawnRate);
             this.Controls.Add(TrackBarSpawnRate);
             this.Controls.Add(TrackBarHightScale);
             this.Controls.Add(TextBoxHightScale);
+            
             this.Controls.Add(LabelSpeed);
             this.Controls.Add(LabelTotalEntities);
+            this.Controls.Add(LabelStartEntities);
             this.Controls.Add(LabelSpawnRate);
             this.Controls.Add(LabelHightScale);
         }
