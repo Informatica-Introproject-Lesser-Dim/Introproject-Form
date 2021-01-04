@@ -27,6 +27,7 @@ namespace IntroProject
         protected Color color;
         public bool dead = false;
         public double energyVal = 100;
+        public bool selected = false;
 
         public double PerishToEnergyPile()
         {
@@ -38,6 +39,8 @@ namespace IntroProject
 
         public virtual void draw(Graphics g, int hexX, int hexY) {
             g.FillEllipse(new SolidBrush(color), hexX + x - r, hexY + y - r, r * 2, r * 2);
+            if (selected)
+                g.DrawEllipse(Pens.LightGreen, hexX + x - r, hexY + y - r, r * 2, r * 2);
         }
     }
 }
