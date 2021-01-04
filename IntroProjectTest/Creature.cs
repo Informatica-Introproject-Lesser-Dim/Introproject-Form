@@ -17,32 +17,33 @@ namespace IntroProjectTest
                 this.chunk = new Hexagon(size: 10, c: 10, x: 10, y: 10, longitudeOnMap: 0, new Map(width: 1, height: 1, size: 1, margin: 0));
             }
 
+            public void Mate(Creature other)
+            {
+                base.MateWithFemale(other);
+            }
+
             public CreatureTestable(Creature parentFirst, Creature parentSecond) : base(parentFirst, parentSecond) { }
         }
 
         [TestFixture]
         public class Mating
         {
-            [Test]
-            public void TestMatingWithSuccess()
-            {
-                Creature parentA = new CreatureTestable(matingWillWork: true);
-                Creature parentB = new CreatureTestable(matingWillWork: true);
-
-                parentB.MateWithMale(parentA);
-            }
-
             [TestFixture]
             public class AfterMating
             {
-                Creature parentA, parentB;
+                CreatureTestable parentA, parentB;
 
                 [SetUp]
                 public void SetUp()
                 {
                     parentA = new CreatureTestable(matingWillWork: true);
                     parentB = new CreatureTestable(matingWillWork: true);
+
+                    parentB.Mate(parentA);
                 }
+
+                [Test]
+                public void TestMatingWithSuccess() {} // SetUp
 
                 [Test]
                 public void TestAfterMatingBothNotReadyForMatingAgain()
@@ -54,7 +55,7 @@ namespace IntroProjectTest
                 [Test]
                 public void TestAfterMatingMatingAgainThrowsInvalidMating()
                 {
-                    Assert.Throws<UnreadyForMating>(() => parentB.MateWithMale(parentA));
+                    Assert.Throws<UnreadyForMating>(() => parentB.Mate(parentA));
                 }
             }
         }

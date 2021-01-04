@@ -90,7 +90,7 @@ namespace IntroProject
             this.sleep = 30;
         }
 
-        private void MateWithFemale(Creature other)
+        protected void MateWithFemale(Creature other)
         {
             //create a new creature, remove energy accordingly and set a "cooldown timer" for both the creatures
             this.coolDown = 1000;
