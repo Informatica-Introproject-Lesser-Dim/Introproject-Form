@@ -35,19 +35,26 @@ namespace IntroProject
         public float ActivePreference { get { return ToInfinity(Fenotype[8] / 2 + 0.5f) / 15 + this.PassiveBias; } }
         //Third Allel
         public float Velocity { get { return (Fenotype[9] / 2 + 0.5f) * 4.5f + 0.5f; } } //within certain max and min values
-        public float JumpHeight { get { return Fenotype[10]/2 + 0.5f; } } //only positive values
         
-        public float Courage { get { return Fenotype[11]; } }//not implemented anywhere yet
+        public float ego { get { return Fenotype[10]; } }
 
-        public float DistanceBias { get { return ToInfinity(Fenotype[12] / 2 + 0.5f); } } //it's in the name dummy
+        public float intelligence { get { return Fenotype[11] / 2 + 0.5f; } }
 
+        public float perception { get { return Fenotype[12] / 2 + 0.5f; } }
+        public float Courage { get { return Fenotype[13]; } }//not implemented anywhere yet
+
+        //Fourth Allel
+
+        public float DistanceBias { get { return ToInfinity(Fenotype[14] / 2 + 0.5f); } } //it's in the name dummy
+
+        public float JumpHeight { get { return Fenotype[15] / 4 + 0.25f; } } //only positive values
         //-1 for "gene isnt used"
         //0 for the average
         //1 for the biggest
         //2 for the biggest but also unable to mutate (only used for the male gene) 
         //3 extra sensitivity with mutation
         //4 sensitive + biggest
-        private int[,] lookupTable = new int[3,5] { { 2, 3, 3, 3, 0}, { 3, 3, 3,3 , -1}, {0, 0, 0, 3, -1 } }; //it's not a bad thing if this is bigger than the actual lists being used
+        private int[,] lookupTable = new int[4,5] { { 2, 3, 3, 3, 0}, { 3, 3, 3,3 , -1}, {0, 0, 0, 3, 3 }, {3,3,-1,-1,-1 } }; //it's not a bad thing if this is bigger than the actual lists being used
 
         protected Func<bool> willMutate = () => true;
 
