@@ -244,8 +244,6 @@ namespace IntroProject
             this.BackColor = Color.FromArgb(123, 156, 148);
             this.Size = new Size(w, h);
 
-            Size sliderTextBoxSize = new Size(30, 20);
-
             Button exit = new ButtonImaged(Properties.Resources.X_icon);
             exit.Location = new Point(2, 2);
             exit.Size = new Size(50, 50);
@@ -253,66 +251,51 @@ namespace IntroProject
             exit.Click += (object o, EventArgs ea) => { this.Hide(); };
 
             //Trackbar x+399 = textbox x
-            Label LabelSettingsX = new Label();
-            LabelSettingsX.Text = "settingsX";
-            LabelSettingsX.ForeColor = Color.White;
-            LabelSettingsX.Location = new Point(40, 60);
+            (Label LabelSpeed, TrackBar TrackBarSpeed, TextBox TextBoxSpeed) = MakeSlider(40, 60, "Speed", 1, 25, 200, 100);
+            TrackBarSpeed.ValueChanged += (object o, EventArgs ea) => { LabelSpeed.Text = "haha LOL"; };
+            TextBoxSpeed.TextChanged += (object o, EventArgs ea) => { LabelSpeed.Text = "UwU"; };
 
-            TrackBar TrackBarSettingX = new CustomTrackbar(40, 80);
-            TextBox TextBoxSettingX = new TextBox();
-            TextBoxSettingX.BackColor = Color.FromArgb(123, 156, 148);
-            TextBoxSettingX.BorderStyle = BorderStyle.FixedSingle;
-            TextBoxSettingX.ForeColor = Color.White;
-            TrackBarSettingX.Value = 72;
-            TextBoxSettingX.Text = TrackBarSettingX.Value.ToString();
-            TrackBarSettingX.ValueChanged += (object o, EventArgs ea) => { TextBoxSettingX.Text = TrackBarSettingX.Value.ToString(); };
-            TextBoxSettingX.TextChanged += (object o, EventArgs ea) => { TrackBarSettingX.Value = int.Parse(TextBoxSettingX.Text); };
-            TextBoxSettingX.Location = new Point(440, 90);
-            TextBoxSettingX.Size = sliderTextBoxSize;
+            (Label LabelTotalEntities, TrackBar TrackBarTotalEntities, TextBox TextBoxTotalEntities) = MakeSlider(40, 140, "Total number of Entities", 20, 10, 50, 1);
+            TrackBarTotalEntities.ValueChanged += (object o, EventArgs ea) => { LabelTotalEntities.Text = "haha LOL"; };
+            TextBoxTotalEntities.TextChanged += (object o, EventArgs ea) => { LabelTotalEntities.Text = "UwU"; };
 
-            Label LabelSettingsY = new Label();
-            LabelSettingsY.Text = "settingsY";
-            LabelSettingsY.ForeColor = Color.White;
-            LabelSettingsY.Location = new Point(40, 140);
+            (Label LabelSpawnRate, TrackBar TrackBarSpawnRate, TextBox TextBoxSpawnRate) = MakeSlider(40, 220, "Spawn Rate", 5, 10, 100, 10);
 
-            TrackBar TrackBarSettingY = new CustomTrackbar(40, 160);
-            TextBox TextBoxSettingY = new TextBox();
-            TextBoxSettingY.BackColor = Color.FromArgb(123, 156, 148);
-            TextBoxSettingY.BorderStyle = BorderStyle.FixedSingle;
-            TextBoxSettingY.ForeColor = Color.White;
-            TrackBarSettingY.Value = 53;
-            TextBoxSettingY.Text = TrackBarSettingY.Value.ToString();
-            TrackBarSettingY.ValueChanged += (object o, EventArgs ea) => { TextBoxSettingY.Text = TrackBarSettingY.Value.ToString(); };
-            TextBoxSettingY.TextChanged += (object o, EventArgs ea) => { TrackBarSettingY.Value = int.Parse(TextBoxSettingY.Text); };
-            TextBoxSettingY.Location = new Point(440, 170);
-            TextBoxSettingY.Size = sliderTextBoxSize;
+            (Label LabelHightScale, TrackBar TrackBarHightScale, TextBox TextBoxHightScale) = MakeSlider(40, 300, "HightScale", 8, 0, 8, 1);
 
             this.Controls.Add(exit);
-            this.Controls.Add(TrackBarSettingX);
-            this.Controls.Add(TextBoxSettingX);
-            this.Controls.Add(TrackBarSettingY);
-            this.Controls.Add(TextBoxSettingY);
-            this.Controls.Add(LabelSettingsX);
-            this.Controls.Add(LabelSettingsY);
+            this.Controls.Add(TrackBarSpeed);
+            this.Controls.Add(TextBoxSpeed);
+            this.Controls.Add(TrackBarTotalEntities);
+            this.Controls.Add(TextBoxTotalEntities);
+            this.Controls.Add(TextBoxSpawnRate);
+            this.Controls.Add(TrackBarSpawnRate);
+            this.Controls.Add(TrackBarHightScale);
+            this.Controls.Add(TextBoxHightScale);
+            this.Controls.Add(LabelSpeed);
+            this.Controls.Add(LabelTotalEntities);
+            this.Controls.Add(LabelSpawnRate);
+            this.Controls.Add(LabelHightScale);
         }
-        private (Label, TrackBar, TextBox) MakeSlider(int x, int y, String name, int value)
+        private (Label, TrackBar, TextBox) MakeSlider(int x, int y, String name, int basevalue, int minvalue, int maxvalue, int scale)
         {
             Size sliderTextBoxSize = new Size(30, 20);
 
             Label label = new Label();
+            label.Size = new Size(200, 20);
             label.Text = name;
             label.ForeColor = Color.White;
             label.Location = new Point(x, y);
 
-            TrackBar trackBar = new CustomTrackbar(x, (y+20));
+            TrackBar trackBar = new CustomTrackbar(x, (y+20), minvalue, maxvalue);
             TextBox textBox = new TextBox();
             textBox.BackColor = Color.FromArgb(123, 156, 148);
             textBox.BorderStyle = BorderStyle.FixedSingle;
             textBox.ForeColor = Color.White;
-            trackBar.Value = 53;
-            textBox.Text = trackBar.Value.ToString();
-            trackBar.ValueChanged += (object o, EventArgs ea) => { textBox.Text = trackBar.Value.ToString(); };
-            textBox.TextChanged += (object o, EventArgs ea) => { trackBar.Value = int.Parse(textBox.Text); };
+            trackBar.Value = (basevalue * scale);
+            textBox.Text = basevalue.ToString();
+            trackBar.ValueChanged += (object o, EventArgs ea) => { textBox.Text = (trackBar.Value * (1.0/scale)).ToString(); };
+            textBox.TextChanged += (object o, EventArgs ea) => { trackBar.Value = Convert.ToInt32(double.Parse(textBox.Text) * scale); };
             textBox.Location = new Point((x+400), (y+30));
             textBox.Size = sliderTextBoxSize;
 
@@ -388,15 +371,15 @@ namespace IntroProject
 
     internal class CustomTrackbar : TrackBar
     {
-        public CustomTrackbar(int x, int y)
+        public CustomTrackbar(int x, int y, int min, int max)
         {
             Location = new Point(x, y);
             Padding = Padding.Empty;
             Cursor = Cursors.Hand;
             Size = new Size(400, 40);
             BackColor = Color.White;
-            Minimum = 0;
-            Maximum = 100;
+            Minimum = min;
+            Maximum = max;
             TickFrequency = 10;
             TickStyle = TickStyle.Both;
             SmallChange = 1;
