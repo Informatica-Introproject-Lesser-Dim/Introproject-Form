@@ -59,7 +59,7 @@ namespace IntroProject
             }
 
             private static int PickValueOnColorChannel(int colorScaleChannelStart, int colorScaleChannelEnd, double fractionPlaceOnScale) =>
-                Math.Min(0, Math.Max(255, (int)(colorScaleChannelStart * (1 - fractionPlaceOnScale) + colorScaleChannelEnd * fractionPlaceOnScale)));
+                Math.Min(255, Math.Max(0, (int)(colorScaleChannelStart * (1 - fractionPlaceOnScale) + colorScaleChannelEnd * fractionPlaceOnScale)));
 
             public static Color PickValue(ColorScale colorScale, double fractionPlaceOnScale)
             {
