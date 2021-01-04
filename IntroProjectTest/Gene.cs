@@ -49,18 +49,6 @@ namespace IntroProjectTest
                 public void TestCloneIsEqual() {
                     Assert.AreEqual(stableGeneSetA, stableGeneSetA.CloneTyped());
                 }
-
-                [Test]
-                public void TestCombineSameGenesStableAddEqMult()
-                {
-                    Gene idemGeneAPlus = stableGeneSetA + stableGeneSetA;
-                    Gene idemGeneAMult = stableGeneSetA * stableGeneSetA;
-                    Assert.AreEqual(idemGeneAPlus, idemGeneAMult);
-
-                    Gene idemGeneBPlus = stableGeneSetB + stableGeneSetB;
-                    Gene idemGeneBMult = stableGeneSetB * stableGeneSetB;
-                    Assert.AreEqual(idemGeneBPlus, idemGeneBMult);
-                }
             }
 
             public class GeneCombiningUnstable
