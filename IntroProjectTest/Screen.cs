@@ -20,16 +20,12 @@ namespace IntroProjectTest
                 [SetUp]
                 public void SetUp()
                 {
-
-                    int i = 0;
                     StreamReader reader = new StreamReader(@".\dataFiles\translations.csv");
-                    while (!reader.EndOfStream)
+                    for (int i = 0; !reader.EndOfStream; i++)
                     {
-                        textFile[i] = reader.ReadLine();
-
-                        languageList[i] = textFile[i].Split(';').ToList();
-                        keyWordList[i] = languageList[i][0];
-                        i++;
+                        textFile.Add(reader.ReadLine());
+                        languageList.Add(textFile[i].Split(';').ToList());
+                        keyWordList.Add(languageList[i][0]);
                     }
                 }
 
