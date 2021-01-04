@@ -10,6 +10,7 @@ namespace IntroProject
 
         private List<float[]>[] Genotype; //we beginnen met velocity en jumpheight en courage maar dat verranderd later
         private List<float> Fenotype;
+        private Random random;
         // All between -1 and 1, will be scaled in their respective dependents
 
         //if mutateScale is at 1 then if your random device gives you a 1 you go all the way to the extreme value (wich happens to be 1) 
@@ -59,13 +60,14 @@ namespace IntroProject
         protected Func<bool> willMutate = () => true;
 
         public Gene() {
+            random = new Random();
             //you have two parts of the genotype, these two parts do exactly the same and code for the same genes
             //within that you have the different allels each allel contains a few values and each value decides an attribute
             //the allels can differ in size, all the genes in one allel are given to the next generation as one
             Genotype = new List<float[]>[2] {GenotypeRandom(), GenotypeRandom()};
             //just add random genes here, dont forget to edit the lookup table and create a poperty accordingly
 
-            Random random = new Random();
+            
             int isMale = random.Next(0, 2);
             if (isMale == 1)
             {
@@ -81,6 +83,16 @@ namespace IntroProject
             calcFenotype();
         }
 
+        private float NormDist(float range) {
+            return NormDist()*range;
+        }
+
+        //get a random value between -1 and 1 (will go according to the normal distribution later on)
+        private float NormDist() {
+            random = new Random();
+            return (float)((random.NextDouble() - 0.5) * 2);
+        }
+
         private float ToInfinity(float x) {
             if (x == 1 || x == -1)
                 return 0;
@@ -88,7 +100,6 @@ namespace IntroProject
         }
 
         private List<float[]> GenotypeRandom() {
-            Random random = new Random();
             List<float[]> result = new List<float[]>();
             for (int i = 0; i < lookupTable.GetLength(0); i++) {
                 List<float> temp = new List<float>();
@@ -97,7 +108,7 @@ namespace IntroProject
                         if (lookupTable[i, j] == 2)
                             temp.Add(random.Next(0, 3)%2);
                         else
-                            temp.Add((float)(random.NextDouble() - 0.5));
+                            temp.Add(NormDist(0.75f));
                     }
                 if (temp.Count == 0)
                     continue;
@@ -152,7 +163,6 @@ namespace IntroProject
 
         public List<float[]> getAllel() {
             List<float[]> result = new List<float[]>();
-            Random random = new Random();
             for (int i = 0; i < Genotype[0].Count; i++)
             {
                 result.Add((float[]) Genotype[random.Next(0, 2)][i].Clone()); //here could be a cloning by reference problem but it's probably fine
@@ -193,8 +203,7 @@ namespace IntroProject
             //range is the amount of you can go in a certain direction
             //mutatescale is how much of the range you're allowed to use
             //val is the actual random number used
-            Random random = new Random();
-            float val = (float)random.NextDouble() * 2 - 1; //value between -1 and 1
+            float val = NormDist(1); //value between -1 and 1
             float range = x + 1; //amount of space left of the x
             if (val > 0) 
                 range = 2 - range; //amount of space to the right
