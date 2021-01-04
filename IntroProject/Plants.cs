@@ -12,7 +12,7 @@ namespace IntroProject
             this.x = x;
             this.y = y;
             this.nutritionValue = nutritionValue;
-            color = Color.Green;
+            color = Color.SaddleBrown;
         }
         private Creature feed(Creature wezen) //concept hoe een plant een wezen kan voeden, mogelijk moet herbivoor de specificatie zijn hier en niet wezen.
         {//MOET NOG BESPROKEN WORDEN
