@@ -16,6 +16,7 @@ namespace IntroProject
         private int margin;
         private List<Entity> entities;
         private List<Entity> children;
+        private List<Entity> deaths;
         private int time = 0;
 
         private Hexagon[,] tiles;
@@ -37,6 +38,7 @@ namespace IntroProject
             this.margin = margin;
             entities = new List<Entity>();
             children = new List<Entity>();
+            deaths = new List<Entity>();
             tiles = new Hexagon[width, height];
             perlin = new SimplexPerlin[4];
             for(int i = 0; i < n; i++)
@@ -76,15 +78,30 @@ namespace IntroProject
         }
 
         private void activateEntities() {
+            
+            if (deaths.Count > 0)
+            {
+                foreach (Entity deadEntity in deaths)
+                {
+                    deadEntity.PerishToEnergyPile();
+                    entities.Remove(deadEntity);
+                }
+                deaths.Clear();
+            }
+
             if (children.Count > 0) {
                 foreach (Entity Child in children)
                     entities.Add(Child);
-                children = new List<Entity>();
+                children.Clear();
             }
 
             foreach (Entity e in entities)
                 if (e is Creature)
+                {
                     ((Creature)e).activate();
+                    if (((Creature)e).dead)
+                        deaths.Add(((Creature)e));
+                }
         }
 
         public void TimeStep() {

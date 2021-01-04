@@ -16,10 +16,11 @@ namespace IntroProject
     public class Creature : Entity
     {
         public Gene gene { get; protected set; }
-        public int isAlive;
+        //public int isAlive;
         public bool isReadyToMate { get => coolDown == 0; }
         private Route route;
         private Creature target;
+        public int isAlive;
 
         private Grass myFood;
         private int sleep = 0;
@@ -117,12 +118,13 @@ namespace IntroProject
         }
 
         public void activate() {
-            if (this.energyVal < 0)
-                this.color = Color.Orange;
 
             this.energyVal -= Calculator.StandardEnergyCost(gene);
             if (this.coolDown > 0)
                 coolDown--;
+
+            if (this.energyVal <= 0)
+                this.dead = true;
 
             if (sleep > 0) {
                 sleep--;
@@ -391,6 +393,7 @@ namespace IntroProject
             grass.visible = false;
             this.energyVal += grass.getVal(this.chunk.vegetation.currentTime);
         }
+
     }
 
 }

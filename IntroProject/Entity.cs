@@ -27,12 +27,16 @@ namespace IntroProject
         protected Color color;
         public bool dead = false;
         public double energyVal = 100;
-
+        public bool isAlive { get => energyVal > 0; }
+        
         public double PerishToEnergyPile()
         {
             dead = true;
             if (chunk != null)
+            {
                 chunk.removeEntity(this);
+                chunk.addEntity(new Plants(this.x, this.y, 150));
+            }
             return energyVal;
         }
 
