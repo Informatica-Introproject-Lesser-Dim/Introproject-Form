@@ -27,11 +27,7 @@ namespace IntroProject
         private bool passive = false;
         public int coolDown = 200; //cooldown so the creature doesnt continuously attempt mating
 
-        public Point GlobalLoc {
-            get {
-                return new Point(chunk.x + this.x, chunk.y + this.y);
-            }
-        }
+        
 
 
         public Creature()

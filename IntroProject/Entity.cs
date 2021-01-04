@@ -29,6 +29,14 @@ namespace IntroProject
         public double energyVal = 100;
         public bool selected = false;
 
+        public Point GlobalLoc
+        {
+            get
+            {
+                return new Point(chunk.x + this.x, chunk.y + this.y);
+            }
+        }
+
         public double PerishToEnergyPile()
         {
             dead = true;

@@ -145,10 +145,10 @@ namespace IntroProject
             if (entities.Count == 0)
                 return null;
 
-            double val = Calculator.distanceSquared(x, y, entities[0].x, entities[1].y);
+            double val = Calculator.distanceSquared(x, y, entities[0].x, entities[0].y);
             Entity best = entities[0];
             foreach (Entity entity in entities) {
-                double temp = Calculator.distanceSquared(x, y, entity.x, entity.y);
+                double temp = Calculator.distanceSquared(x, y, entity.GlobalLoc.X, entity.GlobalLoc.Y);
                 if (temp < val) {
                     val = temp;
                     best = entity;
