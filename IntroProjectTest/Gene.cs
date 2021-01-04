@@ -2,6 +2,7 @@
 using NUnit.Framework;
 
 using IntroProject;
+using System.Collections.Generic;
 
 namespace IntroProjectTest
 {
@@ -33,10 +34,20 @@ namespace IntroProjectTest
                 }
 
                 [Test]
-                public void TestCombiningSameGenesResultsInSameGenes()
+                public void TestOrderOfAddingGenesResultsInSameFenotype() 
                 {
-                    Gene idemGeneAPlus = stableGeneSetA + stableGeneSetA;
-                    Assert.AreEqual(idemGeneAPlus, stableGeneSetA);
+                    List<float[]> a = stableGeneSetA.getAllel();
+                    List<float[]> b = stableGeneSetB.getAllel();
+
+                    Gene childA = new Gene(a, b);
+                    Gene childB = new Gene(b, a);
+
+                    Assert.IsTrue(childA.EqualFenoType(childB));
+                }
+
+                [Test]
+                public void TestCloneIsEqual() {
+                    Assert.AreEqual(stableGeneSetA, stableGeneSetA.CloneTyped());
                 }
 
                 [Test]
@@ -85,6 +96,7 @@ namespace IntroProjectTest
                     Assert.AreNotEqual(idemGeneBPlus, idemGeneBMult);
                 }
 
+
                 [Test]
                 public void TestOriginalGeneNotAffectedByMutationOperation()
                 {
@@ -96,6 +108,12 @@ namespace IntroProjectTest
                     var cloneB = unstableGeneSetB.CloneTyped();
                     _ =  unstableGeneSetB * unstableGeneSetB;
                     Assert.AreEqual(unstableGeneSetB, cloneB);
+                }
+
+                [Test]
+                public void TestGeneChangesWhenMutating()
+                {
+                    Assert.AreNotEqual(unstableGeneSetA.CloneTyped().Mutate(), unstableGeneSetA);
                 }
             }
         }

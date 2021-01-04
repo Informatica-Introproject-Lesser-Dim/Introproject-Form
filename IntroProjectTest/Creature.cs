@@ -13,17 +13,11 @@ namespace IntroProjectTest
 
             public CreatureTestable(bool matingWillWork) : base()
             {
-                this.isReadyToMate = matingWillWork;
+                this.coolDown = matingWillWork ? 0 : int.MaxValue;
+                this.chunk = new Hexagon(size: 10, c: 10, x: 10, y: 10, longitudeOnMap: 0, new Map(width: 1, height: 1, size: 1, margin: 0));
             }
 
             public CreatureTestable(Creature parentFirst, Creature parentSecond) : base(parentFirst, parentSecond) { }
-
-
-            public override Creature MateWith(Creature creature)
-            {
-                base.MateWith(creature);
-                return new CreatureTestable(this, creature);
-            }
         }
 
         [TestFixture]
@@ -35,21 +29,19 @@ namespace IntroProjectTest
                 Creature parentA = new CreatureTestable(matingWillWork: true);
                 Creature parentB = new CreatureTestable(matingWillWork: true);
 
-                parentB.MateWith(parentA);
+                parentB.MateWithMale(parentA);
             }
 
             [TestFixture]
             public class AfterMating
             {
-                Creature parentA, parentB, child;
+                Creature parentA, parentB;
 
                 [SetUp]
                 public void SetUp()
                 {
                     parentA = new CreatureTestable(matingWillWork: true);
                     parentB = new CreatureTestable(matingWillWork: true);
-
-                    child = parentB.MateWith(parentA);
                 }
 
                 [Test]
@@ -62,14 +54,7 @@ namespace IntroProjectTest
                 [Test]
                 public void TestAfterMatingMatingAgainThrowsInvalidMating()
                 {
-                    Assert.Throws<UnreadyForMating>(() => parentB.MateWith(parentA));
-                }
-
-                [Test]
-                public void TestAfterMatingOnlyGenesArePassed()
-                {
-                    // Weak test as we don't have tons of properties yet
-                    Assert.IsTrue(child.isReadyToMate);
+                    Assert.Throws<UnreadyForMating>(() => parentB.MateWithMale(parentA));
                 }
             }
         }

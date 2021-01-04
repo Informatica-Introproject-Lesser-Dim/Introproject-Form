@@ -107,6 +107,17 @@ namespace IntroProject
             calcFenotype();
         }
 
+        public Gene(List<float[]>[] genoType) {
+            Genotype = new List<float[]>[2];
+            for (int i = 0; i < 2; i++) {
+                List<float[]> chromosome = new List<float[]>();
+                for (int j = 0; j < genoType[i].Count; j++) {
+                    chromosome.Add((float[]) genoType[i][j].Clone());
+                }
+                Genotype[i] = chromosome;
+            }
+        }
+
         private void calcFenotype() {
             //this is basicly turning a 3 dimensional array into a one dimensional array
             
@@ -137,7 +148,7 @@ namespace IntroProject
             Random random = new Random();
             for (int i = 0; i < Genotype[0].Count; i++)
             {
-                result.Add(Genotype[random.Next(0, 2)][i]); //here could be a cloning by reference problem but it's probably fine
+                result.Add((float[]) Genotype[random.Next(0, 2)][i].Clone()); //here could be a cloning by reference problem but it's probably fine
             }
             return result;
         } 
@@ -187,8 +198,11 @@ namespace IntroProject
             return x;
         }
 
-        public Gene CloneTyped() => (Gene)this.MemberwiseClone();
-        public object Clone() => this.MemberwiseClone();
+        public Gene CloneTyped() => (Gene)this.Clone();
+
+        public Object Clone() {
+            return new Gene(this.Genotype);
+        }
 
         public static Gene operator +(Gene a, Gene b)
         {
@@ -202,6 +216,19 @@ namespace IntroProject
                     for (int k = 0; k < Genotype[0][j].Length; k++)
                         if (Genotype[i][j][k] != other.Genotype[i][j][k])
                             return false;
+            return true;
+        }
+
+        public bool EqualFenoType(Gene other) {
+            return other.EqualFenoType(this.Fenotype);
+        }
+
+        public bool EqualFenoType(List<float> other) {
+            if (other.Count != Fenotype.Count)
+                return false;
+            for (int i = 0; i < other.Count; i++)
+                if (Fenotype[i] != other[i])
+                    return false;
             return true;
         }
     }

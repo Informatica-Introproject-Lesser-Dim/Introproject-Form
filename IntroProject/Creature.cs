@@ -17,7 +17,7 @@ namespace IntroProject
     {
         public Gene gene { get; protected set; }
         public int isAlive;
-        public bool isReadyToMate = true;
+        public bool isReadyToMate { get => coolDown == 0; }
         private Route route;
         private Creature target;
 
@@ -36,7 +36,7 @@ namespace IntroProject
 
         public Creature()
         {
-            energyVal = 400; //start with quite a lot so they dont die too quickly
+            energyVal = 600; //start with quite a lot so they dont die too quickly
             gene = new Gene();
 
             gene.@class = this.GetType().Name;
@@ -90,32 +90,18 @@ namespace IntroProject
             this.sleep = 30;
         }
 
-        // Assuming this is the same type as wezen: we don't want Herbivores mating Carnivores
-        //public virtual void MatingSuccess()
-        //{
-        //    isReadyToMate = false;
-        //}
-
-        //public virtual Creature? MateWith(Creature other)
-        //{
-        //    if (!this.isReadyToMate || !other.isReadyToMate)
-        //        throw new UnreadyForMating();
-
-        //    this.MatingSuccess();
-        //    other.MatingSuccess();
-        //    return this;
-        //}
-
-        private void MateWith(Creature other) { //this is the mating method called by the males
+        private void MateWithFemale(Creature other)
+        {
             //create a new creature, remove energy accordingly and set a "cooldown timer" for both the creatures
             this.coolDown = 1000;
             other.coolDown = 1000;
-            other.Mate(this);
+            other.MateWithMale(this);
             this.energyVal -= (int) (this.gene.Size * 0.05); //the males barely lose any energy
             this.goalReset();
         }
 
-        public void Mate(Creature other) {//this is the female mating method, will be called from within the male mating method
+        public void MateWithMale(Creature other)
+        {
             double transferredEnergy =  this.energyVal * this.gene.energyDistribution;
             energyVal -= transferredEnergy;
             Creature child = new Creature(this.gene * other.gene, transferredEnergy);
@@ -128,6 +114,9 @@ namespace IntroProject
         }
 
         public void activate() {
+            if (this.energyVal < 0)
+                this.color = Color.Orange;
+
             this.energyVal -= Calculator.StandardEnergyCost(gene);
             if (this.coolDown > 0)
                 coolDown--;
@@ -317,15 +306,25 @@ namespace IntroProject
             if (route != null)
             {
                 myFood = aStar.getTarget();
-                goal = Goal.Food;
-                this.color = Color.FromArgb(150, 50, 50);
+                if (myFood != null)
+                {
+                    goal = Goal.Food;
+                    this.color = Color.FromArgb(150, 50, 50);
+                }
+                else {
+                    goal = Goal.Nothing;
+                }
+                
+                
                 if (route.quality < gene.ActivePreference) {
                     this.color = Color.FromArgb(50, 50, 50);
                     goal = Goal.Nothing;
                 }
                     
             }
-            else { sleep = 20; }
+            else { sleep = 20;
+                this.color = Color.Purple;
+            }
         }
 
         public void checkSurroundings() {
@@ -367,7 +366,7 @@ namespace IntroProject
                         if (goal == Goal.Food)
                             eat(myFood);
                         if (goal == Goal.Mate)
-                            MateWith(target);
+                            MateWithFemale(target);
                         myFood = null;
                         sleep += 30;
                         return;

@@ -34,14 +34,14 @@ namespace IntroProject
 
             Tag++;
             this.energy = energy;
-            maxCost = Math.Pow(10, 3) + energy; //default value for now
+            maxCost = Math.Pow(10, 5) + energy; //default value for now
 
             this.gene = gene;
             //add the starting point
             mark(chunck);
             Route temp = new Route(loc, size, chunck);
             routeList = new RouteList();
-            routeList.Add(new RouteElement(0, temp));
+            expandPoint(temp);
 
             //start with the few base routes
             Route current;
