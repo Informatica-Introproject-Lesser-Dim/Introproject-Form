@@ -25,5 +25,11 @@ namespace IntroProject
         public static float StandardEnergyCost(Gene gene) {
             return standardBias * gene.Size;
         }
+
+        public static double distanceSquared(double x1, double y1, double x2, double y2) {
+            double dx = x1 - x2;
+            double dy = y1 - y2;
+            return dx * dx + dy * dy;
+        }
     }
 }

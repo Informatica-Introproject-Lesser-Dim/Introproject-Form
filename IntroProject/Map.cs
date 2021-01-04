@@ -150,6 +150,33 @@ namespace IntroProject
             return Bias(result,x,y);
         }
 
+        public Entity GetCreature(int x, int y, float range) {
+            int[] hexPos = PosToHexPos(x, y);
+
+            if (hexPos[0] < 0 || hexPos[0] >= width || hexPos[1] < 0 || hexPos[1] >= height)
+                return null;
+
+            Hexagon hex = tiles[hexPos[0], hexPos[1]];
+            List<Entity> entities = hex.searchPoint(0, EntityType.Entity);
+            entities = entities.Concat(hex.searchPoint(1, EntityType.Entity)).ToList();
+            if (entities.Count == 0)
+                return null;
+
+            double val = Calculator.distanceSquared(x, y, entities[0].x, entities[0].y);
+            Entity best = entities[0];
+            foreach (Entity entity in entities) {
+                double temp = Calculator.distanceSquared(x, y, entity.GlobalLoc.X, entity.GlobalLoc.Y);
+                if (temp < val) {
+                    val = temp;
+                    best = entity;
+                }
+            }
+
+            if (val > range * range)
+                return null;
+            return best;
+        }
+
         private float Bias(float f, float x, float y) { //a bias is needed so that the edges of the map are always water
             //not much strange happens here, just deciding wich edge you're closest to and then deciding a bias
             //based on how far you are from this edge

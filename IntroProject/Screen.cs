@@ -67,6 +67,8 @@ namespace IntroProject
         public const int size = 35;
         public Button plus = new ButtonImaged(Properties.Resources.Plus_icon);
 
+        private Entity selected;
+
 
         public MapScreen(Size size) : this(size.Width, size.Height) { }
         public MapScreen(int w, int h)
@@ -117,8 +119,16 @@ namespace IntroProject
         }
 
         public void Klik(object o, MouseEventArgs mea) {
-            int[] adress = kaart.PosToHexPos(mea.X - xCam, mea.Y - yCam);
-            this.Invalidate();
+            if (selected != null)
+                selected.selected = false;
+            selected = null;
+
+            Entity newE = kaart.GetCreature(mea.X - xCam, mea.Y - yCam, 40);
+            if (newE == null)
+                return;
+            
+            newE.selected = true;
+            selected = newE;
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
