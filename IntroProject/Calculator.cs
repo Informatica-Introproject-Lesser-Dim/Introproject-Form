@@ -7,14 +7,15 @@ namespace IntroProject
     static class Calculator
     {
         private const float jumpBias = 0.001f;
-        private const float moveBias = 0.0001f; //mess a bit with these values when we got everything else set up correctly
+        private const float moveBias = 0.01f; //mess a bit with these values when we got everything else set up correctly
+        private const float standardBias = 0.0001f;
 
         public static float JumpCost(Gene gene) {
             return gene.Size * gene.JumpHeight * gene.JumpHeight * jumpBias;
         }
 
         public static float EnergyPerMeter(Gene gene) {
-            return gene.Velocity * StandardEnergyCost(gene);
+            return 0.1f * gene.Velocity * StandardEnergyCost(gene);
         }
 
         public static float EnergyPerTic(Gene gene) {
