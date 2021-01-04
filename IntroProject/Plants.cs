@@ -23,24 +23,4 @@ namespace IntroProject
 
        
     }
-
-    //public class Grass : Plants
-    //{
-
-    //    public Grass(int x, int y, int nutritionValue) : base(x, y, nutritionValue)
-    //    {
-    //        this.x = x;
-    //        this.y = y;
-    //        this.nutritionValue = nutritionValue;
-    //        color = Color.Green;
-    //    }
-    //    public void expand()
-    //    {
-    //        int expensionAge = 200;
-    //        if (age > expensionAge)
-    //        {
-    //            //spawn one or more grasses in edjacent hexagons of current pos
-    //        }
-    //    }
-    //}
 }
