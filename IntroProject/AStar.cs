@@ -164,6 +164,8 @@ namespace IntroProject
         public override Route getResult()
         {
             //test of het result wel naar het einde gaat
+            if (current == null)
+                return null;
             if (!isDone(current))
                 return null;
             this.current.addEnd(new Point(theTarget.x, theTarget.y));

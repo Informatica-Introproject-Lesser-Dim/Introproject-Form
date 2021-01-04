@@ -118,9 +118,9 @@ namespace IntroProject
     //and when the plants "grow" you change the visible variable to true
     public class Grass {//I suppose that since it can also grow in water it should be called algea or smthn else
         //constants
-        private const int min = 40, max = 60;//these numbers are up for discussion, right now it's just temporary placeholders
-        private const int growRange = 50;
-        private const int growthTime = 10; //how much time to grow one bit
+        private const int min = 50, max = 200;//these numbers are up for discussion, right now it's just temporary placeholders
+        private const int growRange = 200;
+        private const int growthTime = 3; //how much time to grow one bit
         private const int radius = 5; //temporary and used for drawing the grass (will later on probably be replaced by some actual pictures)
         //normal variables
 
