@@ -313,49 +313,6 @@ namespace IntroProject
             TrackBarWalkScale.ValueChanged += (object o, EventArgs ea) => { };
             TextBoxWalkScale.TextChanged += (object o, EventArgs ea) => { };
 
-
-            this.Controls.Add(exit);
-            this.Controls.Add(TrackBarSpeed);
-            this.Controls.Add(TextBoxSpeed);
-            this.Controls.Add(TrackBarTotalEntities);
-            this.Controls.Add(TextBoxTotalEntities);
-            this.Controls.Add(TrackBarStartEntities);
-            this.Controls.Add(TextBoxStartEntities);
-            this.Controls.Add(TextBoxSpawnRate);
-            this.Controls.Add(TrackBarSpawnRate);
-            this.Controls.Add(TrackBarHightScale);
-            this.Controls.Add(TextBoxHightScale);
-            this.Controls.Add(TrackBarGrassFoodMin);
-            this.Controls.Add(TextBoxGrassFoodMin);
-            this.Controls.Add(TrackBarGrassFoodMax);
-            this.Controls.Add(TextBoxGrassFoodMax);
-            this.Controls.Add(TrackBarGrassGrowth);
-            this.Controls.Add(TextBoxGrassGrowth);
-            this.Controls.Add(TrackBarGrassFoodScale);
-            this.Controls.Add(TextBoxGrassFoodScale);
-            this.Controls.Add(TrackBarTemperatureBais);
-            this.Controls.Add(TextBoxTemperatureBais);
-            this.Controls.Add(TrackBarTemperatureScale);
-            this.Controls.Add(TextBoxTemperatureScale);
-            this.Controls.Add(TrackBarWalkBias);
-            this.Controls.Add(TextBoxWalkBias);
-            this.Controls.Add(TrackBarWalkScale);
-            this.Controls.Add(TextBoxWalkScale);
-
-            this.Controls.Add(LabelSpeed);
-            this.Controls.Add(LabelTotalEntities);
-            this.Controls.Add(LabelStartEntities);
-            this.Controls.Add(LabelSpawnRate);
-            this.Controls.Add(LabelHightScale);
-            this.Controls.Add(LabelGrassFoodMin);
-            this.Controls.Add(LabelGrassFoodMax);
-            this.Controls.Add(LabelGrassGrowth);
-            this.Controls.Add(LabelGrassFoodScale);
-            this.Controls.Add(LabelTemperatureBais);
-            this.Controls.Add(LabelTemperatureScale);
-            this.Controls.Add(LabelWalkBias);
-            this.Controls.Add(LabelWalkScale);
-
         }
         private (Label, TrackBar, TextBox) MakeSlider(int x, int y, String name, int basevalue, int minvalue, int maxvalue, int scale)
         {
@@ -378,6 +335,10 @@ namespace IntroProject
             textBox.TextChanged += (object o, EventArgs ea) => { trackBar.Value = Convert.ToInt32(double.Parse(textBox.Text) * scale); };
             textBox.Location = new Point((x+400), (y+30));
             textBox.Size = sliderTextBoxSize;
+
+            this.Controls.Add(trackBar);
+            this.Controls.Add(textBox);
+            this.Controls.Add(label);
 
             return (label, trackBar, textBox);
         }
