@@ -249,6 +249,7 @@ namespace IntroProject
 
     class SettingsMenu : UserControl
     {
+        public bool warning = true;
         public SettingsMenu(int w, int h)
         {
             this.BackColor = Color.FromArgb(123, 156, 148);
@@ -274,8 +275,22 @@ namespace IntroProject
             TextBoxStartEntities.TextChanged += (object o, EventArgs ea) => { };
 
             (Label LabelSpawnRate, TrackBar TrackBarSpawnRate, TextBox TextBoxSpawnRate) = MakeSlider(40, 300, "Spawn Rate", 5, 10, 100, 10);
-            TrackBarSpawnRate.ValueChanged += (object o, EventArgs ea) => { };
-            TextBoxSpawnRate.TextChanged += (object o, EventArgs ea) => { };
+            TrackBarSpawnRate.ValueChanged += (object o, EventArgs ea) =>
+            {
+                if (warning)
+                { //msgbox needs restart for effect, press stop to restart.
+                    warning = true;
+                }
+                //change value for next map creation
+            };
+            TextBoxSpawnRate.TextChanged += (object o, EventArgs ea) => 
+            {
+                if (warning)
+                { //msgbox needs restart for effect, press stop to restart.
+                    warning = true;
+                }
+                //change value for next map creation
+            };
 
             (Label LabelHightScale, TrackBar TrackBarHightScale, TextBox TextBoxHightScale) = MakeSlider(40, 380, "HightScale", 8, 0, 8, 1);
             TrackBarHightScale.ValueChanged += (object o, EventArgs ea) => { };
