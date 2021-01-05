@@ -101,7 +101,7 @@ namespace IntroProjectTest
                 [Test]
                 public void TestGeneChangesWhenMutating()
                 {
-                    Assert.AreNotEqual(unstableGeneSetA.CloneTyped().Mutate(), unstableGeneSetA);
+                    Assert.IsFalse(unstableGeneSetA.CloneTyped().Mutate().Equals(unstableGeneSetA));
                 }
             }
         }
