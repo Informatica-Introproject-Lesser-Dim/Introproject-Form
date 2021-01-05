@@ -24,7 +24,7 @@ namespace IntroProjectTest
                     for (int i = 0; !reader.EndOfStream; i++)
                     {
                         textFile.Add(reader.ReadLine());
-                        languageList.Add(textFile[i].Split(';').ToList());
+                        languageList.Add(textFile[i].Split(',').ToList());
                         keyWordList.Add(languageList[i][0]);
                     }
                 }

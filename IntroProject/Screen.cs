@@ -375,7 +375,7 @@ namespace IntroProject
             while (!reader.EndOfStream)
             {
                 string line = reader.ReadLine();
-                string[] value = line.Split(';');
+                string[] value = line.Split(',');
                 if (value[0] == searchData)
                 {
                     return value[languageNumber];
