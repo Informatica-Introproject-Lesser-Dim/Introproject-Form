@@ -260,6 +260,7 @@ namespace IntroProject
             exit.Size = new Size(50, 50);
             exit.FlatAppearance.BorderColor = Color.FromArgb(123, 156, 148);
             exit.Click += (object o, EventArgs ea) => { this.Hide(); };
+            this.Controls.Add(exit);
 
             //Trackbar x+399 = textbox x
             (Label LabelSpeed, TrackBar TrackBarSpeed, TextBox TextBoxSpeed) = MakeSlider(40, 60, "Speed", 1, 25, 200, 100);
