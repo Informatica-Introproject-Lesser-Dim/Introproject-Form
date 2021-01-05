@@ -275,8 +275,8 @@ namespace IntroProject
             TrackBarStartEntities.ValueChanged += (object o, EventArgs ea) => { };
             TextBoxStartEntities.TextChanged += (object o, EventArgs ea) => { };
 
-            (Label LabelSpawnRate, TrackBar TrackBarSpawnRate, TextBox TextBoxSpawnRate) = MakeSlider(40, 300, "Spawn Rate", 5, 10, 100, 10);
-            TrackBarSpawnRate.ValueChanged += (object o, EventArgs ea) =>
+            (Label LabelSHatchSpeed, TrackBar TrackBarHatchSpeed, TextBox TextBoxHatchSpeed) = MakeSlider(40, 300, "Hatch Speed", 5, 10, 100, 10);
+            TrackBarHatchSpeed.ValueChanged += (object o, EventArgs ea) =>
             {
                 if (warning)
                 { //msgbox needs restart for effect, press stop to restart.
@@ -284,7 +284,7 @@ namespace IntroProject
                 }
                 //change value for next map creation
             };
-            TextBoxSpawnRate.TextChanged += (object o, EventArgs ea) => 
+            TextBoxHatchSpeed.TextChanged += (object o, EventArgs ea) => 
             {
                 if (warning)
                 { //msgbox needs restart for effect, press stop to restart.
@@ -293,42 +293,43 @@ namespace IntroProject
                 //change value for next map creation
             };
 
-            (Label LabelHightScale, TrackBar TrackBarHightScale, TextBox TextBoxHightScale) = MakeSlider(40, 380, "HightScale", 8, 0, 8, 1);
-            TrackBarHightScale.ValueChanged += (object o, EventArgs ea) => { };
-            TextBoxHightScale.TextChanged += (object o, EventArgs ea) => { };
+            (Label LabelSeaLevelHeight, TrackBar TrackBarSeaLevelHeight, TextBox TextBoxSeaLevelHeight) = MakeSlider(40, 380, "Sea Level", 8, 0, 8, 1);
+            TrackBarSeaLevelHeight.ValueChanged += (object o, EventArgs ea) => { };
+            TextBoxSeaLevelHeight.TextChanged += (object o, EventArgs ea) => { };
 
-            (Label LabelGrassFoodMin, TrackBar TrackBarGrassFoodMin, TextBox TextBoxGrassFoodMin) = MakeSlider(40, 500, "Grass Feed Min", 5, 10, 100, 10);
-            TrackBarGrassFoodMin.ValueChanged += (object o, EventArgs ea) => { };
-            TextBoxGrassFoodMin.TextChanged += (object o, EventArgs ea) => { };
+            (Label LabelMatingCost, TrackBar TrackBarMatingCost, TextBox TextBoxMatingCost) = MakeSlider(40, 500, "Mating Cost", 20, 10, 50, 1);
+            TrackBarMatingCost.ValueChanged += (object o, EventArgs ea) => { };
+            TextBoxMatingCost.TextChanged += (object o, EventArgs ea) => { };
 
-            (Label LabelGrassFoodMax, TrackBar TrackBarGrassFoodMax, TextBox TextBoxGrassFoodMax) = MakeSlider(40, 580, "Grass Feed Max", 5, 10, 100, 10);
-            TrackBarGrassFoodMax.ValueChanged += (object o, EventArgs ea) => { };
-            TextBoxGrassFoodMax.TextChanged += (object o, EventArgs ea) => { };
-
-            (Label LabelGrassGrowth, TrackBar TrackBarGrassGrowth, TextBox TextBoxGrassGrowth) = MakeSlider(40, 660, "Grass Growth Speed", 5, 10, 100, 10);
+            (Label LabelGrassGrowth, TrackBar TrackBarGrassGrowth, TextBox TextBoxGrassGrowth) = MakeSlider(40, 580, "Grass Growth Speed", 5, 10, 100, 10);
             TrackBarGrassGrowth.ValueChanged += (object o, EventArgs ea) => { };
             TextBoxGrassGrowth.TextChanged += (object o, EventArgs ea) => { };
 
-            (Label LabelGrassFoodScale, TrackBar TrackBarGrassFoodScale, TextBox TextBoxGrassFoodScale) = MakeSlider(40, 740, "Grass Feed Scale", 5, 10, 100, 10);
-            TrackBarGrassFoodScale.ValueChanged += (object o, EventArgs ea) => { };
-            TextBoxGrassFoodScale.TextChanged += (object o, EventArgs ea) => { };
+            (Label LabelGrassMaxFeed, TrackBar TrackBarGrassFeedScale, TextBox TextBoxGrassFeedScale) = MakeSlider(40, 660, "Grass Feed Scale", 5, 10, 100, 10);
+            TrackBarGrassFeedScale.ValueChanged += (object o, EventArgs ea) => { };
+            TextBoxGrassFeedScale.TextChanged += (object o, EventArgs ea) => { };
 
-            (Label LabelTemperatureBais, TrackBar TrackBarTemperatureBais, TextBox TextBoxTemperatureBais) = MakeSlider(500, 60, "Temperature Bais", 1, 25, 200, 100);
-            TrackBarTemperatureBais.ValueChanged += (object o, EventArgs ea) => { };
-            TextBoxTemperatureBais.TextChanged += (object o, EventArgs ea) => { };
+            (Label LabelTemperatureMin, TrackBar TrackBarTemperatureMin, TextBox TextBoxTemperatureMin) = MakeSlider(500, 60, "Temperature Min", 1, 25, 200, 100);
+            TrackBarTemperatureMin.ValueChanged += (object o, EventArgs ea) => { };
+            TextBoxTemperatureMin.TextChanged += (object o, EventArgs ea) => { };
 
-            (Label LabelTemperatureScale, TrackBar TrackBarTemperatureScale, TextBox TextBoxTemperatureScale) = MakeSlider(500, 140, "Temperature Scale", 1, 25, 200, 100);
-            TrackBarTemperatureScale.ValueChanged += (object o, EventArgs ea) => { };
-            TextBoxTemperatureScale.TextChanged += (object o, EventArgs ea) => { };
+            (Label LabelTemperatureMax, TrackBar TrackBarTemperatureMax, TextBox TextBoxTemperatureMax) = MakeSlider(500, 140, "Temperature Max", 1, 25, 200, 100);
+            TrackBarTemperatureMax.ValueChanged += (object o, EventArgs ea) => { };
+            TextBoxTemperatureMax.TextChanged += (object o, EventArgs ea) => { };
 
-            (Label LabelWalkBias, TrackBar TrackBarWalkBias, TextBox TextBoxWalkBias) = MakeSlider(500, 140, "Walk Bias", 1, 25, 200, 100);
-            TrackBarWalkBias.ValueChanged += (object o, EventArgs ea) => { };
-            TextBoxWalkBias.TextChanged += (object o, EventArgs ea) => { };
+            (Label LabelWalkEnergy, TrackBar TrackBarWalkEnergy, TextBox TextBoxWalkEnergy) = MakeSlider(500, 220, "Walk Bias", 1, 25, 200, 100);
+            TrackBarWalkEnergy.ValueChanged += (object o, EventArgs ea) => { };
+            TextBoxWalkEnergy.TextChanged += (object o, EventArgs ea) => { };
 
-            (Label LabelWalkScale, TrackBar TrackBarWalkScale, TextBox TextBoxWalkScale) = MakeSlider(500, 140, "Walk Scale", 1, 25, 200, 100);
-            TrackBarWalkScale.ValueChanged += (object o, EventArgs ea) => { };
-            TextBoxWalkScale.TextChanged += (object o, EventArgs ea) => { };
+            (Label LabelJumpEnergy, TrackBar TrackBarJumpEnergy, TextBox TextBoxJumpEnergy) = MakeSlider(500, 300, "Walk Scale", 1, 25, 200, 100);
+            TrackBarJumpEnergy.ValueChanged += (object o, EventArgs ea) => { };
+            TextBoxJumpEnergy.TextChanged += (object o, EventArgs ea) => { };
 
+            (Label LabelPassiveEnergy, TrackBar TrackBarPassiveEnergy, TextBox TextBoxPassiveEnergy) = MakeSlider(500, 380, "Walk Scale", 1, 25, 200, 100);
+            TrackBarPassiveEnergy.ValueChanged += (object o, EventArgs ea) => { };
+            TextBoxPassiveEnergy.TextChanged += (object o, EventArgs ea) => { };
+
+            this.Controls.Add(exit);
         }
         private (Label, TrackBar, TextBox) MakeSlider(int x, int y, String name, int basevalue, int minvalue, int maxvalue, int scale)
         {
