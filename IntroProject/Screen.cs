@@ -262,20 +262,24 @@ namespace IntroProject
             exit.Click += (object o, EventArgs ea) => { this.Hide(); };
             this.Controls.Add(exit);
 
+            ToolTip t = new ToolTip();
+            t.ToolTipIcon = ToolTipIcon.Info;
+            t.SetToolTip(exit, "Doe wat leuks");
+
             //Trackbar x+399 = textbox x
-            (Label LabelSpeed, TrackBar TrackBarSpeed, TextBox TextBoxSpeed) = MakeSlider(40, 60, "Speed", 1, 25, 200, 100);
+            (Label LabelSpeed, TrackBar TrackBarSpeed, TextBox TextBoxSpeed, ToolTip ToolTipSpeed) = MakeSlider(40, 60, "Speed", 1, 25, 200, 100, "bijbehorende uitleg");
             TrackBarSpeed.ValueChanged += (object o, EventArgs ea) => { };
             TextBoxSpeed.TextChanged += (object o, EventArgs ea) => { };
 
-            (Label LabelTotalEntities, TrackBar TrackBarTotalEntities, TextBox TextBoxTotalEntities) = MakeSlider(40, 140, "Total number of Entities", 20, 10, 50, 1);
+            (Label LabelTotalEntities, TrackBar TrackBarTotalEntities, TextBox TextBoxTotalEntities, ToolTip ToolTipTotalEntities) = MakeSlider(40, 140, "Total number of Entities", 20, 10, 50, 1, "bijbehorende uitleg");
             TrackBarTotalEntities.ValueChanged += (object o, EventArgs ea) => { };
             TextBoxTotalEntities.TextChanged += (object o, EventArgs ea) => { };
 
-            (Label LabelStartEntities, TrackBar TrackBarStartEntities, TextBox TextBoxStartEntities) = MakeSlider(40, 220, "Begin number of Entities", 20, 10, 40, 1);
+            (Label LabelStartEntities, TrackBar TrackBarStartEntities, TextBox TextBoxStartEntities, ToolTip ToolTipSTartEntities) = MakeSlider(40, 220, "Begin number of Entities", 20, 10, 40, 1, "bijbehorende uitleg");
             TrackBarStartEntities.ValueChanged += (object o, EventArgs ea) => { };
             TextBoxStartEntities.TextChanged += (object o, EventArgs ea) => { };
 
-            (Label LabelSHatchSpeed, TrackBar TrackBarHatchSpeed, TextBox TextBoxHatchSpeed) = MakeSlider(40, 300, "Hatch Speed", 5, 10, 100, 10);
+            (Label LabelSHatchSpeed, TrackBar TrackBarHatchSpeed, TextBox TextBoxHatchSpeed, ToolTip ToolTipHatchSpeed) = MakeSlider(40, 300, "Hatch Speed", 5, 10, 100, 10, "bijbehorende uitleg");
             TrackBarHatchSpeed.ValueChanged += (object o, EventArgs ea) =>
             {
                 if (warning)
@@ -293,45 +297,45 @@ namespace IntroProject
                 //change value for next map creation
             };
 
-            (Label LabelSeaLevelHeight, TrackBar TrackBarSeaLevelHeight, TextBox TextBoxSeaLevelHeight) = MakeSlider(40, 380, "Sea Level", 8, 0, 8, 1);
+            (Label LabelSeaLevelHeight, TrackBar TrackBarSeaLevelHeight, TextBox TextBoxSeaLevelHeight, ToolTip ToolTipSeaLevelHeight) = MakeSlider(40, 380, "Sea Level", 8, 0, 8, 1, "bijbehorende uitleg");
             TrackBarSeaLevelHeight.ValueChanged += (object o, EventArgs ea) => { };
             TextBoxSeaLevelHeight.TextChanged += (object o, EventArgs ea) => { };
 
-            (Label LabelMatingCost, TrackBar TrackBarMatingCost, TextBox TextBoxMatingCost) = MakeSlider(40, 500, "Mating Cost", 20, 10, 50, 1);
+            (Label LabelMatingCost, TrackBar TrackBarMatingCost, TextBox TextBoxMatingCost, ToolTip ToolTipMatingCost) = MakeSlider(40, 500, "Mating Cost", 20, 10, 50, 1, "bijbehorende uitleg");
             TrackBarMatingCost.ValueChanged += (object o, EventArgs ea) => { };
             TextBoxMatingCost.TextChanged += (object o, EventArgs ea) => { };
 
-            (Label LabelGrassGrowth, TrackBar TrackBarGrassGrowth, TextBox TextBoxGrassGrowth) = MakeSlider(40, 580, "Grass Growth Speed", 5, 10, 100, 10);
+            (Label LabelGrassGrowth, TrackBar TrackBarGrassGrowth, TextBox TextBoxGrassGrowth, ToolTip ToolTipGrassGrowth) = MakeSlider(40, 580, "Grass Growth Speed", 5, 10, 100, 10, "bijbehorende uitleg");
             TrackBarGrassGrowth.ValueChanged += (object o, EventArgs ea) => { };
             TextBoxGrassGrowth.TextChanged += (object o, EventArgs ea) => { };
 
-            (Label LabelGrassMaxFeed, TrackBar TrackBarGrassFeedScale, TextBox TextBoxGrassFeedScale) = MakeSlider(40, 660, "Grass Feed Scale", 5, 10, 100, 10);
+            (Label LabelGrassMaxFeed, TrackBar TrackBarGrassFeedScale, TextBox TextBoxGrassFeedScale, ToolTip ToolTipGrassFeedScale) = MakeSlider(40, 660, "Grass Feed Scale", 5, 10, 100, 10, "bijbehorende uitleg");
             TrackBarGrassFeedScale.ValueChanged += (object o, EventArgs ea) => { };
             TextBoxGrassFeedScale.TextChanged += (object o, EventArgs ea) => { };
 
-            (Label LabelTemperatureMin, TrackBar TrackBarTemperatureMin, TextBox TextBoxTemperatureMin) = MakeSlider(500, 60, "Temperature Min", 1, 25, 200, 100);
+            (Label LabelTemperatureMin, TrackBar TrackBarTemperatureMin, TextBox TextBoxTemperatureMin, ToolTip ToolTipTemperatureMin) = MakeSlider(500, 60, "Temperature Min", 1, 25, 200, 100, "bijbehorende uitleg");
             TrackBarTemperatureMin.ValueChanged += (object o, EventArgs ea) => { };
             TextBoxTemperatureMin.TextChanged += (object o, EventArgs ea) => { };
 
-            (Label LabelTemperatureMax, TrackBar TrackBarTemperatureMax, TextBox TextBoxTemperatureMax) = MakeSlider(500, 140, "Temperature Max", 1, 25, 200, 100);
+            (Label LabelTemperatureMax, TrackBar TrackBarTemperatureMax, TextBox TextBoxTemperatureMax, ToolTip ToolTipTemperatureMax) = MakeSlider(500, 140, "Temperature Max", 1, 25, 200, 100, "bijbehorende uitleg");
             TrackBarTemperatureMax.ValueChanged += (object o, EventArgs ea) => { };
             TextBoxTemperatureMax.TextChanged += (object o, EventArgs ea) => { };
 
-            (Label LabelWalkEnergy, TrackBar TrackBarWalkEnergy, TextBox TextBoxWalkEnergy) = MakeSlider(500, 220, "Walk Bias", 1, 25, 200, 100);
+            (Label LabelWalkEnergy, TrackBar TrackBarWalkEnergy, TextBox TextBoxWalkEnergy, ToolTip ToolTipWalkEnergy) = MakeSlider(500, 220, "Walk Bias", 1, 25, 200, 100, "bijbehorende uitleg");
             TrackBarWalkEnergy.ValueChanged += (object o, EventArgs ea) => { };
             TextBoxWalkEnergy.TextChanged += (object o, EventArgs ea) => { };
 
-            (Label LabelJumpEnergy, TrackBar TrackBarJumpEnergy, TextBox TextBoxJumpEnergy) = MakeSlider(500, 300, "Walk Scale", 1, 25, 200, 100);
+            (Label LabelJumpEnergy, TrackBar TrackBarJumpEnergy, TextBox TextBoxJumpEnergy, ToolTip ToolTipJumpEnergy) = MakeSlider(500, 300, "Walk Scale", 1, 25, 200, 100, "bijbehorende uitleg");
             TrackBarJumpEnergy.ValueChanged += (object o, EventArgs ea) => { };
             TextBoxJumpEnergy.TextChanged += (object o, EventArgs ea) => { };
 
-            (Label LabelPassiveEnergy, TrackBar TrackBarPassiveEnergy, TextBox TextBoxPassiveEnergy) = MakeSlider(500, 380, "Walk Scale", 1, 25, 200, 100);
+            (Label LabelPassiveEnergy, TrackBar TrackBarPassiveEnergy, TextBox TextBoxPassiveEnergy, ToolTip ToolTipPassiveEnergy) = MakeSlider(500, 380, "Walk Scale", 1, 25, 200, 100, "bijbehorende uitleg");
             TrackBarPassiveEnergy.ValueChanged += (object o, EventArgs ea) => { };
             TextBoxPassiveEnergy.TextChanged += (object o, EventArgs ea) => { };
 
             this.Controls.Add(exit);
         }
-        private (Label, TrackBar, TextBox) MakeSlider(int x, int y, String name, int basevalue, int minvalue, int maxvalue, int scale)
+        private (Label, TrackBar, TextBox, ToolTip) MakeSlider(int x, int y, String name, int basevalue, int minvalue, int maxvalue, int scale, String uitleg)
         {
             Size sliderTextBoxSize = new Size(30, 20);
 
@@ -353,11 +357,18 @@ namespace IntroProject
             textBox.Location = new Point((x+400), (y+30));
             textBox.Size = sliderTextBoxSize;
 
+            ToolTip toolTip = new ToolTip();
+            toolTip.ToolTipIcon = ToolTipIcon.Info;
+            toolTip.ToolTipTitle = name;
+            toolTip.SetToolTip(label, uitleg);
+            toolTip.SetToolTip(trackBar, uitleg);
+
             this.Controls.Add(trackBar);
             this.Controls.Add(textBox);
             this.Controls.Add(label);
+            
 
-            return (label, trackBar, textBox);
+            return (label, trackBar, textBox, toolTip);
         }
     }
 
