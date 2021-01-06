@@ -166,7 +166,10 @@ namespace IntroProject
             if (selected != null)
             {
                 pea.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(50, 0, 0, 0)), 1500, 100, 200, 100);
-                pea.Graphics.DrawString(selected.GetType().ToString().Substring(13, selected.GetType().ToString().Length - 1) + "\n" + "Energy: " + Math.Round(selected.energyVal, 2), font, new SolidBrush(Color.Black), 1510, 110);
+                pea.Graphics.DrawString(selected.GetType().ToString().Substring(13, selected.GetType().ToString().Length - 13) + "\n" + 
+                                        "Energy: " + Math.Round(selected.energyVal, 2), 
+                                        font, new SolidBrush(Color.Black), 
+                                        1510, 110);
             }
             this.Invalidate();
         }
