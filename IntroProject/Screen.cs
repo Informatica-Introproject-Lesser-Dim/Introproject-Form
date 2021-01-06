@@ -21,13 +21,13 @@ namespace IntroProject
 
             this.Size = new Size(1800, 1200);
             debugscr = new MapScreen(this.Size);
-            settingsMenu = new SettingsMenu(Size.Width, Size.Height);
-            helpMenu = new HelpMenu(Size.Width, Size.Height);
-            statisticsMenu = new StatisticsMenu(Size.Width, Size.Height);
+            settingsMenu = new SettingsMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { settingsMenu.Hide(); debugscr.clicked = false; });
+            helpMenu = new HelpMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { helpMenu.Hide(); debugscr.clicked = false; });
+            statisticsMenu = new StatisticsMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { statisticsMenu.Hide(); debugscr.clicked = false; });
             dropMenu = new DropMenu(Size.Width/10, Size.Height, 
-                                   (object o, EventArgs ea) => { settingsMenu.Show(); settingsMenu.BringToFront(); }, 
-                                   (object o, EventArgs ea) => { helpMenu.Show(); helpMenu.BringToFront(); }, 
-                                   (object o, EventArgs ea) => { statisticsMenu.Show(); statisticsMenu.BringToFront(); },
+                                   (object o, EventArgs ea) => { settingsMenu.Show(); settingsMenu.BringToFront(); debugscr.clicked = true; }, 
+                                   (object o, EventArgs ea) => { helpMenu.Show(); helpMenu.BringToFront(); debugscr.clicked = true; }, 
+                                   (object o, EventArgs ea) => { statisticsMenu.Show(); statisticsMenu.BringToFront(); debugscr.clicked = true; },          
                                     debugscr.plus);
             dropMenu.Dock = DockStyle.Right;
             this.Controls.Add(dropMenu);
@@ -59,6 +59,7 @@ namespace IntroProject
     class MapScreen : UserControl
     {
         Map kaart;
+        public bool clicked = false; 
         int[] pos = new int[2] { 0, 0 };
         Font font = new Font("Arial", 12);
         int n = 0;
@@ -93,8 +94,8 @@ namespace IntroProject
             play.Location = new Point(40, 5);
             stop.Location = new Point(105, 5);
 
-            play.Click += (object o, EventArgs ea) => { play.Hide(); };
-            pause.Click += (object o, EventArgs ea) => { play.Show(); };
+            play.Click += (object o, EventArgs ea) => { play.Hide(); clicked = true; };
+            pause.Click += (object o, EventArgs ea) => { play.Show(); clicked = false; };
 
             this.Controls.Add(play); 
             this.Controls.Add(pause);
@@ -105,7 +106,6 @@ namespace IntroProject
 
             kaart = new Map(100, 70, size, 0);
             
-
             for (int i = 0; i < 20; i++)
             {
                 Herbivore herbivore = new Herbivore();
@@ -115,7 +115,6 @@ namespace IntroProject
             }
 
             this.MouseClick += Klik;
-            
         }
 
         public void Klik(object o, MouseEventArgs mea) {
@@ -153,14 +152,12 @@ namespace IntroProject
 
         public void drawScreen(object o, PaintEventArgs pea) 
         {
-            if (n > 4) {
+            if (n > 4 && clicked == false) {
                 kaart.TimeStep();
                 n = 0;
-
             }
             pea.Graphics.FillRectangle(new SolidBrush(Color.DarkGray), 0, 0, this.Width, this.Height);
             kaart.draw(pea.Graphics, xCam, yCam, this.Width, this.Height);
-            pea.Graphics.DrawString(pos[0].ToString() + "," + pos[1].ToString(), font, Brushes.Black, 0, 0);
             n++;
             this.Invalidate();
         }
@@ -250,7 +247,7 @@ namespace IntroProject
     class SettingsMenu : UserControl
     {
         public bool warning = true;
-        public SettingsMenu(int w, int h)
+        public SettingsMenu(int w, int h, EventHandler exitMenu)
         {
             this.BackColor = Color.FromArgb(123, 156, 148);
             this.Size = new Size(w, h);
@@ -259,7 +256,7 @@ namespace IntroProject
             exit.Location = new Point(2, 2);
             exit.Size = new Size(50, 50);
             exit.FlatAppearance.BorderColor = Color.FromArgb(123, 156, 148);
-            exit.Click += (object o, EventArgs ea) => { this.Hide(); };
+            exit.Click += exitMenu;
 
             //Trackbar x+399 = textbox x
             (Label LabelSpeed, TrackBar TrackBarSpeed, TextBox TextBoxSpeed) = MakeSlider(40, 60, "Speed", 1, 25, 200, 100);
@@ -362,7 +359,7 @@ namespace IntroProject
     class HelpMenu : UserControl
     {
 
-        public HelpMenu(int w, int h)
+        public HelpMenu(int w, int h, EventHandler exitMenu)
         {
             this.BackColor = Color.FromArgb(123, 156, 148);
             this.Size = new Size(w, h);
@@ -371,7 +368,7 @@ namespace IntroProject
             exit.Location = new Point(2, 2);
             exit.Size = new Size(50, 50);
             exit.FlatAppearance.BorderColor = Color.FromArgb(123, 156, 148);
-            exit.Click += (object o, EventArgs ea) => { this.Hide(); };
+            exit.Click += exitMenu;
 
             this.Controls.Add(exit);
         }
@@ -380,7 +377,7 @@ namespace IntroProject
     class StatisticsMenu : UserControl
     {
 
-        public StatisticsMenu(int w, int h)
+        public StatisticsMenu(int w, int h, EventHandler exitMenu)
         {
             this.BackColor = Color.FromArgb(123, 156, 148);
             this.Size = new Size(w, h);
@@ -389,7 +386,7 @@ namespace IntroProject
             exit.Location = new Point(2, 2);
             exit.Size = new Size(50, 50);
             exit.FlatAppearance.BorderColor = Color.FromArgb(123, 156, 148);
-            exit.Click += (object o, EventArgs ea) => { this.Hide(); };
+            exit.Click += exitMenu;
 
             this.Controls.Add(exit);
         }
