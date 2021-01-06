@@ -6,9 +6,9 @@ namespace IntroProject
 {
     static class Calculator
     {
-        private const float jumpBias = 0.001f;
-        private const float moveBias = 0.1f; //mess a bit with these values when we got everything else set up correctly
-        private const float standardBias = 0.00001f;
+        private const float jumpBias = 0.001f;  //shouldbechanged we should make one place where we can tinker with variables like these
+        private const float moveBias = 0.1f; //mess a bit with these values when we got everything else set up correctly //shouldbechanged see above
+        private const float standardBias = 0.00001f;//shouldbechanged see above
 
         public static float JumpCost(Gene gene) {
             return gene.Size * gene.JumpHeight * gene.JumpHeight * jumpBias;
