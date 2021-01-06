@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace IntroProject
 {
+    //shouldbechanged enhance readability with type aliases to match biological representation
     public class Gene : ICloneable, IEquatable<Gene>
     {
         public string @class;
