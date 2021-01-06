@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+﻿using System.Drawing;//shouldbechanged loats of things from entity should be here
 
 namespace IntroProject
 {
