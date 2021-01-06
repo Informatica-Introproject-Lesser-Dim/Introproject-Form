@@ -3,7 +3,7 @@
     static class Settings
     {
         //geef nog alles de correcte initiele waarden, en de sliders moeten nog goed worden gescaled.
-        public static int StepSize;
+        public static double StepSize;
         public static int TotalEntities;
         public static int StartEntities;
         public static int HatchSpeed;
