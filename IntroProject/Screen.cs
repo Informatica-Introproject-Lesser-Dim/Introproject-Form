@@ -159,6 +159,11 @@ namespace IntroProject
             pea.Graphics.FillRectangle(new SolidBrush(Color.DarkGray), 0, 0, this.Width, this.Height);
             kaart.draw(pea.Graphics, xCam, yCam, this.Width, this.Height);
             n++;
+            if (selected != null)
+            {
+                pea.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(50, 0, 0, 0)), 1500, 100, 200, 100);
+                pea.Graphics.DrawString("Energy: " + Math.Round(selected.energyVal, 2), font, new SolidBrush(Color.Black), 1510, 110);
+            }
             this.Invalidate();
         }
 
