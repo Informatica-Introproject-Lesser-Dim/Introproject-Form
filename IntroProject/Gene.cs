@@ -166,7 +166,7 @@ namespace IntroProject
             List<float[]> result = new List<float[]>();
             for (int i = 0; i < Genotype[0].Count; i++)
             {
-                result.Add((float[]) Genotype[random.Next(0, 2)][i].Clone()); //here could be a cloning by reference problem but it's probably fine
+                result.Add((float[]) Genotype[random.Next(0, 2)][i].Clone()); //shouldbechanged here could be a cloning by reference problem but it's probably fine
             }
             return result;
         } 
