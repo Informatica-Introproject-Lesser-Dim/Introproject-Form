@@ -417,7 +417,7 @@ namespace IntroProject
             }
             if (debugdisplayedText == true)
             {
-                searchData = "niet compleet" + searchData;
+                searchData = "||niet compleet||" + searchData;
                 return searchData;
             }
             return "";
