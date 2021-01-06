@@ -381,6 +381,7 @@ namespace IntroProject
                     return value[languageNumber];
                 }
             }
+            reader.Close();
             if (debugdisplayedText == true)
             {
                 searchData = "niet compleet" + searchData;

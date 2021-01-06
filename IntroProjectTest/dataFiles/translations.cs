@@ -27,6 +27,7 @@ namespace IntroProjectTest.DataFiles
                         languageList.Add(textFile[i].Split(',').ToList());
                         keyWordList.Add(languageList[i][0]);
                     }
+                    reader.Close();
                 }
 
                 [Test]
