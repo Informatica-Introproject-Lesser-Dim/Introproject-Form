@@ -1,8 +1,6 @@
 ﻿using System;
-using System.IO;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Collections.Generic;
 
 namespace IntroProject
 {
@@ -452,36 +450,6 @@ namespace IntroProject
             this.Controls.Add(exit);
         }
     }
-    public class MultiLanguage
-    {
-        bool debugdisplayedText = true;
-        public MultiLanguage()
-        { }
-
-        public string displayedText(string searchData, int languageNumber)// languageNumber should be changed to a global variable
-        {
-
-            var reader = new StreamReader(@".\dataFiles\translations.csv");
-            while (!reader.EndOfStream)
-            {
-                string line = reader.ReadLine();
-                string[] value = line.Split(';');
-                if (value[0] == searchData)
-                {
-                    return value[languageNumber];
-                }
-            }
-            if (debugdisplayedText == true)
-            {
-                searchData = "||niet compleet||" + searchData;
-                return searchData;
-            }
-            return "";
-
-        }
-    
-    }
-
 
     internal class CustomTrackbar : TrackBar
     {

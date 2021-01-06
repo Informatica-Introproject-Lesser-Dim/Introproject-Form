@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.IO;
-using NUnit.Framework;
 using System.Linq;
 
-namespace IntroProjectTest
+using NUnit.Framework;
+
+namespace IntroProjectTest.DataFiles
 {
-    class ScreenTest
+    class DataFilesTest
     {
         [TestFixture]
-        public class TextFile
+        public class ValidateDataFiles
         {
-            public class CheckForNoDuplicates
+            [TestFixture]
+            public class ValidateTranslationsFile
             {
                 private List<string> textFile = new List<string>();
                 private List<string> keyWordList = new List<string>();
@@ -24,9 +24,10 @@ namespace IntroProjectTest
                     for (int i = 0; !reader.EndOfStream; i++)
                     {
                         textFile.Add(reader.ReadLine());
-                        languageList.Add(textFile[i].Split(';').ToList());
+                        languageList.Add(textFile[i].Split(',').ToList());
                         keyWordList.Add(languageList[i][0]);
                     }
+                    reader.Close();
                 }
 
                 [Test]
