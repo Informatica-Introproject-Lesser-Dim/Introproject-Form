@@ -45,14 +45,14 @@ namespace IntroProject
             if (chunk != null)
             {
                 chunk.removeEntity(this);
-                chunk.addEntity(new Plants(this.x, this.y, 150));
+                chunk.addEntity(new DeathPile(this.x, this.y, 150));
             }
             return energyVal;
         }
 
 
         public virtual void draw(Graphics g, int hexX, int hexY, Entity e) {
-            if (e is Plants)
+            if (e is DeathPile)
             {
                 g.FillEllipse(new SolidBrush(color), hexX + x - r, hexY + y - r, r, r);
                 g.FillEllipse(new SolidBrush(color), hexX + x - r + disp, hexY + y - r + disp, r, r);
