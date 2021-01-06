@@ -22,7 +22,7 @@ namespace IntroProject
         private Creature target;
         public int isAlive;
 
-        private Grass myFood;
+        private Grass myFood;  //shouldbechanged isn;t unifersal for each creature, grass isn;t the only food
         private int sleep = 0;
         private Goal goal = Goal.Nothing;
         private bool passive = false;
@@ -33,7 +33,7 @@ namespace IntroProject
 
         public Creature()
         {
-            energyVal = 600; //start with quite a lot so they dont die too quickly
+            energyVal = 600; //start with quite a lot so they dont die too quickly //shouldbechanged we should make one place where we can tinker with variables like these
             gene = new Gene();
 
             gene.@class = this.GetType().Name;
@@ -47,11 +47,11 @@ namespace IntroProject
         }
 
         public static int calcDistance2(EntityType type, Hexagon place, Point point) { //enter the world relative position for point
-            List<Entity> targets = new List<Entity>();
+            List<Entity> targets = new List<Entity>();//shouldbechanged isn;t soort dependent
             for (int l = 0; targets.Count == 0 && l < 10; l++)
                 targets = place.searchPoint(l, type);
             if (targets.Count == 0)
-                return 10000000; //just a big number so stuff doesnt break
+                return 10000000; //just a big number so stuff doesnt break //shouldbechanged not the way we should implement this, can give not findable errors down the road
             int dist = calcDist2(targets[0], point);
             foreach (Entity e in targets)
                 if (calcDist2(e, point) < dist)
@@ -93,8 +93,8 @@ namespace IntroProject
             if (0 != (this.coolDown + other.coolDown))
                 throw new UnreadyForMating();
 
-            this.coolDown = 1000;
-            other.coolDown = 1000;
+            this.coolDown = 1000; //shouldbechanged we should make one place where we can tinker with variables like these and it should be 1 variable or mabye gene dependent
+            other.coolDown = 1000; //shouldbechanged we should make one place where we can tinker with variables like these and it should be 1 variable or maybe gene dependent
             other.MateWithMale(this);
             this.energyVal -= (int) (this.gene.Size * 0.05); //the males barely lose any energy
             this.goalReset();
@@ -251,12 +251,12 @@ namespace IntroProject
                 return false;
 
             this.goal = Goal.Mate;
-            this.color = Color.Pink;
+            this.color = Color.Pink; //shouldbechanged doesn;t give the collor pink because of the temperature overlay(white)
             this.sleep = 10;
             return true;
         }
 
-        public bool available(Creature creature) { // call this method to "spread your feromones"
+        public bool available(Creature creature) { // call this method to "spread your feromones" //shouldbechanged mating isn;t inter spiecies
             //both tells you wether the entity is interested and makes the entity go towards you
             if (this.coolDown > 0 || this.goal == Goal.Mate)
                 return false;
@@ -278,13 +278,13 @@ namespace IntroProject
                 return false; //stopping if it costs too much energy
 
             //Pathfinding...
-            this.color = Color.Pink;
+            this.color = Color.Pink; //shouldbechanged gives the collor white because of temperature overlay
             SingleTargetAStar aStar = new SingleTargetAStar(new Point(this.x, this.y), this.chunk, this.gene, this.chunk.size, this.energyVal, creature);
             route = aStar.getResult();
 
             if (route != null) {
                 goal = Goal.Mate;
-                this.color = Color.Pink;
+                this.color = Color.Pink;//shouldbechanged gives the collor white because of temperature overlay
                 this.target = creature;
                 return true;
             }
@@ -382,7 +382,7 @@ namespace IntroProject
             }
             //do whatever and entity should do when it doesnt have a route
         }
-        private void eat(Grass grass)
+        private void eat(Grass grass)//shouldbechanged (2 ways to implement, eat grass eat meat etc or make eat have multiple inputs)
         {
             if (grass == null)
                 return;
