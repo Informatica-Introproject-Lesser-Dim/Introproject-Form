@@ -156,7 +156,7 @@ namespace IntroProject
 
         }
 
-        public Creature GetCreature() 
+        public Creature GetCreature() //shouldbechanged: wordt niet gebruikt(0 references)
         {
             return theTarget; 
         }
