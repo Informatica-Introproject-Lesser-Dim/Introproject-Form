@@ -16,4 +16,10 @@
     <ProjectReference Include="..\IntroProject\IntroProject.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="fixtures\translations\header-only.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

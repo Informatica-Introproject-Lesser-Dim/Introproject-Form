@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 namespace IntroProject
 {
+    using Language = String;
     public partial class Screen : Form
     {
         MapScreen debugscr;
@@ -365,13 +366,32 @@ namespace IntroProject
     public class MultiLanguage
     {
         bool debugdisplayedText = true;
-        public MultiLanguage()
-        { }
+
+        public Dictionary<Language, Dictionary<string, string>> translations = new Dictionary<Language, Dictionary<string, string>>();
+
+        private StreamReader reader;
+
+        public MultiLanguage() : this(@".\dataFiles\translations.csv") { }
+
+        public MultiLanguage(string translationFile)
+        {
+            reader = new StreamReader(translationFile);
+            ReadLanguagesFromTranslationsFileHeader();
+        }
+
+        private void ReadLanguagesFromTranslationsFileHeader()
+        {
+            if (reader.EndOfStream)
+                throw new FileLoadException("Missing header; End of Filestream reached");
+            string[] headerSplit = reader.ReadLine().Split(',');
+
+            for (int i = 1; i < headerSplit.Length; i++)
+                translations.Add(headerSplit[i], new Dictionary<string, string>());
+        }
 
         public string displayedText(string searchData, int languageNumber)// languageNumber should be changed to a global variable
         {
 
-            var reader = new StreamReader(@".\dataFiles\translations.csv");
             while (!reader.EndOfStream)
             {
                 string line = reader.ReadLine();
