@@ -4,7 +4,7 @@ namespace IntroProject
 {
     public class DeathPile : Entity
     {
-        protected int age;
+        protected int age;//shouldbechanged not used variable, what is the intention
         protected int nutritionValue;
 
         public DeathPile(int x, int y, int nutritionValue) //De input waarde zijn voor referentie.
