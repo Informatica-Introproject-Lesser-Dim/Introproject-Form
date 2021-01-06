@@ -157,8 +157,14 @@ namespace IntroProject
                 n = 0;
             }
             pea.Graphics.FillRectangle(new SolidBrush(Color.DarkGray), 0, 0, this.Width, this.Height);
+            if (selected != null)
+            {
+                xCam = this.Width / 2 - selected.GlobalLoc.X;
+                yCam = this.Height / 2 - selected.GlobalLoc.Y;
+            }
             kaart.draw(pea.Graphics, xCam, yCam, this.Width, this.Height);
             n++;
+            
             if (selected != null)
             {
                 pea.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(50, 0, 0, 0)), 1500, 100, 200, 100);
