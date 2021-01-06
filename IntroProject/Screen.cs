@@ -245,10 +245,9 @@ namespace IntroProject
     }
 
     class SettingsMenu : UserControl
-    {     
-        public SettingsMenu(int w, int h, EventHandler exitMenu)
-
+    {
         public bool warned = true;
+        public SettingsMenu(int w, int h, EventHandler exitMenu) 
 
         {
             this.BackColor = Color.FromArgb(123, 156, 148);
