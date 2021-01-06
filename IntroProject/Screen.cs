@@ -407,28 +407,16 @@ namespace IntroProject
             reader.Close();
         }
 
-        public string displayedText(string searchData, int languageNumber)// languageNumber should be changed to a global variable
+        public string DisplayText(string lookupText, int languageNumber)// languageNumber should be changed to a global variable
         {
-
-            while (!reader.EndOfStream)
+            try { return translations[headerSplit[++languageNumber]][lookupText]; }
+            catch (KeyNotFoundException)
             {
-                string line = reader.ReadLine();
-                string[] value = line.Split(',');
-                if (value[0] == searchData)
-                {
-                    return value[languageNumber];
-                }
+                if (debugdisplayedText == true)
+                    return $"Translation for {lookupText} is unknown";
+                return lookupText;
             }
-            reader.Close();
-            if (debugdisplayedText == true)
-            {
-                searchData = "niet compleet" + searchData;
-                return searchData;
-            }
-            return "";
-
         }
-    
     }
 
 
