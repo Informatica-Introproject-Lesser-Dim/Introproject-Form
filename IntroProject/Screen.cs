@@ -262,9 +262,6 @@ namespace IntroProject
             exit.Click += (object o, EventArgs ea) => { this.Hide(); };
             this.Controls.Add(exit);
 
-            ToolTip t = new ToolTip();
-            t.ToolTipIcon = ToolTipIcon.Info;
-            t.SetToolTip(exit, "Doe wat leuks");
             //Don't forget, slider values are integers. So there is a scale in every thing. If the scale is a visual addition, don't forget to remove it from the trackbar value.
             (Label LabelSpeed, TrackBar TrackBarSpeed, TextBox TextBoxSpeed, ToolTip ToolTipSpeed) = MakeSlider(40, 60, "Speed", 1, 25, 200, 100, "bijbehorende uitleg");
             TrackBarSpeed.ValueChanged += (object o, EventArgs ea) => { Settings.StepSize = TrackBarSpeed.Value; };
