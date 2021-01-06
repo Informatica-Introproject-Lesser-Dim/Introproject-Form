@@ -335,15 +335,15 @@ namespace IntroProject
                 Settings.MaxTemp = int.Parse(TextBoxTemperatureMax.Text);
             };
 
-            (Label LabelWalkEnergy, TrackBar TrackBarWalkEnergy, TextBox TextBoxWalkEnergy, ToolTip ToolTipWalkEnergy) = MakeSlider(500, 220, "Walk Bias", 1, 25, 200, 100, "bijbehorende uitleg");
+            (Label LabelWalkEnergy, TrackBar TrackBarWalkEnergy, TextBox TextBoxWalkEnergy, ToolTip ToolTipWalkEnergy) = MakeSlider(500, 220, "Walk Energy Cost", 1, 25, 200, 100, "bijbehorende uitleg");
             TrackBarWalkEnergy.ValueChanged += (object o, EventArgs ea) => { Settings.WalkEnergy = TrackBarWalkEnergy.Value; };
             TextBoxWalkEnergy.TextChanged += (object o, EventArgs ea) => { Settings.WalkEnergy = int.Parse(TextBoxWalkEnergy.Text); };
 
-            (Label LabelJumpEnergy, TrackBar TrackBarJumpEnergy, TextBox TextBoxJumpEnergy, ToolTip ToolTipJumpEnergy) = MakeSlider(500, 300, "Walk Scale", 1, 25, 200, 100, "bijbehorende uitleg");
+            (Label LabelJumpEnergy, TrackBar TrackBarJumpEnergy, TextBox TextBoxJumpEnergy, ToolTip ToolTipJumpEnergy) = MakeSlider(500, 300, "Jump Energy Cost", 1, 25, 200, 100, "bijbehorende uitleg");
             TrackBarJumpEnergy.ValueChanged += (object o, EventArgs ea) => { Settings.JumpEnergy = TrackBarJumpEnergy.Value; };
             TextBoxJumpEnergy.TextChanged += (object o, EventArgs ea) => { Settings.JumpEnergy = int.Parse(TextBoxJumpEnergy.Text); };
 
-            (Label LabelPassiveEnergy, TrackBar TrackBarPassiveEnergy, TextBox TextBoxPassiveEnergy, ToolTip ToolTipPassiveEnergy) = MakeSlider(500, 380, "Walk Scale", 1, 25, 200, 100, "bijbehorende uitleg");
+            (Label LabelPassiveEnergy, TrackBar TrackBarPassiveEnergy, TextBox TextBoxPassiveEnergy, ToolTip ToolTipPassiveEnergy) = MakeSlider(500, 380, "Passive Energy Cost", 1, 25, 200, 100, "bijbehorende uitleg");
             TrackBarPassiveEnergy.ValueChanged += (object o, EventArgs ea) => { Settings.PassiveEnergy = TrackBarPassiveEnergy.Value; };
             TextBoxPassiveEnergy.TextChanged += (object o, EventArgs ea) => { Settings.PassiveEnergy = int.Parse(TextBoxPassiveEnergy.Text); };
 
