@@ -2,12 +2,12 @@
 
 namespace IntroProject
 {
-    public class Plants : Entity
+    public class DeathPile : Entity
     {
         protected int age;
         protected int nutritionValue;
 
-        public Plants(int x, int y, int nutritionValue) //De input waarde zijn voor referentie.
+        public DeathPile(int x, int y, int nutritionValue) //De input waarde zijn voor referentie.
         { // dit kan anders/ MOET NOG BESPROKEN WORDEN
             this.x = x;
             this.y = y;
