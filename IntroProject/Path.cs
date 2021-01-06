@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+//shouldbechanged: delete these
 using System.ComponentModel;
 using System.Data;
+
 using System.Drawing;
+//shouldbechanged: delete these
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,6 +49,7 @@ namespace IntroProject
             ones = new Curve[12];
             twos = new Curve[12];
             threes = new Curve[6];
+            //shouldbechanged: These 3 for loops have the same indexer: they should be one for loop if there are no asymetric-dependencies between the lists
             for (int i = 0; i < 6; i++) {//for each curve in "ones" calculate the appropriate start and end of the curve
                 Curve[] temp = calcCurve(size / 2, (int) (size * Math.Cos(Math.PI * (-1.0 / 3 + i / 3.0))), (int) (size *Math.Sin(Math.PI * (-1.0 / 3 + i / 3.0))), Math.PI * (1.0/3 + i/3.0), Math.PI * 2.0 / 3);
                 ones[i] = temp[0];
