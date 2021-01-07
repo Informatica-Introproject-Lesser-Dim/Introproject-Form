@@ -355,11 +355,11 @@ namespace IntroProject
                     }
                 }
 
-                Point temp;
+                Point currentLoc;
                 if (route.move(gene.Velocity)) {
-                    temp = route.getPos();
-                    x = temp.X;
-                    y = temp.Y;
+                    currentLoc = route.getPos();
+                    x = currentLoc.X;
+                    y = currentLoc.Y;
                     if (route.isDone()) {
                         route = null; //put any functions wich are to activate when the route is done here
                         if (goal == Goal.Food)
@@ -373,9 +373,9 @@ namespace IntroProject
                     this.chunk.moveEntity(this, route.getDir());
                     return;
                 }
-                temp = route.getPos();
-                x = temp.X;
-                y = temp.Y;
+                currentLoc = route.getPos();
+                x = currentLoc.X;
+                y = currentLoc.Y;
                 return;
             }
             //do whatever and entity should do when it doesnt have a route
