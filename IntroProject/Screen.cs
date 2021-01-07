@@ -56,7 +56,7 @@ namespace IntroProject
 
     class MapScreen : UserControl
     {
-        Map kaart;
+        Map map;
         public bool clicked = false; 
         int[] pos = new int[2] { 0, 0 };
         Font font = new Font("Arial", 12);
@@ -102,25 +102,25 @@ namespace IntroProject
             this.Size = new Size(w, h);
             this.Paint += drawScreen;
 
-            kaart = new Map(100, 70, size, 0);
+            map = new Map(100, 70, size, 0);
             
             for (int i = 0; i < 20; i++)
             {
                 Herbivore herbivore = new Herbivore();
                 herbivore.x = 0;
-                kaart.placeRandom(herbivore);
+                map.placeRandom(herbivore);
                 herbivore.calcFoodDist();
             }
 
-            this.MouseClick += Klik;
+            this.MouseClick += Click;
         }
 
-        public void Klik(object o, MouseEventArgs mea) {
+        public void Click(object o, MouseEventArgs mea) {
             if (selected != null)
                 selected.selected = false;
             selected = null;
 
-            Entity newE = kaart.GetCreature(mea.X - xCam, mea.Y - yCam, 40);
+            Entity newE = map.GetCreature(mea.X - xCam, mea.Y - yCam, 40);
             if (newE == null)
                 return;
             
@@ -151,7 +151,7 @@ namespace IntroProject
         public void drawScreen(object o, PaintEventArgs pea) 
         {
             if (n > 4 && clicked == false) {
-                kaart.TimeStep();
+                map.TimeStep();
                 n = 0;
             }
             pea.Graphics.FillRectangle(new SolidBrush(Color.DarkGray), 0, 0, this.Width, this.Height);
@@ -160,7 +160,7 @@ namespace IntroProject
                 xCam = this.Width / 2 - selected.GlobalLoc.X;
                 yCam = this.Height / 2 - selected.GlobalLoc.Y;
             }
-            kaart.draw(pea.Graphics, xCam, yCam, this.Width, this.Height);
+            map.draw(pea.Graphics, xCam, yCam, this.Width, this.Height);
             n++;
             
             if (selected != null)
