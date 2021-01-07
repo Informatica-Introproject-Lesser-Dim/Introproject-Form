@@ -27,14 +27,13 @@ namespace IntroProject
         private Goal goal = Goal.Nothing;
         private bool passive = false;
         public int coolDown = 200; //cooldown so the creature doesnt continuously attempt mating
-
-        
-
+        float maxEnergy;
 
         public Creature()
         {
             energyVal = 600; //start with quite a lot so they dont die too quickly
             gene = new Gene();
+            maxEnergy = this.gene.Size;
 
             gene.@class = this.GetType().Name;
         }
@@ -387,9 +386,9 @@ namespace IntroProject
             if (grass == null)
                 return;
             grass.visible = false;
-            this.energyVal += grass.getVal(this.chunk.vegetation.currentTime);
+            if (energyVal + grass.getVal(this.chunk.vegetation.currentTime) > maxEnergy)
+                this.energyVal = maxEnergy;
+            else this.energyVal += grass.getVal(this.chunk.vegetation.currentTime);
         }
-
     }
-
 }
