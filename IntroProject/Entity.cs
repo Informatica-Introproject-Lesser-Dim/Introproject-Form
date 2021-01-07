@@ -30,6 +30,7 @@ namespace IntroProject
         public bool isAlive { get => energyVal > 0; }
         private int disp = 4;
         public bool selected = false;
+        public bool eaten = false;
 
         public Point GlobalLoc
         {
@@ -39,7 +40,7 @@ namespace IntroProject
             }
         }
 
-        public double PerishToEnergyPile()
+        public void PerishToDeathPile()
         {
             dead = true;
             if (chunk != null)
@@ -47,6 +48,12 @@ namespace IntroProject
                 chunk.removeEntity(this);
                 chunk.addEntity(new DeathPile(this.x, this.y, 150));
             }
+        }
+
+        public double BeingEaten()
+        {
+            eaten = true;
+            dead = true;
             return energyVal;
         }
 

@@ -17,6 +17,7 @@ namespace IntroProject
         private List<Entity> entities;
         private List<Entity> children;
         private List<Entity> deaths;
+        private List<Entity> eaten;
         private int time = 0;
 
         private Hexagon[,] tiles;
@@ -83,7 +84,9 @@ namespace IntroProject
             {
                 foreach (Entity deadEntity in deaths)
                 {
-                    deadEntity.PerishToEnergyPile();
+                    if (!deadEntity.eaten)
+                        deadEntity.PerishToDeathPile();
+                    else deadEntity.chunk.removeEntity(deadEntity);
                     entities.Remove(deadEntity);
                 }
                 deaths.Clear();
