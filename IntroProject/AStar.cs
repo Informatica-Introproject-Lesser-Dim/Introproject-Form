@@ -105,7 +105,7 @@ namespace IntroProject
             //distance squared to the closest bit of food
             double quality = calcQuality(r);
 
-            //Creature.calcDistance2(EntityType.Plant, r.endHex, new Point(r.endHex.x, r.endHex.y));
+            //Creature.calcDistanceSqrt(EntityType.Plant, r.endHex, new Point(r.endHex.x, r.endHex.y));
 
             //current cost is only based on energy cost for now, will need more things such as fear later on
             float current = r.Length*Calculator.EnergyPerMeter(gene) + r.jumpCount*Calculator.JumpCost(gene);
