@@ -57,7 +57,8 @@ namespace IntroProject
     class MapScreen : UserControl
     {
         Map map;
-        public bool clicked = false; 
+        public bool clicked = false;
+        bool camAutoMove = false;
         int[] pos = new int[2] { 0, 0 };
         Font font = new Font("Arial", 12);
         int n = 0;
@@ -117,7 +118,10 @@ namespace IntroProject
 
         public void Click(object o, MouseEventArgs mea) {
             if (selected != null)
+            { 
                 selected.selected = false;
+                camAutoMove = false;
+            }
             selected = null;
 
             Entity newE = map.GetCreature(mea.X - xCam, mea.Y - yCam, 40);
@@ -126,6 +130,7 @@ namespace IntroProject
             
             newE.selected = true;
             selected = newE;
+            camAutoMove = true;
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -133,15 +138,19 @@ namespace IntroProject
             switch (keyData) {
                 case Keys.Up:
                     this.yCam += (int) (size * (0.5*Hexagon.sqrt3));
+                    camAutoMove = false;
                     break;
                 case Keys.Down:
                     this.yCam -= (int)(size * (0.5 * Hexagon.sqrt3));
+                    camAutoMove = false;
                     break;
                 case Keys.Left:
                     this.xCam += (int) (size*(3.0/2));
+                    camAutoMove = false;
                     break;
                 case Keys.Right:
                     this.xCam -= (int) (size*(3.0/2));
+                    camAutoMove = false;
                     break;
             }
 
@@ -155,7 +164,7 @@ namespace IntroProject
                 n = 0;
             }
             pea.Graphics.FillRectangle(new SolidBrush(Color.DarkGray), 0, 0, this.Width, this.Height);
-            if (selected != null)
+            if (camAutoMove)
             {
                 xCam = this.Width / 2 - selected.GlobalLoc.X;
                 yCam = this.Height / 2 - selected.GlobalLoc.Y;
