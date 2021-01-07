@@ -16,11 +16,10 @@ namespace IntroProject
     public class Creature : Entity
     {
         public Gene gene { get; protected set; }
-        //public int isAlive;
+        public int Alive;
         public bool isReadyToMate { get => coolDown == 0; }
         private Route route;
         private Creature target;
-        public int isAlive;
 
         private Grass myFood;
         private int sleep = 0;

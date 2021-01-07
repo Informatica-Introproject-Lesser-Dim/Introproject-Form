@@ -16,7 +16,7 @@ namespace IntroProject
         }
         private Creature feed(Creature wezen) //concept hoe een plant een wezen kan voeden, mogelijk moet herbivoor de specificatie zijn hier en niet wezen.
         {//MOET NOG BESPROKEN WORDEN
-            wezen.isAlive += nutritionValue;
+            wezen.Alive += nutritionValue;
             //death methode aanroepen
             return wezen;
         }
