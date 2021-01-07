@@ -9,13 +9,13 @@
         public static int HatchSpeed;
         public static double SeaLevel;
         public static int MatingCost;
-        public static int GrassGrowth;
-        public static int GrassMaxFeed;
+        public static int GrassGrowth = 200;
+        public static int GrassMaxFeed = 1500;
         public static int MinTemp;
         public static int MaxTemp;
-        public static int WalkEnergy;
-        public static int JumpEnergy;
-        public static int PassiveEnergy;
+        public static float WalkEnergy;
+        public static float JumpEnergy;
+        public static float PassiveEnergy;
 
     }
 }

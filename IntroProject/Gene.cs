@@ -28,7 +28,7 @@ namespace IntroProject
         public float HungerBias { get { return ToInfinity(Fenotype[2]/2 + 0.5f); } }//positive and to infinity
 
         public float sexualPreference { get { return ToInfinity(Fenotype[3] / 2 + 0.5f) + 50; } } //to infinity but still needs to have at least 50
-        public float energyDistribution { get { return Fenotype[4] / 2 + 0.5f; } } //just a percentage between 0 and 1
+        public float energyDistribution { get { return Fenotype[4] / 2 + 0.5f; /* Settings.MatingCost */ } } //just a percentage between 0 and 1
         //Second Allel
         public float PassivePreference { get { return ToInfinity(Fenotype[5] / 2 + 0.5f)/5; } }
         public float PassiveBias { get { return Fenotype[6]/3 + 2.0f/3; } }// positive and to infinity

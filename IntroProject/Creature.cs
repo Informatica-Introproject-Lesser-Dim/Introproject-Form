@@ -385,9 +385,20 @@ namespace IntroProject
             if (grass == null)
                 return;
             grass.visible = false;
-            if (energyVal + grass.getVal(this.chunk.vegetation.currentTime) > maxEnergy)
-                this.energyVal = maxEnergy;
-            else this.energyVal += grass.getVal(this.chunk.vegetation.currentTime);
+            int value = grass.getVal(this.chunk.vegetation.currentTime);
+            int MaxValue = Settings.GrassMaxFeed;
+            if (MaxValue < value)
+            {
+                if (energyVal + MaxValue > maxEnergy)
+                    this.energyVal = maxEnergy;
+                else this.energyVal += MaxValue;
+            }
+            else
+            {
+                if (energyVal + grass.getVal(this.chunk.vegetation.currentTime) > maxEnergy)
+                    this.energyVal = maxEnergy;
+                else this.energyVal += grass.getVal(this.chunk.vegetation.currentTime);
+            }
         }
     }
 }
