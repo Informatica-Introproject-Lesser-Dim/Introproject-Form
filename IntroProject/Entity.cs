@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace IntroProject
 {
@@ -20,7 +13,7 @@ namespace IntroProject
     }
     public abstract class Entity
     {
-        protected int id; //Vincent: Hoe kan je er voor zorgen dat de id niet overlapt met id's van andere entities?
+        protected Guid id = Guid.NewGuid();
         public int x,y;
         protected const int r = 10;
         public Hexagon chunk;
