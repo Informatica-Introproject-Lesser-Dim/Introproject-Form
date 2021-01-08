@@ -17,5 +17,6 @@
         public static float JumpEnergy;
         public static float PassiveEnergy;
         public static bool AddHeatMap = false;
+        public static int LanguageIndex = 0;
     }
 }

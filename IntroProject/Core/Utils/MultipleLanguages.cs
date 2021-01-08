@@ -49,7 +49,14 @@ namespace IntroProject.Core.Utils
             reader.Close();
         }
 
-        public string DisplayText(string lookupText, int languageNumber)// languageNumber should be changed to a global variable
+        /// <summary>
+        /// Attempts to translate lookupText to selected language either by passing a languageNumber
+        /// or reading it from Settings.LanguageIndex
+        /// </summary>
+        /// <param name="lookupText"></param>
+        /// <returns>The translated lookupText</returns>
+        public string DisplayText(string lookupText) => DisplayText(lookupText, Settings.LanguageIndex);
+        public string DisplayText(string lookupText, int languageNumber)
         {
             try { return translations[headerSplit[++languageNumber]][lookupText]; }
             catch (KeyNotFoundException)
