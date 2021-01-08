@@ -89,7 +89,7 @@ namespace IntroProject
             parent = map;
             this.longitudeOnMap = longitudeOnMap;
             heightOfTile = c;
-            calcColor((float)c);
+            calcColor();
             this.size = size;
 
             entities = new List<Entity>();
@@ -271,14 +271,20 @@ namespace IntroProject
                 e.draw(g, x + xPos, y + yPos, e);
         }
 
-        private void calcColor(float f)
+        private void calcColor()
         {
-            this.color = getHeightColor(f);
+            this.color = getHeightColor();
 
             if(Settings.AddHeatMap)
                 addHeatColor();
         }
 
+        /// <summary>
+        /// Should be used when color needs recalculation (f.e. when toggling heat map)
+        /// </summary>
+        public void UpdateColor() => this.calcColor();
+
+        private Color getHeightColor() => getHeightColor((float)this.heightOfTile);
         private Color getHeightColor(float f)
         {
             int layer = 0;
