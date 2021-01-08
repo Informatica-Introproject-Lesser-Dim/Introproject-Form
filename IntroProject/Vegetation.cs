@@ -12,7 +12,10 @@ namespace IntroProject
     {
         //"Constants" (dont usually change while the program is running)
         int min = 50, max = 10000; //how much time it usually takes before a new bit of vegetation is grown
+
         int maxPlants = 8; 
+        double fertillity = 1;
+
         double plantBoost = 0.2;
         public Grass this[int n] { get { return grass[n]; } }
 
@@ -21,24 +24,34 @@ namespace IntroProject
         public int currentTime = 0;
         List<Grass> grass;
         Hexagon tile;
-        double fertillity = 1; //this is gonna depend on height later on
 
         public Vegetation(Hexagon tile) {
             this.tile = tile;
-            if (tile.heightOfTile < Hexagon.sand) {
+
+            matchSpawnStatsWithTileHeight();
+            preGenGrassUnvisible();
+            setSpawnTimer();
+        }
+
+        private void matchSpawnStatsWithTileHeight()
+        {
+            if (tile.heightOfTile < Hexagon.sand - 0.05)
+            {
                 maxPlants = 1;
-                fertillity = 0.5;
-                if (tile.heightOfTile > Hexagon.deepSea && tile.heightOfTile < Hexagon.seaLevel)
-                    maxPlants = 3;
-                else if (tile.heightOfTile > Hexagon.seaLevel && tile.heightOfTile < Hexagon.sand - 0.05)
-                    maxPlants = 0;
+                fertillity = 0.25;
             }
+            if (tile.heightOfTile < Hexagon.seaLevel)
+                maxPlants = 0;
+        }
+        private void preGenGrassUnvisible()
+        {
             grass = new List<Grass>();
             for (int i = 0; i < maxPlants; i++) //all the plants are already created but not visible yet
                 grass.Add(new Grass(tile.size));
-            Random random = new Random();
-            targetTime = random.Next(min, max);
         }
+
+        private void setSpawnTimer() =>
+            targetTime = new Random().Next(min, max);
 
         //just call this every step in "hexagon"
         public void actvate(int time) {
