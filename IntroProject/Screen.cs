@@ -351,6 +351,7 @@ namespace IntroProject
             label.Text = name;
             label.ForeColor = Color.White;
             label.Location = new Point(x, y);
+            label.AutoSize = false;
 
             TrackBar trackBar = new CustomTrackbar(x, (y+20), minvalue, maxvalue);
             TextBox textBox = new TextBox();
@@ -363,6 +364,7 @@ namespace IntroProject
             textBox.Leave += (object o, EventArgs ea) => { trackBar.Value = Convert.ToInt32(double.Parse(textBox.Text) * scale); };
             textBox.Location = new Point((x+400), (y+30));
             textBox.Size = sliderTextBoxSize;
+            trackBar.AutoSize = false;
 
             ToolTip toolTip = new ToolTip();
             toolTip.ToolTipIcon = ToolTipIcon.Info;
