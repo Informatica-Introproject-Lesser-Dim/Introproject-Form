@@ -156,7 +156,7 @@ namespace IntroProject
 
         public void drawScreen(object o, PaintEventArgs pea) 
         {
-            if (n > 4 && clicked == false) {
+            if (clicked == false) {
                 map.TimeStep();
                 n = 0;
             }

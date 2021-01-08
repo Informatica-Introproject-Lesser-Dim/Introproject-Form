@@ -32,7 +32,7 @@ namespace IntroProject
         public Creature()
         {
             energyVal = 600; //start with quite a lot so they dont die too quickly
-            gene = new Gene();
+            gene = new HerbivoreGene();
             maxEnergy = this.gene.Size;
 
             gene.@class = this.GetType().Name;
@@ -92,8 +92,8 @@ namespace IntroProject
             if (0 != (this.coolDown + other.coolDown))
                 throw new UnreadyForMating();
 
-            this.coolDown = 1000;
-            other.coolDown = 1000;
+            this.coolDown = 300;
+            other.coolDown = 300;
             other.MateWithMale(this);
             this.energyVal -= (int) (this.gene.Size * 0.05); //the males barely lose any energy
             this.goalReset();
@@ -106,6 +106,7 @@ namespace IntroProject
             Creature child = new Creature(this.gene * other.gene, transferredEnergy);
             child.x = this.x;
             child.y = this.y;
+            child.sleep = 20;
             this.chunk.EntityBirth(child);
             //Now we only need to put this child in the entity list
 

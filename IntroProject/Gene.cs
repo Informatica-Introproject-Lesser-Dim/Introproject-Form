@@ -4,12 +4,12 @@ using System.Linq;
 
 namespace IntroProject
 {
-    public class Gene : ICloneable, IEquatable<Gene>
+    public abstract class Gene : ICloneable, IEquatable<Gene>
     {
         public string @class;
 
         private List<float[]>[] Genotype; //we beginnen met velocity en jumpheight en courage maar dat verranderd later
-        private List<float> Fenotype;
+        protected List<float> Fenotype;
         private Random random;
         // All between -1 and 1, will be scaled in their respective dependents
 
@@ -28,20 +28,19 @@ namespace IntroProject
         public float HungerBias { get { return ToInfinity(Fenotype[2]/2 + 0.5f); } }//positive and to infinity
 
         public float sexualPreference { get { return ToInfinity(Fenotype[3] / 2 + 0.5f) + 50; } } //to infinity but still needs to have at least 50
-        public float energyDistribution { get { return Fenotype[4] / 2 + 0.5f; /* Settings.MatingCost */ } } //just a percentage between 0 and 1
+        public float energyDistribution { get { return Fenotype[4] / 3 + 0.33f; /* Settings.MatingCost */ } } //just a percentage between 0 and 1
         //Second Allel
         public float PassivePreference { get { return ToInfinity(Fenotype[5] / 2 + 0.5f)/5; } }
         public float PassiveBias { get { return Fenotype[6]/3 + 2.0f/3; } }// positive and to infinity
         public float ActiveBias { get { return (Fenotype[7]/2 + 0.5f) * (1 - PassiveBias) + this.PassiveBias; } } //active must be higher than passive
         public float ActivePreference { get { return ToInfinity(Fenotype[8] / 2 + 0.5f) / 15 + this.PassiveBias; } }
         //Third Allel
-        public float Velocity { get { return (Fenotype[9] / 2 + 0.5f) * 4.5f + 0.5f; } } //within certain max and min values
-        
-        public float ego { get { return Fenotype[10]; } }
+        public virtual float Velocity { get; } //within certain max and min values
 
-        public float intelligence { get { return Fenotype[11] / 2 + 0.5f; } }
+        public virtual float SprintSpeed { get; }
 
-        public float perception { get { return Fenotype[12] / 2 + 0.5f; } }
+        public virtual float SprintDuration { get; }
+        public virtual float perception { get { return Fenotype[12] / 2 + 0.5f; } }
         public float Courage { get { return Fenotype[13]; } }//not implemented anywhere yet
 
         //Fourth Allel
@@ -49,13 +48,17 @@ namespace IntroProject
         public float DistanceBias { get { return ToInfinity(Fenotype[14] / 2 + 0.5f); } } //it's in the name dummy
 
         public float JumpHeight { get { return Fenotype[15] / 4 + 0.25f; } } //only positive values
+
+        
+
+        public float EatSpeed { get { return Fenotype[17] / 2 + 0.5f; } }
         //-1 for "gene isnt used"
         //0 for the average
         //1 for the biggest
         //2 for the biggest but also unable to mutate (only used for the male gene) 
         //3 extra sensitivity with mutation
         //4 sensitive + biggest
-        private int[,] lookupTable = new int[4,5] { { 2, 3, 3, 3, 0}, { 3, 3, 3,3 , -1}, {0, 0, 0, 3, 3 }, {3,3,-1,-1,-1 } }; //it's not a bad thing if this is bigger than the actual lists being used
+        private int[,] lookupTable = new int[4,5] { { 2, 3, 3, 3, 0}, { 3, 3, 3,3 , -1}, {0, 0, 0, 3, 3 }, {3,3,3,3,-1 } }; //it's not a bad thing if this is bigger than the actual lists being used
 
         protected Func<bool> willMutate = () => true;
 
@@ -93,7 +96,7 @@ namespace IntroProject
             return (float)((random.NextDouble() - 0.5) * 2);
         }
 
-        private float ToInfinity(float x) {
+        public float ToInfinity(float x) {
             if (x == 1 || x == -1)
                 return 0;
             return x / (1 - Math.Abs(x));
@@ -217,12 +220,12 @@ namespace IntroProject
         public Gene CloneTyped() => (Gene)this.Clone();
 
         public Object Clone() {
-            return new Gene(this.Genotype);
+            return new HerbivoreGene(this.Genotype);
         }
 
         public static Gene operator +(Gene a, Gene b)
         {
-            return new Gene(a.getAllel(), b.getAllel());
+            return new HerbivoreGene(a.getAllel(), b.getAllel());
         }
 
         public bool Equals(Gene other) {
@@ -246,6 +249,44 @@ namespace IntroProject
                 if (Fenotype[i] != other[i])
                     return false;
             return true;
+        }
+    }
+
+    public class HerbivoreGene : Gene 
+    {
+        public HerbivoreGene() : base() { }
+        public HerbivoreGene(List<float[]>[] genoType) : base(genoType) { }
+        public HerbivoreGene(List<float[]> a, List<float[]> b) : base(a, b) { }
+
+        public static HerbivoreGene operator +(HerbivoreGene a, HerbivoreGene b)
+        {
+            return new HerbivoreGene(a.getAllel(), b.getAllel());
+        }
+
+        public override float Velocity { get { return (Fenotype[9] / 2 + 0.5f) * 4.5f + 0.5f; } } //within certain max and min values
+
+        public override float SprintSpeed { get { return (Fenotype[10]/2 + 0.5f)*2 + 1 + Velocity; } }
+
+        public override float SprintDuration { get { return (Fenotype[11] / 2 + 0.5f) * 990 + 10; } }
+    }
+
+    public class CarnivoreGene : Gene
+    {
+        public CarnivoreGene() : base() { }
+        public CarnivoreGene(List<float[]>[] genoType) : base(genoType) { }
+        public CarnivoreGene(List<float[]> a, List<float[]> b) : base(a, b) { }
+
+        public override float Velocity { get { return (Fenotype[9] / 2 + 0.5f) * 4.5f + 0.5f; } } //within certain max and min values
+
+        public override float SprintSpeed { get { return (Fenotype[10] / 2 + 0.5f) * 3 + 2 + Velocity; } }
+
+        public override float SprintDuration { get { return (Fenotype[11] / 2 + 0.5f)* 990 + 10; } }
+
+        public float LivingTargetBias { get { return ToInfinity(Fenotype[16] / 2 + 0.5f) / 5; } }
+
+        public static CarnivoreGene operator +(CarnivoreGene a, CarnivoreGene b)
+        {
+            return new CarnivoreGene(a.getAllel(), b.getAllel());
         }
     }
 }
