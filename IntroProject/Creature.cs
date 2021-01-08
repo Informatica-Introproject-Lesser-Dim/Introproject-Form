@@ -41,6 +41,7 @@ namespace IntroProject
         public Creature(Gene gene, double energy) {
             this.gene = gene;
             this.energyVal = energy;
+            maxEnergy = this.gene.Size;
 
             gene.@class = this.GetType().Name;
         }
