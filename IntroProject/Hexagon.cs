@@ -273,7 +273,10 @@ namespace IntroProject
 
         private void calcColor(float f)
         {
-            this.color = addHeatColor(getHeightColor(f));
+            this.color = getHeightColor(f);
+
+            if(Settings.AddHeatMap)
+                addHeatColor();
         }
 
         private Color getHeightColor(float f)
@@ -285,7 +288,11 @@ namespace IntroProject
             return ColorScale.PickValue(heightColors[layer], (f - heights[layer]) / (heights[layer + 1] - heights[layer]));
         }
 
-        private Color addHeatColor(Color colorPrev)
+        /// <summary>
+        ///  Blends an heat hue to this.color
+        /// </summary>
+        /// <returns></returns>
+        private void addHeatColor()
         {
             var warmthScale = new ColorScale(Color.FromArgb(0x55aa1111), Color.FromArgb(0x660033dd));
             var snowScale = new ColorScale(Color.FromArgb(0x66003377), Color.FromArgb(0x55ffff));
@@ -299,7 +306,7 @@ namespace IntroProject
                 scale = warmthScale;
 
             var warmth = ColorScale.PickValue(scale, relHeight);
-            return Color.FromArgb((colorPrev.R + warmth.R) >> 1, (colorPrev.G + warmth.G) >> 1, (colorPrev.B + warmth.B) >> 1);
+            this.color = Color.FromArgb((color.R + warmth.R) >> 1, (color.G + warmth.G) >> 1, (color.B + warmth.B) >> 1);
         }
 
         public void draw(Graphics g, int sx, int sy) { //center of the hexagon is at sx,sy

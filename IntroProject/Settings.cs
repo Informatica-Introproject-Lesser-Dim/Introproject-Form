@@ -16,6 +16,6 @@
         public static float WalkEnergy;
         public static float JumpEnergy;
         public static float PassiveEnergy;
-
+        public static bool AddHeatMap = false;
     }
 }
