@@ -34,7 +34,7 @@ namespace IntroProject
 
             Tag++;
             this.energy = energy;
-            maxCost = Math.Pow(10, 5) + energy; //default value for now
+            maxCost = energy; //default value for now
 
             this.gene = gene;
             //add the starting point
@@ -92,8 +92,6 @@ namespace IntroProject
             if (goal.Tag == Tag)
                 return;
             goal.Tag = Tag;//tag it so we dont use it again
-            if (goal.heightOfTile < Hexagon.seaLevel) //this needs to be changed if we want to add swimming
-                return;
             Route result = r.addAndClone(dir);
             float cost = calcCost(result);
             if (cost > maxCost)
@@ -108,7 +106,7 @@ namespace IntroProject
             //Creature.calcDistancePow2(EntityType.Plant, r.endHex, new Point(r.endHex.x, r.endHex.y));
 
             //current cost is only based on energy cost for now, will need more things such as fear later on
-            float current = r.Length*Calculator.EnergyPerMeter(gene) + r.jumpCount*Calculator.JumpCost(gene);
+            float current = r.Length*Calculator.EnergyPerMeter(gene) + r.jumpCount*Calculator.JumpCost(gene) + r.amountWaterTiles*30;
 
             //later on we also need to add a "reward" amount so that the entity targets the best bit of food/a partner to procreate with
             if (current > maxCost)
@@ -117,7 +115,7 @@ namespace IntroProject
         }
 
         private void expandPoint(Route r) {
-            //call addDir for every direction except the one yo came from
+            //call addDir for every direction except the one you came from
             int not = (r.lastDir + 3) % 6;
             if (r.lastDir == -1)
                 not = -1;

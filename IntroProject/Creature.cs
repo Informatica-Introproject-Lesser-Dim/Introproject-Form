@@ -340,8 +340,11 @@ namespace IntroProject
 
         public void move() { //needs a rework cus the target wont be an entity
 
-            this.energyVal -= Calculator.EnergyPerTic(gene);
-
+            if (this.chunk.heightOfTile < Hexagon.seaLevel)
+                this.energyVal -= Calculator.EnergyPerTic(gene) * gene.SwimCost;
+            
+            else this.energyVal -= Calculator.EnergyPerTic(gene) * gene.WalkCost;
+            
             if (route != null) {
                 if (goal == Goal.Mate) {
                     if (target.goal != Goal.Mate) {

@@ -11,11 +11,13 @@ namespace IntroProject
         Point start;
         Point end;
         List<float> distances; //length of the path untill this point
+        public int amountWaterTiles = 0;
         public float Length { get { if (distances.Count == 0) return 0; return distances[distances.Count - 1]; } }
         int hex; //number of current hexagon in the list
         float pos; //position within current hex
         int size; //hex size
-        public Hexagon endHex;
+        private Hexagon EndHex;
+        public Hexagon endHex { get { return EndHex; } set { if (value.heightOfTile < Hexagon.seaLevel) amountWaterTiles++; EndHex = value; } }
         public int lastDir = -1;
         public double quality = 0;
         public float jumpCount { get { return distances.Count; } }

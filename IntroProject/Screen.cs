@@ -19,13 +19,13 @@ namespace IntroProject
 
             this.Size = new Size(1800, 1200);
             debugscr = new MapScreen(this.Size);
-            settingsMenu = new SettingsMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { settingsMenu.Warning(); settingsMenu.Hide(); debugscr.clicked = false; });
-            helpMenu = new HelpMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { helpMenu.Hide(); debugscr.clicked = false; });
-            statisticsMenu = new StatisticsMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { statisticsMenu.Hide(); debugscr.clicked = false; });
+            settingsMenu = new SettingsMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { settingsMenu.Warning(); settingsMenu.Hide(); if (!debugscr.buttonPaused) debugscr.paused = false; });
+            helpMenu = new HelpMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { helpMenu.Hide(); if (!debugscr.buttonPaused) debugscr.paused = false; });
+            statisticsMenu = new StatisticsMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { statisticsMenu.Hide(); if (!debugscr.buttonPaused) debugscr.paused = false; });
             dropMenu = new DropMenu(Size.Width/10, Size.Height, 
-                                   (object o, EventArgs ea) => { settingsMenu.Prep(); settingsMenu.Show(); settingsMenu.BringToFront(); debugscr.clicked = true; }, 
-                                   (object o, EventArgs ea) => { helpMenu.Show(); helpMenu.BringToFront(); debugscr.clicked = true; }, 
-                                   (object o, EventArgs ea) => { statisticsMenu.Show(); statisticsMenu.BringToFront(); debugscr.clicked = true; },          
+                                   (object o, EventArgs ea) => { settingsMenu.Prep(); settingsMenu.Show(); settingsMenu.BringToFront(); debugscr.paused = true; }, 
+                                   (object o, EventArgs ea) => { helpMenu.Show(); helpMenu.BringToFront(); debugscr.paused = true; }, 
+                                   (object o, EventArgs ea) => { statisticsMenu.Show(); statisticsMenu.BringToFront(); debugscr.paused = true; },          
                                     debugscr.plus);
             dropMenu.Dock = DockStyle.Right;
             this.Controls.Add(dropMenu);
@@ -57,7 +57,8 @@ namespace IntroProject
     class MapScreen : UserControl
     {
         Map map;
-        public bool clicked = false;
+        public bool paused = true;
+        public bool buttonPaused = true;
         bool camAutoMove = false;
         int[] pos = new int[2] { 0, 0 };
         Font font = new Font("Arial", 12);
@@ -93,8 +94,8 @@ namespace IntroProject
             play.Location = new Point(40, 5);
             stop.Location = new Point(105, 5);
 
-            play.Click += (object o, EventArgs ea) => { play.Hide(); clicked = true; };
-            pause.Click += (object o, EventArgs ea) => { play.Show(); clicked = false; };
+            play.Click += (object o, EventArgs ea) => { play.Hide(); paused = false; buttonPaused = false; };
+            pause.Click += (object o, EventArgs ea) => { play.Show(); paused = true; buttonPaused = true; };
 
             this.Controls.Add(play); 
             this.Controls.Add(pause);
@@ -156,7 +157,7 @@ namespace IntroProject
 
         public void drawScreen(object o, PaintEventArgs pea) 
         {
-            if (clicked == false) {
+            if (paused == false) {
                 map.TimeStep();
                 n = 0;
             }

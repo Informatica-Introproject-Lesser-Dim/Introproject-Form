@@ -52,13 +52,18 @@ namespace IntroProject
         
 
         public float EatSpeed { get { return Fenotype[17] / 2 + 0.5f; } }
+
+        public float SwimCost { get { return Fenotype[18] / 2 + 1.5f; } }
+
+        public float WalkCost { get { return 1.25f - Fenotype[18] / 4 ; } }
+
         //-1 for "gene isnt used"
         //0 for the average
         //1 for the biggest
         //2 for the biggest but also unable to mutate (only used for the male gene) 
         //3 extra sensitivity with mutation
         //4 sensitive + biggest
-        private int[,] lookupTable = new int[4,5] { { 2, 3, 3, 3, 0}, { 3, 3, 3,3 , -1}, {0, 0, 0, 3, 3 }, {3,3,3,3,-1 } }; //it's not a bad thing if this is bigger than the actual lists being used
+        private int[,] lookupTable = new int[4,5] { { 2, 3, 3, 3, 0}, { 3, 3, 3,3 , -1}, {0, 0, 0, 3, 3 }, {3,3,3,3,0 } }; //it's not a bad thing if this is bigger than the actual lists being used
 
         protected Func<bool> willMutate = () => true;
 
