@@ -13,6 +13,7 @@ namespace IntroProject
         Nothing
     }
 
+
     public class Creature : Entity
     {
         public Gene gene { get; protected set; }
@@ -44,7 +45,7 @@ namespace IntroProject
             gene.@class = this.GetType().Name;
         }
 
-        public static int calcDistance2(EntityType type, Hexagon place, Point point) { //enter the world relative position for point
+        public static int calcDistancePow2(EntityType type, Hexagon place, Point point) { //enter the world relative position for point
             List<Entity> targets = new List<Entity>();
             for (int l = 0; targets.Count == 0 && l < 10; l++)
                 targets = place.searchPoint(l, type);
@@ -58,7 +59,7 @@ namespace IntroProject
         }
 
         public void calcFoodDist() {
-            int dist = (int)(Math.Sqrt(calcDistance2(EntityType.Plant, this.chunk, new Point(x + this.chunk.x, y + this.chunk.y))));
+            int dist = (int)(Math.Sqrt(calcDistancePow2(EntityType.Plant, this.chunk, new Point(x + this.chunk.x, y + this.chunk.y))));
             if (dist > 255)
                 dist = 255;
             this.color = Color.FromArgb(255 - dist, 50, 50);
