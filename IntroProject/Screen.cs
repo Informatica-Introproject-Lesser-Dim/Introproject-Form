@@ -6,7 +6,7 @@ namespace IntroProject
 {
     public partial class Screen : Form
     {
-        MapScreen debugscr;
+        MapScreen mapscr;
         DropMenu dropMenu;
         SettingsMenu settingsMenu;
         HelpMenu helpMenu;
@@ -18,18 +18,18 @@ namespace IntroProject
 
 
             this.Size = new Size(1800, 1200);
-            debugscr = new MapScreen(this.Size);
-            settingsMenu = new SettingsMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { settingsMenu.Warning(); settingsMenu.Hide(); debugscr.clicked = false; });
-            helpMenu = new HelpMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { helpMenu.Hide(); debugscr.clicked = false; });
-            statisticsMenu = new StatisticsMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { statisticsMenu.Hide(); debugscr.clicked = false; });
+            mapscr = new MapScreen(this.Size);
+            settingsMenu = new SettingsMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { settingsMenu.Warning(); mapscr.UpdateVars(); settingsMenu.Hide(); mapscr.clicked = false; });
+            helpMenu = new HelpMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { helpMenu.Hide(); mapscr.clicked = false; });
+            statisticsMenu = new StatisticsMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { statisticsMenu.Hide(); mapscr.clicked = false; });
             dropMenu = new DropMenu(Size.Width/10, Size.Height, 
-                                   (object o, EventArgs ea) => { settingsMenu.Prep(); settingsMenu.Show(); settingsMenu.BringToFront(); debugscr.clicked = true; }, 
-                                   (object o, EventArgs ea) => { helpMenu.Show(); helpMenu.BringToFront(); debugscr.clicked = true; }, 
-                                   (object o, EventArgs ea) => { statisticsMenu.Show(); statisticsMenu.BringToFront(); debugscr.clicked = true; },          
-                                    debugscr.plus);
+                                   (object o, EventArgs ea) => { settingsMenu.Prep(); settingsMenu.Show(); settingsMenu.BringToFront(); mapscr.clicked = true; }, 
+                                   (object o, EventArgs ea) => { helpMenu.Show(); helpMenu.BringToFront(); mapscr.clicked = true; }, 
+                                   (object o, EventArgs ea) => { statisticsMenu.Show(); statisticsMenu.BringToFront(); mapscr.clicked = true; },          
+                                    mapscr.plus);
             dropMenu.Dock = DockStyle.Right;
             this.Controls.Add(dropMenu);
-            this.Controls.Add(debugscr);
+            this.Controls.Add(mapscr);
             this.Controls.Add(settingsMenu);
             this.Controls.Add(helpMenu);
             this.Controls.Add(statisticsMenu);
@@ -41,16 +41,16 @@ namespace IntroProject
             Resize += (object o, EventArgs ea) => 
             {
                 int maxim = Math.Max((int)(Size.Width / 36), (int)(Size.Height / 36));
-                debugscr.Size = new Size(Size.Width, Size.Height);
+                mapscr.Size = new Size(Size.Width, Size.Height);
                 dropMenu.Size = new Size(Size.Width / 10, Size.Height);
                 settingsMenu.Size = new Size(Size.Width, Size.Height);
                 helpMenu.Size = new Size(Size.Width, Size.Height);
                 statisticsMenu.Size = new Size(Size.Width, Size.Height);
-                debugscr.plus.Location = new Point(Size.Width - maxim - 16, 5);
-                debugscr.plus.Size = new Size(maxim, maxim);
+                mapscr.plus.Location = new Point(Size.Width - maxim - 16, 5);
+                mapscr.plus.Size = new Size(maxim, maxim);
             };
 
-            debugscr.plus.Click += (object o, EventArgs ea) => { dropMenu.Show(); debugscr.plus.Hide(); };
+            mapscr.plus.Click += (object o, EventArgs ea) => { dropMenu.Show(); mapscr.plus.Hide(); };
         }
     }
 
@@ -189,6 +189,14 @@ namespace IntroProject
                 return handeleparam;
             }
         }
+        public void UpdateVars()
+        {
+            Calculator.Update();
+            //In clicked Stop Button method, make new map. With new variable values that require restart.
+
+            //Here Seperate update for current map...
+            map.Update();
+        }
     }
     internal class ButtonImaged : Button
     {
@@ -281,18 +289,15 @@ namespace IntroProject
             
             this.Controls.Add(exit);
 
-            int n = 1, d = 10, c = 100, m = 1000; //Scale variables for ease in the transitions.
-
-
             /* Each triple sentence is an slider group, First the construnction, where after the TrackBar specific event and textbox equivelent handlers.
                Don't forget, slider values are integers. So there is a scale in every thing
                If the scale is a visual addition, don't forget to remove it from the trackbar value.
             */
-            (TrackBar TrackBarSpeed, TextBox TextBoxSpeed, ToolTip ToolTipSpeed) = MakeSlider(40, 60, "Speed", 1, 25, 200, c, "bijbehorende uitleg");
-            TrackBarSpeed.ValueChanged += (object o, EventArgs ea) => { Settings.StepSize = TrackBarSpeed.Value/c; };
-            TextBoxSpeed.Leave += (object o, EventArgs ea) => { Settings.StepSize = double.Parse(TextBoxSpeed.Text); };
+            (TrackBar TrackBarSpeed, TextBox TextBoxSpeed, ToolTip ToolTipSpeed) = MakeSlider(40, 60, "Speed", 1, 25, 200, 100, "bijbehorende uitleg");
+            TrackBarSpeed.ValueChanged += (object o, EventArgs ea) => { Settings.StepSize = TrackBarSpeed.Value / 100f; };
+            TextBoxSpeed.Leave += (object o, EventArgs ea) => { Settings.StepSize = float.Parse(TextBoxSpeed.Text); };
 
-            (TrackBar TrackBarTotalEntities, TextBox TextBoxTotalEntities, ToolTip ToolTipTotalEntities) = MakeSlider(40, 140, "Total number of Entities", 20, 10, 50, 1, "bijbehorende uitleg");
+            (TrackBar TrackBarTotalEntities, TextBox TextBoxTotalEntities, ToolTip ToolTipTotalEntities) = MakeSlider(40, 140, "Total number of Entities", 50, 40, 100, 1, "bijbehorende uitleg");
             TrackBarTotalEntities.ValueChanged += (object o, EventArgs ea) => { Settings.TotalEntities = TrackBarTotalEntities.Value; };
             TextBoxTotalEntities.Leave += (object o, EventArgs ea) => { Settings.TotalEntities = int.Parse(TextBoxTotalEntities.Text); };
 
@@ -306,38 +311,38 @@ namespace IntroProject
 
             (TrackBar TrackBarSeaLevelHeight, TextBox TextBoxSeaLevelHeight, ToolTip ToolTipSeaLevelHeight) = MakeSlider(40, 380, "Sea Level", 8, 0, 8, 1, "bijbehorende uitleg");
             TrackBarSeaLevelHeight.ValueChanged += (object o, EventArgs ea) => { Settings.SeaLevel = TrackBarSeaLevelHeight.Value; };
-            TextBoxSeaLevelHeight.Leave += (object o, EventArgs ea) => { Settings.SeaLevel = double.Parse(TextBoxSeaLevelHeight.Text); };
+            TextBoxSeaLevelHeight.Leave += (object o, EventArgs ea) => { Settings.SeaLevel = float.Parse(TextBoxSeaLevelHeight.Text); };
 
-            (TrackBar TrackBarMatingCost, TextBox TextBoxMatingCost, ToolTip ToolTipMatingCost) = MakeSlider(40, 500, "Mating Cost", 500, 100, 1000, n, "bijbehorende uitleg");
-            TrackBarMatingCost.ValueChanged += (object o, EventArgs ea) => { Settings.MatingCost = TrackBarMatingCost.Value; };
-            TextBoxMatingCost.Leave += (object o, EventArgs ea) => { Settings.MatingCost = int.Parse(TextBoxMatingCost.Text); };
+            (TrackBar TrackBarMatingCost, TextBox TextBoxMatingCost, ToolTip ToolTipMatingCost) = MakeSlider(40, 500, "Mating Cost", 75, 200, 1500, 10, "bijbehorende uitleg");
+            TrackBarMatingCost.ValueChanged += (object o, EventArgs ea) => { Settings.MatingCost = TrackBarMatingCost.Value / 10000f; };
+            TextBoxMatingCost.Leave += (object o, EventArgs ea) => { Settings.MatingCost = float.Parse(TextBoxMatingCost.Text); };
 
-            (TrackBar TrackBarGrassGrowth, TextBox TextBoxGrassGrowth, ToolTip ToolTipGrassGrowth) = MakeSlider(40, 580, "Grass Growth Speed", 200, 100, 500, n, "bijbehorende uitleg");
+            (TrackBar TrackBarGrassGrowth, TextBox TextBoxGrassGrowth, ToolTip ToolTipGrassGrowth) = MakeSlider(40, 580, "Grass Growth Speed", 200, 100, 500, 1, "bijbehorende uitleg");
             TrackBarGrassGrowth.ValueChanged += (object o, EventArgs ea) => { Settings.GrassGrowth = TrackBarGrassGrowth.Value; };
             TextBoxGrassGrowth.Leave += (object o, EventArgs ea) => { Settings.GrassGrowth = int.Parse(TextBoxGrassGrowth.Text); };
 
-            (TrackBar TrackBarGrassMaxFeed, TextBox TextBoxGrassMaxFeed, ToolTip ToolTipGrassMaxFeed) = MakeSlider(40, 660, "Grass Feed Scale", 1500, 1000, 3000, n, "bijbehorende uitleg");
+            (TrackBar TrackBarGrassMaxFeed, TextBox TextBoxGrassMaxFeed, ToolTip ToolTipGrassMaxFeed) = MakeSlider(40, 660, "Grass Feed Scale", 1500, 1000, 3000, 1, "bijbehorende uitleg");
             TrackBarGrassMaxFeed.ValueChanged += (object o, EventArgs ea) => { Settings.GrassMaxFeed = TrackBarGrassMaxFeed.Value; };
             TextBoxGrassMaxFeed.Leave += (object o, EventArgs ea) => { Settings.GrassMaxFeed = int.Parse(TextBoxGrassMaxFeed.Text); };
 
-            (TrackBar TrackBarTemperatureMin, TextBox TextBoxTemperatureMin, ToolTip ToolTipTemperatureMin) = MakeSlider(500, 60, "Temperature Min", 15, 10, 20, n, "bijbehorende uitleg");
+            (TrackBar TrackBarTemperatureMin, TextBox TextBoxTemperatureMin, ToolTip ToolTipTemperatureMin) = MakeSlider(500, 60, "Temperature Min", 15, 10, 20, 1, "bijbehorende uitleg");
             TrackBarTemperatureMin.ValueChanged += (object o, EventArgs ea) => { Settings.MinTemp = TrackBarTemperatureMin.Value; };
             TextBoxTemperatureMin.Leave += (object o, EventArgs ea) => { Settings.MinTemp = int.Parse(TextBoxTemperatureMin.Text); };
 
-            (TrackBar TrackBarTemperatureMax, TextBox TextBoxTemperatureMax, ToolTip ToolTipTemperatureMax) = MakeSlider(500, 140, "Temperature Max", 25, 20, 30, n, "bijbehorende uitleg");
+            (TrackBar TrackBarTemperatureMax, TextBox TextBoxTemperatureMax, ToolTip ToolTipTemperatureMax) = MakeSlider(500, 140, "Temperature Max", 25, 20, 30, 1, "bijbehorende uitleg");
             TrackBarTemperatureMax.ValueChanged += (object o, EventArgs ea) => { Settings.MaxTemp = TrackBarTemperatureMax.Value; };
             TextBoxTemperatureMax.Leave += (object o, EventArgs ea) => {  Settings.MaxTemp = int.Parse(TextBoxTemperatureMax.Text); };
 
-            (TrackBar TrackBarWalkEnergy, TextBox TextBoxWalkEnergy, ToolTip ToolTipWalkEnergy) = MakeSlider(500, 220, "Walk Energy Cost", 1, 50, 300, c, "bijbehorende uitleg");
-            TrackBarWalkEnergy.ValueChanged += (object o, EventArgs ea) => { Settings.WalkEnergy = TrackBarWalkEnergy.Value/c; };
+            (TrackBar TrackBarWalkEnergy, TextBox TextBoxWalkEnergy, ToolTip ToolTipWalkEnergy) = MakeSlider(500, 220, "Walk Energy Cost", 1, 5, 30, 10, "bijbehorende uitleg");
+            TrackBarWalkEnergy.ValueChanged += (object o, EventArgs ea) => { Settings.WalkEnergy = TrackBarWalkEnergy.Value / 100f; };
             TextBoxWalkEnergy.Leave += (object o, EventArgs ea) => { Settings.WalkEnergy = float.Parse(TextBoxWalkEnergy.Text); };
 
-            (TrackBar TrackBarJumpEnergy, TextBox TextBoxJumpEnergy, ToolTip ToolTipJumpEnergy) = MakeSlider(500, 300, "Jump Energy Cost", 1, 5000, 30000, 10000, "bijbehorende uitleg");
-            TrackBarJumpEnergy.ValueChanged += (object o, EventArgs ea) => { Settings.JumpEnergy = TrackBarJumpEnergy.Value/10000; };
+            (TrackBar TrackBarJumpEnergy, TextBox TextBoxJumpEnergy, ToolTip ToolTipJumpEnergy) = MakeSlider(500, 300, "Jump Energy Cost", 1, 5, 30, 10, "bijbehorende uitleg");
+            TrackBarJumpEnergy.ValueChanged += (object o, EventArgs ea) => { Settings.JumpEnergy = TrackBarJumpEnergy.Value / 10000f; };
             TextBoxJumpEnergy.Leave += (object o, EventArgs ea) => { Settings.JumpEnergy = float.Parse(TextBoxJumpEnergy.Text); };
 
-            (TrackBar TrackBarPassiveEnergy, TextBox TextBoxPassiveEnergy, ToolTip ToolTipPassiveEnergy) = MakeSlider(500, 380, "Passive Energy Cost", 1, 500000, 3000000, 1000000, "bijbehorende uitleg");
-            TrackBarPassiveEnergy.ValueChanged += (object o, EventArgs ea) => { Settings.PassiveEnergy = TrackBarPassiveEnergy.Value/1000000; };
+            (TrackBar TrackBarPassiveEnergy, TextBox TextBoxPassiveEnergy, ToolTip ToolTipPassiveEnergy) = MakeSlider(500, 380, "Passive Energy Cost", 1, 5, 30, 10, "bijbehorende uitleg");
+            TrackBarPassiveEnergy.ValueChanged += (object o, EventArgs ea) => { Settings.PassiveEnergy = TrackBarPassiveEnergy.Value / 1000000f; };
             TextBoxPassiveEnergy.Leave += (object o, EventArgs ea) => { Settings.PassiveEnergy = float.Parse(TextBoxPassiveEnergy.Text); };
 
             this.Controls.Add(exit);

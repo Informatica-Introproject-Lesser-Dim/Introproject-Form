@@ -77,10 +77,10 @@ namespace IntroProject
                                                                     , new ColorScale(Color.FromArgb(155, 184, 147), Color.FromArgb(109, 135, 105))
                                                                     , new ColorScale(Color.FromArgb(109, 135, 105), Color.FromArgb(62, 89, 63))
                                                                     };
-        public static float seaLevel = -0.15f; //corresponds to the height below wich the colours are blue
+        public static float seaLevel = -0.15f; //corresponds to the height below which the colours are blue
         public static float deepSea = -0.4f;
         public static float sand = 0.1f;
-        private static float[] heights = new float[6] {-1f, deepSea, seaLevel, sand, 0.7f, 1f};
+        private static float[] heights = new float[6] {-1f, deepSea, seaLevel, sand, 0.7f, 1f}; //moet nog veranderen afhankelijk van SeaLevel variable
         
 
 
@@ -337,6 +337,11 @@ namespace IntroProject
             if (x > width / 2)
                 return false;
             return x < size - (size * y) / height;
+        }
+        public void Update()
+        {
+            vegetation.UpdateGrass();
+            //Still have to make an SeaLevel method that makes dependent on the seaLevel variable its array.
         }
     }
 }

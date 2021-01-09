@@ -22,6 +22,7 @@ namespace IntroProject
         private Route route;
         private Creature target;
 
+        private float MateWeight = Settings.MatingCost;
         private Grass myFood;
         private int sleep = 0;
         private Goal goal = Goal.Nothing;
@@ -95,13 +96,13 @@ namespace IntroProject
             this.coolDown = 1000;
             other.coolDown = 1000;
             other.MateWithMale(this);
-            this.energyVal -= (int) (this.gene.Size * 0.05); //the males barely lose any energy
+            this.energyVal -= (int) (this.gene.Size * (0.1 * MateWeight)); //the males barely lose any energy
             this.goalReset();
         }
 
         public void MateWithMale(Creature other)
         {
-            double transferredEnergy =  this.energyVal * this.gene.energyDistribution;
+            double transferredEnergy =  this.energyVal * (this.gene.energyDistribution * MateWeight);
             energyVal -= transferredEnergy;
             Creature child = new Creature(this.gene * other.gene, transferredEnergy);
             child.x = this.x;
@@ -400,6 +401,10 @@ namespace IntroProject
                     this.energyVal = maxEnergy;
                 else this.energyVal += grass.getVal(this.chunk.vegetation.currentTime);
             }
+        }
+        public void Update()
+        {
+            MateWeight = Settings.MatingCost;
         }
     }
 }

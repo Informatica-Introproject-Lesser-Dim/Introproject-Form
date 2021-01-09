@@ -291,5 +291,16 @@ namespace IntroProject
                 return new int[2] { column * 2, row + 1 };
             return new int[2] { column * 2, row};
         }
+        public void Update()
+        {
+            foreach (Creature creature in entities)
+            {
+                creature.Update();
+            }
+            foreach (Hexagon tile in tiles)
+            {
+                tile.Update();
+            }
+        }
     }
 }
