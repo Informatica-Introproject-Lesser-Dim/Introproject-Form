@@ -10,8 +10,8 @@ namespace IntroProject
 {
     public class Map
     {
-        private int width;
-        private int height;
+        public int width;
+        public int height;
         private int size;
         private int margin;
         private List<Entity> entities;
@@ -20,7 +20,7 @@ namespace IntroProject
         private List<Entity> eaten;
         private int time = 0;
 
-        private Hexagon[,] tiles;
+        public Hexagon[,] tiles;
         public Hexagon this[int x, int y] {
             get { return getHex(x, y); }
         }
