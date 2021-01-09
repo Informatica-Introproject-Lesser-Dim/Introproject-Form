@@ -136,18 +136,34 @@ namespace IntroProject
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            switch (keyData) {
+            switch (keyData)
+            {
                 case Keys.Up:
-                    this.yCam += (int) (size * (0.5*Hexagon.sqrt3));
+                    if (this.yCam + (size * (0.5 * Hexagon.sqrt3)) >= 0.5 * Size.Height)
+                        this.yCam = (int)(0.5 * Size.Height);
+                    else
+                        this.yCam += (int)(size * (0.5 * Hexagon.sqrt3));
                     break;
+                
                 case Keys.Down:
-                    this.yCam -= (int)(size * (0.5 * Hexagon.sqrt3));
+                    if (this.yCam - (size * 0.5 * Hexagon.sqrt3) <= -(map.tiles[map.width - 1, map.height - 1].y - 0.5 * Size.Height))
+                        this.yCam = (int)-(map.tiles[map.width - 1, map.height - 1].y - 0.5 * Size.Height);
+                    else
+                        this.yCam -= (int)(size * (0.5 * Hexagon.sqrt3));
                     break;
+                
                 case Keys.Left:
-                    this.xCam += (int) (size*(3.0/2));
+                    if (this.xCam + (size * (3.0 / 2)) >= 0.5 * Size.Width)
+                        this.xCam = (int)(0.5 * Size.Width);
+                    else
+                        this.xCam += (int)(size * (3.0 / 2));
                     break;
+                
                 case Keys.Right:
-                    this.xCam -= (int) (size*(3.0/2));
+                    if (this.xCam - (size * (3.0 / 2)) <= -(map.tiles[map.width - 1, map.height - 1].x - 0.5 * Size.Width))
+                        this.xCam = (int)-(map.tiles[map.width - 1, map.height - 1].x - 0.5 * Size.Width);
+                    else
+                        this.xCam -= (int)(size * (3.0 / 2));
                     break;
             }
             camAutoMove = false;
