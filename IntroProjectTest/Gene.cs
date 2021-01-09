@@ -11,6 +11,7 @@ namespace IntroProjectTest
         public sealed class GeneTestable : Gene
         {
             public GeneTestable(Func<bool> willMutate) => this.willMutate = willMutate;
+            public GeneTestable(List<float[]> allelParentA, List<float[]> allelParentB) : base(allelParentA, allelParentB) { }
         }
 
         [TestFixture]
@@ -39,8 +40,8 @@ namespace IntroProjectTest
                     List<float[]> a = stableGeneSetA.getAllel();
                     List<float[]> b = stableGeneSetB.getAllel();
 
-                    Gene childA = new Gene(a, b);
-                    Gene childB = new Gene(b, a);
+                    Gene childA = new GeneTestable(a, b);
+                    Gene childB = new GeneTestable(b, a);
 
                     Assert.IsTrue(childA.EqualFenoType(childB));
                 }
