@@ -177,7 +177,7 @@ namespace IntroProject
                 map.TimeStep();
                 n = 0;
             }
-            pea.Graphics.FillRectangle(new SolidBrush(Color.DarkGray), 0, 0, this.Width, this.Height);
+            pea.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(108, 116, 150)), 0, 0, this.Width, this.Height);
             if (camAutoMove)
             {
                 xCam = this.Width / 2 - selected.GlobalLoc.X;
