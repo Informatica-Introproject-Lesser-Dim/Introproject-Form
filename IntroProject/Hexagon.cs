@@ -19,7 +19,7 @@ namespace IntroProject
         public List<Entity> entities;
         public int Tag = -1;
         public Map parent;
-
+        public Color warmth;
         public Vegetation vegetation;
         public Hexagon this[int a, int b] { //the a is wether you want the neighbor to the left or right, b is wether you want the neighbour up or down
             get {
@@ -311,7 +311,7 @@ namespace IntroProject
             else
                 scale = warmthScale;
 
-            var warmth = ColorScale.PickValue(scale, relHeight);
+            warmth = ColorScale.PickValue(scale, relHeight);
             this.color = Color.FromArgb((color.R + warmth.R) >> 1, (color.G + warmth.G) >> 1, (color.B + warmth.B) >> 1);
         }
 

@@ -39,9 +39,18 @@ namespace IntroProject
             {
                 maxPlants = 1;
                 fertillity = 0.25;
+                if(Settings.AddHeatMap)
+                {
+                    fertillity = 0.25 + tile.warmth.R/500 - tile.warmth.B/500;
+                }
             }
             if (tile.heightOfTile < Hexagon.seaLevel)
                 maxPlants = 0;
+            if (tile.heightOfTile > Hexagon.sand - 0.05)
+            {
+                if (Settings.AddHeatMap)
+                    fertillity = 1 + tile.warmth.R/500 - tile.warmth.B/500;
+            }
         }
         private void preGenGrassUnvisible()
         {
