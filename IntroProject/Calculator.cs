@@ -6,9 +6,9 @@ namespace IntroProject
 {
     static class Calculator
     {
-        private const float jumpBias = 0.001f; /* Settings.JumpEnergy */
-        private const float moveBias = 0.1f; /* Settings.WalkEnergy */ //mess a bit with these values when we got everything else set up correctly
-        private const float standardBias = 0.00001f; /* Settings.PassiveEnergy */
+        private static float jumpBias = Settings.JumpEnergy; /* Settings.JumpEnergy */
+        private static float moveBias = Settings.WalkEnergy; /* Settings.WalkEnergy */ //mess a bit with these values when we got everything else set up correctly
+        private static float standardBias = Settings.PassiveEnergy; /* Settings.PassiveEnergy */
 
         public static float JumpCost(Gene gene) {
             return gene.Size * gene.JumpHeight * gene.JumpHeight * jumpBias;
@@ -30,6 +30,13 @@ namespace IntroProject
             double dx = x1 - x2;
             double dy = y1 - y2;
             return dx * dx + dy * dy;
+        }
+
+        public static void Update()
+        {
+            jumpBias = Settings.JumpEnergy;
+            moveBias = Settings.WalkEnergy;
+            standardBias = Settings.PassiveEnergy;
         }
     }
 }

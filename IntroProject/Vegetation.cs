@@ -132,7 +132,14 @@ namespace IntroProject
                 if (g.visible)
                     result.Add(g);
             return result;
-        } 
+        }
+        public void UpdateGrass()
+        {
+            foreach (Grass g in grass)
+            {
+                g.Update();
+            }
+        }
     }
 
     //random creation of each piece of grass would probably take up a load of performance
@@ -141,7 +148,6 @@ namespace IntroProject
     public class Grass {//I suppose that since it can also grow in water it should be called algea or smthn else
         //constants
         private const int min = 50, max = 200;//these numbers are up for discussion, right now it's just temporary placeholders
-        private const int growRange = 200; /* Settings.GrassGrowth */
         private const int growthTime = 3; //how much time to grow one bit
         private const int radius = 5; //temporary and used for drawing the grass (will later on probably be replaced by some actual pictures)
         //normal variables
@@ -150,7 +156,9 @@ namespace IntroProject
         private int foodStart;
         private int time;
         public bool visible = false;
-        
+        private int growRange = Settings.GrassGrowth;
+        private int feedMax = Settings.GrassMaxFeed;
+
         public Grass(int size) { //random creation
 
             //random location is decided by a random radius and angle
@@ -184,9 +192,19 @@ namespace IntroProject
 
         public int getVal(int time) {
             int added = (time - this.time) / growthTime;
+
             if (added > growRange)
                 added = growRange;
+
+            if (feedMax < foodStart + added)
+                return feedMax;
             return foodStart + added;
+        }
+
+        public void Update ()
+        {
+            growRange = Settings.GrassGrowth;
+            feedMax = Settings.GrassMaxFeed;
         }
     }
 }
