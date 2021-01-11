@@ -297,10 +297,11 @@ namespace IntroProject
         {
             this.BackColor = Color.FromArgb(123, 156, 148);
             this.Size = new Size(w, h);
+            int edge = Math.Min((int)Size.Width / 30, (int)Size.Height / 20);
 
             Button exit = new ButtonImaged(Properties.Resources.X_icon);
             exit.Location = new Point(2, 2);
-            exit.Size = new Size(50, 50);
+            exit.Size = new Size(edge, edge);
             exit.FlatAppearance.BorderColor = Color.FromArgb(123, 156, 148);
             exit.Click += exitMenu;
             
@@ -444,19 +445,54 @@ namespace IntroProject
 
     class StatisticsMenu : UserControl
     {
-
+        int r = 0;
         public StatisticsMenu(int w, int h, EventHandler exitMenu)
         {
             this.BackColor = Color.FromArgb(123, 156, 148);
             this.Size = new Size(w, h);
+            int edge = Math.Min((int)Size.Width / 30, (int)Size.Height / 20);
 
             Button exit = new ButtonImaged(Properties.Resources.X_icon);
             exit.Location = new Point(2, 2);
-            exit.Size = new Size(50, 50);
+            exit.Size = new Size(edge, edge);
             exit.FlatAppearance.BorderColor = Color.FromArgb(123, 156, 148);
             exit.Click += exitMenu;
-
             this.Controls.Add(exit);
+
+            Resize += (object o, EventArgs ea) =>
+            {
+                edge = Math.Min((int)Size.Width / 30, (int)Size.Height / 20);
+                exit.Size = new Size(edge, edge);
+            };
+            Button statname1 = ButtonList("statistics");
+            Button statname2 = ButtonList("statistics");
+            Button statname3 = ButtonList("statistics");
+            Button statname4 = ButtonList("statistics");
+            Button statname5 = ButtonList("statistics");
+            Button statname6 = ButtonList("statistics");
+
+        }
+
+        private Button ButtonList(String name) //makes a button and next call makes a button under the previus.
+        {
+            r++;
+            int i = r, y = Math.Min((int)Size.Width / 30, (int)Size.Height / 20) + 10;
+            Button button = new Button();
+            button.Text = name;
+            button.Location = new Point(0, i*y);
+            button.Size = new Size(this.Width / 12, this.Height / 20);
+            button.BackColor = Color.White;
+
+            Resize += (object o, EventArgs ea) =>
+            {
+                y = Math.Min((int)Size.Width / 30, (int)Size.Height / 20) + 10;
+
+                button.Location = new Point(0, i*y);
+                button.Size = new Size(this.Width / 12, this.Height / 20);
+            };
+
+            this.Controls.Add(button);
+            return button;
         }
     }
 

@@ -6,10 +6,9 @@ namespace IntroProject
 {
     static class Calculator
     {
-        private static float jumpBias = Settings.JumpEnergy; /* Settings.JumpEnergy */
-        private static float moveBias = Settings.WalkEnergy; /* Settings.WalkEnergy */ //mess a bit with these values when we got everything else set up correctly
-        private static float standardBias = Settings.PassiveEnergy; /* Settings.PassiveEnergy */
-
+        private static float jumpBias = Settings.JumpEnergy;
+        private static float moveBias = Settings.WalkEnergy;//mess a bit with these values when we got everything else set up correctly
+        private static float standardBias = Settings.PassiveEnergy;
         public static float JumpCost(Gene gene) {
             return gene.Size * gene.JumpHeight * gene.JumpHeight * jumpBias;
         }
