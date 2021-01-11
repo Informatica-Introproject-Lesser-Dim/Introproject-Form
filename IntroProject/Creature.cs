@@ -24,10 +24,10 @@ namespace IntroProject
 
         private float MateWeight = Settings.MatingCost;
         private Grass myFood;
-        private int sleep = 0;
+        private double sleep = 0;
         private Goal goal = Goal.Nothing;
         private bool passive = false;
-        public int coolDown = 200; //cooldown so the creature doesnt continuously attempt mating
+        public double coolDown = 200; //cooldown so the creature doesnt continuously attempt mating
         float maxEnergy;
 
         public Creature()
@@ -91,7 +91,7 @@ namespace IntroProject
         protected void MateWithFemale(Creature other)
         {
             //create a new creature, remove energy accordingly and set a "cooldown timer" for both the creatures
-            if (0 != (this.coolDown + other.coolDown))
+            if (0 < (this.coolDown + other.coolDown))
                 throw new UnreadyForMating();
 
             this.coolDown = 300;
@@ -115,17 +115,17 @@ namespace IntroProject
             this.goalReset();
         }
 
-        public void activate() {
+        public void activate(double dt) {
 
-            this.energyVal -= Calculator.StandardEnergyCost(gene);
+            this.energyVal -= Calculator.StandardEnergyCost(gene)*dt;
             if (this.coolDown > 0)
-                coolDown--;
+                coolDown -= dt;
 
             if (this.energyVal <= 0)
                 this.dead = true;
 
             if (sleep > 0) {
-                sleep--;
+                sleep -= dt;
                 if (goal != Goal.Mate)
                     this.color = Color.FromArgb(50, 50, 150);
                 return;
@@ -135,7 +135,7 @@ namespace IntroProject
                 this.mateActive();
 
             if (route != null) //just move along the road if you have one, otherwise search for a new route
-                this.move();
+                this.move(dt);
             else {
                 passiveSearch();
             }
@@ -339,12 +339,12 @@ namespace IntroProject
         }
 
 
-        public void move() { //needs a rework cus the target wont be an entity
+        public void move(double dt) { //needs a rework cus the target wont be an entity
 
             if (this.chunk.heightOfTile < Hexagon.seaLevel)
-                this.energyVal -= Calculator.EnergyPerTic(gene) * gene.SwimCost;
+                this.energyVal -= Calculator.EnergyPerTic(gene) * gene.SwimCost * dt;
             
-            else this.energyVal -= Calculator.EnergyPerTic(gene) * gene.WalkCost;
+            else this.energyVal -= Calculator.EnergyPerTic(gene) * gene.WalkCost * dt;
             
             if (route != null) {
                 if (goal == Goal.Mate) {
@@ -363,7 +363,7 @@ namespace IntroProject
                 }
 
                 Point currentLoc;
-                if (route.move(gene.Velocity)) {
+                if (route.move((float)dt * gene.Velocity)) {
                     currentLoc = route.getPos();
                     x = currentLoc.X;
                     y = currentLoc.Y;

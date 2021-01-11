@@ -18,7 +18,8 @@ namespace IntroProject
         private List<Entity> children;
         private List<Entity> deaths;
         private List<Entity> eaten;
-        private int time = 0;
+        private double time = 0;
+        private double msPerTick = 30;
 
         public Hexagon[,] tiles;
         public Hexagon this[int x, int y] {
@@ -78,7 +79,7 @@ namespace IntroProject
             entities.Add(e);
         }
 
-        private void activateEntities() {
+        private void activateEntities(double dt) {
             
             if (deaths.Count > 0)
             {
@@ -101,17 +102,17 @@ namespace IntroProject
             foreach (Entity e in entities)
                 if (e is Creature)
                 {
-                    ((Creature)e).activate();
+                    ((Creature)e).activate(dt/msPerTick);
                     if (((Creature)e).dead)
                         deaths.Add(((Creature)e));
                 }
         }
 
-        public void TimeStep() {
-            time++; //the map keeps the time so that not each hexagon has to keep the time for itself
-            this.activateEntities(); //activating all the entities
+        public void TimeStep(double dt) {
+            time += dt; //the map keeps the time so that not each hexagon has to keep the time for itself
+            this.activateEntities(dt); //activating all the entities
             foreach (Hexagon hexagon in tiles)
-                hexagon.activate(time); //letting each hexagon grow it's plants
+                hexagon.activate(time/msPerTick); //letting each hexagon grow it's plants
         }
 
 

@@ -189,7 +189,7 @@ namespace IntroProject
             return result;
         }
 
-        private double calcGrassVal(Point point, Grass grass, int time) {
+        private double calcGrassVal(Point point, Grass grass, double time) {
             int dx = point.X - grass.loc.X;
             int dy = point.Y - grass.loc.Y;
             double dist = Math.Sqrt(dx * dx + dy * dy);
@@ -251,7 +251,7 @@ namespace IntroProject
             return result;
         }
 
-        public void activate(int time)
+        public void activate(double time)
         {
             vegetation.actvate(time);
         }

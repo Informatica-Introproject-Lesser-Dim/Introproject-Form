@@ -57,6 +57,7 @@ namespace IntroProject
     class MapScreen : UserControl
     {
         Map map;
+
         public bool paused = true;
         public bool buttonPaused = true;
         bool camAutoMove = false;
@@ -69,6 +70,9 @@ namespace IntroProject
         public Button plus = new ButtonImaged(Properties.Resources.Plus_icon);
 
         private Entity selected;
+
+        DateTime oldTime = DateTime.Now;
+        TimeSpan dt;
 
 
         public MapScreen(Size size) : this(size.Width, size.Height) { }
@@ -94,7 +98,7 @@ namespace IntroProject
             play.Location = new Point(40, 5);
             stop.Location = new Point(105, 5);
 
-            play.Click += (object o, EventArgs ea) => { play.Hide(); paused = false; buttonPaused = false; };
+            play.Click += (object o, EventArgs ea) => { play.Hide(); paused = false; buttonPaused = false; oldTime = DateTime.Now; };
             pause.Click += (object o, EventArgs ea) => { play.Show(); paused = true; buttonPaused = true; };
 
             this.Controls.Add(play); 
@@ -174,8 +178,9 @@ namespace IntroProject
         public void drawScreen(object o, PaintEventArgs pea) 
         {
             if (paused == false) {
-                map.TimeStep();
-                n = 0;
+                dt = DateTime.Now - oldTime;
+                oldTime = oldTime + dt;
+                map.TimeStep(dt.TotalMilliseconds);
             }
             pea.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(108, 116, 150)), 0, 0, this.Width, this.Height);
             if (camAutoMove)

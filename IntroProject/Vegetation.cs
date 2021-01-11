@@ -20,8 +20,8 @@ namespace IntroProject
         public Grass this[int n] { get { return grass[n]; } }
 
         //normal variables
-        int targetTime = 0;
-        public int currentTime = 0;
+        double targetTime = 0;
+        public double currentTime = 0;
         List<Grass> grass;
         Hexagon tile;
 
@@ -63,7 +63,7 @@ namespace IntroProject
             targetTime = new Random().Next(min, max);
 
         //just call this every step in "hexagon"
-        public void actvate(int time) {
+        public void actvate(double time) {
             currentTime = time;
             if (targetTime > currentTime)
                 return; //you basicly dont have to do anything untill you hit the target time
@@ -107,7 +107,7 @@ namespace IntroProject
                 boost = boost / 4; //putting grass on neighbor tiles happens but slower
             }
 
-            targetTime = currentTime + (int)(random.Next((int)(min / fertillity), (int)(max / fertillity)) / boost); //when this is reached a new plant will grow
+            targetTime = currentTime + (random.Next((int)(min / fertillity), (int)(max / fertillity)) / boost); //when this is reached a new plant will grow
         }
         public void draw(Graphics g, int x, int y) {
             foreach (Grass gr in grass)
@@ -180,8 +180,8 @@ namespace IntroProject
             this.foodStart = foodValue;
         }
 
-        public void start(int time) {
-            this.time = time;
+        public void start(double time) {
+            this.time = (int)time;
         }
 
         public void draw(Graphics g, int x, int y) {
@@ -190,15 +190,15 @@ namespace IntroProject
             g.FillEllipse(new SolidBrush(Color.FromArgb(70, 60, 255, 0)), loc.X + x - radius, loc.Y + y - radius, radius * 2, radius * 2);
         }
 
-        public int getVal(int time) {
-            int added = (time - this.time) / growthTime;
+        public int getVal(double time) {
+            double added = (time - this.time) / growthTime;
 
             if (added > growRange)
                 added = growRange;
 
             if (feedMax < foodStart + added)
                 return feedMax;
-            return foodStart + added;
+            return (int)(foodStart + added);
         }
 
         public void Update ()
