@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace IntroProject
 {
-    public partial class Screen : Form
+    public partial class HexagonOfLife : Form
     {
         MapScreen mapscr;
         DropMenu dropMenu;
@@ -12,7 +12,7 @@ namespace IntroProject
         HelpMenu helpMenu;
         StatisticsMenu statisticsMenu;
 
-        public Screen()
+        public HexagonOfLife()
         {
             InitializeComponent();
 
@@ -302,16 +302,32 @@ namespace IntroProject
         {
             this.BackColor = Color.FromArgb(123, 156, 148);
             this.Size = new Size(w, h);
-            int edge = Math.Min((int)Size.Width / 30, (int)Size.Height / 20);
+            int edge = Math.Max((int)(Size.Width / 36), (int)(Size.Height / 36));
 
             Button exit = new ButtonImaged(Properties.Resources.X_icon);
             exit.Location = new Point(2, 2);
             exit.Size = new Size(edge, edge);
             exit.FlatAppearance.BorderColor = Color.FromArgb(123, 156, 148);
             exit.Click += exitMenu;
-            
-            this.Controls.Add(exit);
 
+            Button importSet = new Button();
+            importSet.Location = new Point(Size.Width - (edge * 2) - 16, 5);
+            importSet.Size = new Size(edge * 2, edge * 2);
+            importSet.FlatAppearance.BorderColor = Color.FromArgb(123, 156, 148);
+            importSet.BackColor = Color.White;
+            importSet.Text = "Import Settings";
+            importSet.Click += ImportSettings;
+
+            this.Controls.Add(exit);
+            this.Controls.Add(importSet);
+
+            Resize += (object o, EventArgs ea) =>
+            {
+                edge = Math.Max((int)(Size.Width / 36), (int)(Size.Height / 36));
+                exit.Size = new Size(edge, edge);
+                importSet.Size = new Size(edge * 2, edge * 2);
+                importSet.Location = new Point(Size.Width - (edge * 2) - 16, 5);
+            };
             /* Each triple sentence is an slider group, First the construnction, where after the TrackBar specific event and textbox equivelent handlers.
                Don't forget, slider values are integers. So there is a scale in every thing
                If the scale is a visual addition, don't forget to remove it from the trackbar value.
@@ -407,6 +423,11 @@ namespace IntroProject
 
             return (trackBar, textBox, toolTip);
         }
+        public void ImportSettings(object o, EventArgs ea)
+        {
+
+        }
+
         public void Prep()
         {
             TE = Settings.TotalEntities;
@@ -455,7 +476,7 @@ namespace IntroProject
         {
             this.BackColor = Color.FromArgb(123, 156, 148);
             this.Size = new Size(w, h);
-            int edge = Math.Min((int)Size.Width / 30, (int)Size.Height / 20);
+            int edge = Math.Max((int)(Size.Width / 36), (int)(Size.Height / 36));
 
             Button exit = new ButtonImaged(Properties.Resources.X_icon);
             exit.Location = new Point(2, 2);
@@ -466,7 +487,7 @@ namespace IntroProject
 
             Resize += (object o, EventArgs ea) =>
             {
-                edge = Math.Min((int)Size.Width / 30, (int)Size.Height / 20);
+                edge = Math.Max((int)(Size.Width / 36), (int)(Size.Height / 36));
                 exit.Size = new Size(edge, edge);
             };
             Button statname1 = ButtonList("statistics");

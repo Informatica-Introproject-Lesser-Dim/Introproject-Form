@@ -1,6 +1,6 @@
 ﻿namespace IntroProject
 {
-    partial class Screen
+    partial class HexagonOfLife
     {
         /// <summary>
         /// Required designer variable.
