@@ -19,7 +19,7 @@ namespace IntroProject
         private List<Entity> deaths;
         private List<Entity> eaten;
         private double time = 0;
-        private double msPerTick = 30;
+        private double msPerTick { get { return 30 / Settings.StepSize; } }
 
         public Hexagon[,] tiles;
         public Hexagon this[int x, int y] {
@@ -43,7 +43,8 @@ namespace IntroProject
             deaths = new List<Entity>();
             tiles = new Hexagon[width, height];
             perlin = new SimplexPerlin[4];
-            for(int i = 0; i < n; i++)
+            Hexagon.calcHeight(Settings.MiddleHeight);
+            for (int i = 0; i < n; i++)
                 perlin[i] = new SimplexPerlin(random.Next(), LibNoise.NoiseQuality.Best);
 
             for (int x = 0; x < width; x++) //creating all the tiles and calculating the correct perlin noise for it
@@ -301,6 +302,7 @@ namespace IntroProject
             foreach (Hexagon tile in tiles)
             {
                 tile.Update();
+                tile.UpdateColor();
             }
         }
     }

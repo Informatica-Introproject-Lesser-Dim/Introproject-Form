@@ -77,12 +77,10 @@ namespace IntroProject
                                                                     , new ColorScale(Color.FromArgb(155, 184, 147), Color.FromArgb(109, 135, 105))
                                                                     , new ColorScale(Color.FromArgb(109, 135, 105), Color.FromArgb(62, 89, 63))
                                                                     };
-        public static float seaLevel = -0.15f; //corresponds to the height below which the colours are blue
-        public static float deepSea = -0.4f;
-        public static float sand = 0.1f;
-        private static float[] heights = new float[6] {-1f, deepSea, seaLevel, sand, 0.7f, 1f}; //moet nog veranderen afhankelijk van SeaLevel variable
-        
-
+        public static float seaLevel; //multi references //corresponds to the height below which the colours are blue
+        public static float deepSea;
+        public static float sand; //multi references
+        private static float[] heights;
 
         public Hexagon(int size, double c, int x, int y, double longitudeOnMap, Map map) //size is the length of each side
         {
@@ -337,6 +335,15 @@ namespace IntroProject
             if (x > width / 2)
                 return false;
             return x < size - (size * y) / height;
+        }
+        public static void calcHeight(float nullLevel)
+        {
+            float neg = -1f - nullLevel, pos = 1f - nullLevel;
+            deepSea = nullLevel + neg * 0.4f;
+            seaLevel = nullLevel + neg * 0.15f;
+            sand = nullLevel + pos * 0.1f;
+            float grass = nullLevel + pos * 0.7f;
+            heights = new float[6] { -1f, deepSea, seaLevel, sand, grass, 1f };
         }
         public void Update()
         {

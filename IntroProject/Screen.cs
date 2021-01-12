@@ -1,6 +1,10 @@
 ﻿using System;
+using System.IO;
+using System.Security;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Collections.Generic;
+
 
 namespace IntroProject
 {
@@ -110,7 +114,7 @@ namespace IntroProject
 
             map = new Map(100, 70, size, 0);
             
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < Settings.StartEntities; i++)
             {
                 Herbivore herbivore = new Herbivore();
                 herbivore.x = 0;
@@ -297,6 +301,7 @@ namespace IntroProject
         public bool warned = true;
         private int TE,SE, MiT, MaT;
         private double SL;
+        private OpenFileDialog openFileDialog;
         public SettingsMenu(int w, int h, EventHandler exitMenu) 
 
         {
@@ -332,7 +337,7 @@ namespace IntroProject
                Don't forget, slider values are integers. So there is a scale in every thing
                If the scale is a visual addition, don't forget to remove it from the trackbar value.
             */
-            (TrackBar TrackBarSpeed, TextBox TextBoxSpeed, ToolTip ToolTipSpeed) = MakeSlider(40, 60, "Speed", 1, 25, 200, 100, "bijbehorende uitleg");
+            (TrackBar TrackBarSpeed, TextBox TextBoxSpeed, ToolTip ToolTipSpeed) = MakeSlider(40, 60, "Speed", 1, 25, 400, 100, "bijbehorende uitleg");
             TrackBarSpeed.ValueChanged += (object o, EventArgs ea) => { Settings.StepSize = TrackBarSpeed.Value / 100f; };
             TextBoxSpeed.Leave += (object o, EventArgs ea) => { Settings.StepSize = float.Parse(TextBoxSpeed.Text); };
 
@@ -348,19 +353,19 @@ namespace IntroProject
             TrackBarHatchSpeed.ValueChanged += (object o, EventArgs ea) => { Settings.HatchSpeed = TrackBarHatchSpeed.Value; };
             TextBoxHatchSpeed.Leave += (object o, EventArgs ea) => { Settings.HatchSpeed = int.Parse(TextBoxHatchSpeed.Text); };
 
-            (TrackBar TrackBarSeaLevelHeight, TextBox TextBoxSeaLevelHeight, ToolTip ToolTipSeaLevelHeight) = MakeSlider(40, 380, "Sea Level", 8, 0, 8, 1, "bijbehorende uitleg");
-            TrackBarSeaLevelHeight.ValueChanged += (object o, EventArgs ea) => { Settings.SeaLevel = TrackBarSeaLevelHeight.Value; };
-            TextBoxSeaLevelHeight.Leave += (object o, EventArgs ea) => { Settings.SeaLevel = float.Parse(TextBoxSeaLevelHeight.Text); };
+            (TrackBar TrackBarSeaLevel, TextBox TextBoxSeaLevel, ToolTip ToolTipSeaLevel) = MakeSlider(40, 380, "Sea Level", 0.5f, 0, 99, 100, "bijbehorende uitleg");
+            TrackBarSeaLevel.ValueChanged += (object o, EventArgs ea) => { Settings.MiddleHeight = (TrackBarSeaLevel.Value/50f) - 0.99f; };
+            TextBoxSeaLevel.Leave += (object o, EventArgs ea) => { Settings.MiddleHeight = float.Parse(TextBoxSeaLevel.Text) - 0.99f; };
 
-            (TrackBar TrackBarMatingCost, TextBox TextBoxMatingCost, ToolTip ToolTipMatingCost) = MakeSlider(40, 500, "Mating Cost", 75, 200, 1500, 10, "bijbehorende uitleg");
-            TrackBarMatingCost.ValueChanged += (object o, EventArgs ea) => { Settings.MatingCost = TrackBarMatingCost.Value / 10000f; };
+            (TrackBar TrackBarMatingCost, TextBox TextBoxMatingCost, ToolTip ToolTipMatingCost) = MakeSlider(40, 500, "Mating Cost", .75f, 20, 150, 100, "bijbehorende uitleg");
+            TrackBarMatingCost.ValueChanged += (object o, EventArgs ea) => { Settings.MatingCost = TrackBarMatingCost.Value / 100f; };
             TextBoxMatingCost.Leave += (object o, EventArgs ea) => { Settings.MatingCost = float.Parse(TextBoxMatingCost.Text); };
 
             (TrackBar TrackBarGrassGrowth, TextBox TextBoxGrassGrowth, ToolTip ToolTipGrassGrowth) = MakeSlider(40, 580, "Grass Growth Speed", 200, 100, 500, 1, "bijbehorende uitleg");
             TrackBarGrassGrowth.ValueChanged += (object o, EventArgs ea) => { Settings.GrassGrowth = TrackBarGrassGrowth.Value; };
             TextBoxGrassGrowth.Leave += (object o, EventArgs ea) => { Settings.GrassGrowth = int.Parse(TextBoxGrassGrowth.Text); };
 
-            (TrackBar TrackBarGrassMaxFeed, TextBox TextBoxGrassMaxFeed, ToolTip ToolTipGrassMaxFeed) = MakeSlider(40, 660, "Grass Feed Scale", 1500, 1000, 3000, 1, "bijbehorende uitleg");
+            (TrackBar TrackBarGrassMaxFeed, TextBox TextBoxGrassMaxFeed, ToolTip ToolTipGrassMaxFeed) = MakeSlider(40, 660, "Grass Feed Max", 1500, 1000, 3000, 1, "bijbehorende uitleg");
             TrackBarGrassMaxFeed.ValueChanged += (object o, EventArgs ea) => { Settings.GrassMaxFeed = TrackBarGrassMaxFeed.Value; };
             TextBoxGrassMaxFeed.Leave += (object o, EventArgs ea) => { Settings.GrassMaxFeed = int.Parse(TextBoxGrassMaxFeed.Text); };
 
@@ -386,7 +391,7 @@ namespace IntroProject
 
             this.Controls.Add(exit);
         }
-        private (TrackBar, TextBox, ToolTip) MakeSlider(int x, int y, String name, int basevalue, int minvalue, int maxvalue, int scale, String uitleg)
+        private (TrackBar, TextBox, ToolTip) MakeSlider(int x, int y, String name, float basevalue, int minvalue, int maxvalue, int scale, String uitleg)
         {
             Size sliderTextBoxSize = new Size(30, 20);
 
@@ -402,7 +407,7 @@ namespace IntroProject
             textBox.BackColor = Color.FromArgb(123, 156, 148);
             textBox.BorderStyle = BorderStyle.FixedSingle;
             textBox.ForeColor = Color.White;
-            trackBar.Value = (basevalue * scale);
+            trackBar.Value = (int) (basevalue * scale);
             textBox.Text = basevalue.ToString();
             trackBar.ValueChanged += (object o, EventArgs ea) => { textBox.Text = (Math.Round(trackBar.Value * (1.0/scale), 2)).ToString(); };
             textBox.Leave += (object o, EventArgs ea) => { trackBar.Value = Convert.ToInt32(double.Parse(textBox.Text) * scale); };
@@ -425,6 +430,34 @@ namespace IntroProject
         }
         public void ImportSettings(object o, EventArgs ea)
         {
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    StreamReader sr = new StreamReader(openFileDialog.FileName);
+
+                    string[] settings = new string[14];
+                    string lineInfo;
+                    int i = 0;
+
+                    while ((lineInfo = sr.ReadLine()) != null)
+                    {
+                        settings[i] = lineInfo;
+                        i++;
+                    }
+                    sr.Close();
+                    import(settings);
+                }
+                catch (SecurityException ex)
+                {
+                    MessageBox.Show($"Security error.\n\nError message: {ex.Message}\n\n" +
+                    $"Details:\n\n{ex.StackTrace}");
+                }
+            }
+        }
+
+        private void import(string[] settings)
+        {
 
         }
 
@@ -434,7 +467,7 @@ namespace IntroProject
             SE = Settings.StartEntities;
             MiT = Settings.MinTemp;
             MaT = Settings.MaxTemp;
-            SL = Settings.SeaLevel;
+            SL = Settings.MiddleHeight;
         }
         public void Warning()
         {
@@ -443,7 +476,7 @@ namespace IntroProject
             SE != Settings.StartEntities ||
             MiT != Settings.MinTemp ||
             MaT != Settings.MaxTemp ||
-            SL != Settings.SeaLevel)
+            SL != Settings.MiddleHeight)
             {
                 MessageBox.Show("For the changes to take effect, restart is required. \n" +
                     "This is done by clicking the squared terminate button.", "Requires restart");
