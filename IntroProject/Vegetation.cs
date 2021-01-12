@@ -31,6 +31,9 @@ namespace IntroProject
             matchSpawnStatsWithTileHeight();
             preGenGrassUnvisible();
             setSpawnTimer();
+            Random random = new Random();
+            if (random.NextDouble() < 0.3) //at the start a random chance to grow pretty quickly
+                targetTime = random.Next(0, min * 4);
         }
 
         private void matchSpawnStatsWithTileHeight()
@@ -79,7 +82,7 @@ namespace IntroProject
         private void Grow(bool x) {
             if (maxPlants == 0)
                 return;
-            bool temp = maxPlants > 1 && x; //if this stays true then a berrybush will need to grow (if it's not already there)
+            bool temp = maxPlants > 1 && x;
             double boost = 1;
             foreach (Grass g in grass)
             {

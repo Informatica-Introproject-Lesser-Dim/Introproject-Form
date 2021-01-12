@@ -17,6 +17,8 @@ namespace IntroProject
         private double energy;
         private Route best;
 
+        private int maxLength = 300;
+
         //when you initialize an AStar object it starts calculating the best route and then you're able to ask for the Route
         public AStar(Point loc, Hexagon chunck, Gene gene, int size, double energy) {
 
@@ -46,7 +48,7 @@ namespace IntroProject
             //start with the few base routes
             Route current;
             while ((current = routeList.Pop()) != null)
-            { //add a test wether hte current route is null aka no route has been found
+            { //add a test wether the current route is null aka no route has been found
                 if (isDone(current))
                     break;
                 if (best == null)
@@ -94,7 +96,7 @@ namespace IntroProject
             goal.Tag = Tag;//tag it so we dont use it again
             Route result = r.addAndClone(dir);
             float cost = calcCost(result);
-            if (cost > maxCost)
+            if (cost > maxCost || r.Length > maxLength)
                 return;
             routeList.Add(new RouteElement(cost, result));
         }
