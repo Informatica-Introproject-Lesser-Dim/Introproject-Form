@@ -295,13 +295,11 @@ namespace IntroProject
         }
         public void Update()
         {
-            foreach (Creature creature in entities)
-            {
-                creature.Update();
-            }
+            Creature.Update();
+            Hexagon.Update();
+
             foreach (Hexagon tile in tiles)
             {
-                tile.Update();
                 tile.UpdateColor();
             }
         }

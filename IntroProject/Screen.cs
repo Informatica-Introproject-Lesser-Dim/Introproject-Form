@@ -23,11 +23,11 @@ namespace IntroProject
 
             this.Size = new Size(1800, 1200);
             mapscr = new MapScreen(this.Size);
-            settingsMenu = new SettingsMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { settingsMenu.Warning(); settingsMenu.Hide(); if (!mapscr.buttonPaused) mapscr.paused = false; });
+            settingsMenu = new SettingsMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { settingsMenu.ImplementChanges(); mapscr.UpdateVars(); settingsMenu.Hide(); if (!mapscr.buttonPaused) mapscr.paused = false; });
             helpMenu = new HelpMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { helpMenu.Hide(); if (!mapscr.buttonPaused) mapscr.paused = false; });
             statisticsMenu = new StatisticsMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { statisticsMenu.Hide(); if (!mapscr.buttonPaused) mapscr.paused = false; });
             dropMenu = new DropMenu(Size.Width/10, Size.Height, 
-                                   (object o, EventArgs ea) => { settingsMenu.Prep(); settingsMenu.Show(); settingsMenu.BringToFront(); mapscr.paused = true; }, 
+                                   (object o, EventArgs ea) => { settingsMenu.Show(); settingsMenu.BringToFront(); mapscr.paused = true; }, 
                                    (object o, EventArgs ea) => { helpMenu.Show(); helpMenu.BringToFront(); mapscr.paused = true; }, 
                                    (object o, EventArgs ea) => { statisticsMenu.Show(); statisticsMenu.BringToFront(); mapscr.paused = true; },          
                                     mapscr.plus);
@@ -299,9 +299,11 @@ namespace IntroProject
     class SettingsMenu : UserControl
     {
         public bool warned = true;
-        private int TE,SE, MiT, MaT;
-        private double SL;
+        private int TE, SE, HS, MiT, MaT, GG, GMF, LI;
+        private float Sp, MH, MC, WE, JE, PE;
+        private bool changed, HM;
         private OpenFileDialog openFileDialog;
+        private List<TrackBar> trackBars;
         public SettingsMenu(int w, int h, EventHandler exitMenu) 
 
         {
@@ -338,56 +340,69 @@ namespace IntroProject
                If the scale is a visual addition, don't forget to remove it from the trackbar value.
             */
             (TrackBar TrackBarSpeed, TextBox TextBoxSpeed, ToolTip ToolTipSpeed) = MakeSlider(40, 60, "Speed", 1, 25, 400, 100, "bijbehorende uitleg");
-            TrackBarSpeed.ValueChanged += (object o, EventArgs ea) => { Settings.StepSize = TrackBarSpeed.Value / 100f; };
-            TextBoxSpeed.Leave += (object o, EventArgs ea) => { Settings.StepSize = float.Parse(TextBoxSpeed.Text); };
+            TrackBarSpeed.ValueChanged += (object o, EventArgs ea) => { Sp = TrackBarSpeed.Value / 100f; };
+            TextBoxSpeed.Leave += (object o, EventArgs ea) => { Sp = float.Parse(TextBoxSpeed.Text); };
+            trackBars.Add(TrackBarSpeed); //0
 
             (TrackBar TrackBarTotalEntities, TextBox TextBoxTotalEntities, ToolTip ToolTipTotalEntities) = MakeSlider(40, 140, "Total number of Entities", 50, 40, 100, 1, "bijbehorende uitleg");
-            TrackBarTotalEntities.ValueChanged += (object o, EventArgs ea) => { Settings.TotalEntities = TrackBarTotalEntities.Value; };
-            TextBoxTotalEntities.Leave += (object o, EventArgs ea) => { Settings.TotalEntities = int.Parse(TextBoxTotalEntities.Text); };
+            TrackBarTotalEntities.ValueChanged += (object o, EventArgs ea) => { TE = TrackBarTotalEntities.Value; };
+            TextBoxTotalEntities.Leave += (object o, EventArgs ea) => { TE = int.Parse(TextBoxTotalEntities.Text); };
+            trackBars.Add(TrackBarTotalEntities); //1
 
             (TrackBar TrackBarStartEntities, TextBox TextBoxStartEntities, ToolTip ToolTipSTartEntities) = MakeSlider(40, 220, "Begin number of Entities", 20, 10, 40, 1, "bijbehorende uitleg");
-            TrackBarStartEntities.ValueChanged += (object o, EventArgs ea) => { Settings.StartEntities = TrackBarStartEntities.Value; };
-            TextBoxStartEntities.Leave += (object o, EventArgs ea) => { Settings.StartEntities = int.Parse(TextBoxStartEntities.Text); };
+            TrackBarStartEntities.ValueChanged += (object o, EventArgs ea) => { SE = TrackBarStartEntities.Value; };
+            TextBoxStartEntities.Leave += (object o, EventArgs ea) => { SE = int.Parse(TextBoxStartEntities.Text); };
+            trackBars.Add(TrackBarStartEntities); //2
 
             (TrackBar TrackBarHatchSpeed, TextBox TextBoxHatchSpeed, ToolTip ToolTipHatchSpeed) = MakeSlider(40, 300, "Hatch Speed", 20, 10, 100, 1, "bijbehorende uitleg");
-            TrackBarHatchSpeed.ValueChanged += (object o, EventArgs ea) => { Settings.HatchSpeed = TrackBarHatchSpeed.Value; };
-            TextBoxHatchSpeed.Leave += (object o, EventArgs ea) => { Settings.HatchSpeed = int.Parse(TextBoxHatchSpeed.Text); };
+            TrackBarHatchSpeed.ValueChanged += (object o, EventArgs ea) => { HS = TrackBarHatchSpeed.Value; };
+            TextBoxHatchSpeed.Leave += (object o, EventArgs ea) => { HS = int.Parse(TextBoxHatchSpeed.Text); };
+            trackBars.Add(TrackBarHatchSpeed); //3
 
-            (TrackBar TrackBarSeaLevel, TextBox TextBoxSeaLevel, ToolTip ToolTipSeaLevel) = MakeSlider(40, 380, "Sea Level", 0.5f, 0, 99, 100, "bijbehorende uitleg");
-            TrackBarSeaLevel.ValueChanged += (object o, EventArgs ea) => { Settings.MiddleHeight = (TrackBarSeaLevel.Value/50f) - 0.99f; };
-            TextBoxSeaLevel.Leave += (object o, EventArgs ea) => { Settings.MiddleHeight = float.Parse(TextBoxSeaLevel.Text) - 0.99f; };
+            (TrackBar TrackBarMiddleHeight, TextBox TextBoxMiddleHeight, ToolTip ToolTipMiddleHeight) = MakeSlider(40, 380, "Sea Level", 0.5f, 0, 99, 100, "bijbehorende uitleg");
+            TrackBarMiddleHeight.ValueChanged += (object o, EventArgs ea) => { MH = (TrackBarMiddleHeight.Value/50f) - 0.99f; };
+            TextBoxMiddleHeight.Leave += (object o, EventArgs ea) => { MH = float.Parse(TextBoxMiddleHeight.Text) - 0.99f; };
+            trackBars.Add(TrackBarMiddleHeight); //4
 
             (TrackBar TrackBarMatingCost, TextBox TextBoxMatingCost, ToolTip ToolTipMatingCost) = MakeSlider(40, 500, "Mating Cost", .75f, 20, 150, 100, "bijbehorende uitleg");
-            TrackBarMatingCost.ValueChanged += (object o, EventArgs ea) => { Settings.MatingCost = TrackBarMatingCost.Value / 100f; };
-            TextBoxMatingCost.Leave += (object o, EventArgs ea) => { Settings.MatingCost = float.Parse(TextBoxMatingCost.Text); };
+            TrackBarMatingCost.ValueChanged += (object o, EventArgs ea) => { MC = TrackBarMatingCost.Value / 100f; };
+            TextBoxMatingCost.Leave += (object o, EventArgs ea) => { MC = float.Parse(TextBoxMatingCost.Text); };
+            trackBars.Add(TrackBarMatingCost); //5
 
             (TrackBar TrackBarGrassGrowth, TextBox TextBoxGrassGrowth, ToolTip ToolTipGrassGrowth) = MakeSlider(40, 580, "Grass Growth Speed", 200, 100, 500, 1, "bijbehorende uitleg");
-            TrackBarGrassGrowth.ValueChanged += (object o, EventArgs ea) => { Settings.GrassGrowth = TrackBarGrassGrowth.Value; };
-            TextBoxGrassGrowth.Leave += (object o, EventArgs ea) => { Settings.GrassGrowth = int.Parse(TextBoxGrassGrowth.Text); };
+            TrackBarGrassGrowth.ValueChanged += (object o, EventArgs ea) => { GG = TrackBarGrassGrowth.Value; };
+            TextBoxGrassGrowth.Leave += (object o, EventArgs ea) => { GG = int.Parse(TextBoxGrassGrowth.Text); };
+            trackBars.Add(TrackBarGrassGrowth); //6
 
             (TrackBar TrackBarGrassMaxFeed, TextBox TextBoxGrassMaxFeed, ToolTip ToolTipGrassMaxFeed) = MakeSlider(40, 660, "Grass Feed Max", 1500, 1000, 3000, 1, "bijbehorende uitleg");
-            TrackBarGrassMaxFeed.ValueChanged += (object o, EventArgs ea) => { Settings.GrassMaxFeed = TrackBarGrassMaxFeed.Value; };
-            TextBoxGrassMaxFeed.Leave += (object o, EventArgs ea) => { Settings.GrassMaxFeed = int.Parse(TextBoxGrassMaxFeed.Text); };
+            TrackBarGrassMaxFeed.ValueChanged += (object o, EventArgs ea) => { GMF = TrackBarGrassMaxFeed.Value; };
+            TextBoxGrassMaxFeed.Leave += (object o, EventArgs ea) => { GMF = int.Parse(TextBoxGrassMaxFeed.Text); };
+            trackBars.Add(TrackBarGrassMaxFeed); //7
 
             (TrackBar TrackBarTemperatureMin, TextBox TextBoxTemperatureMin, ToolTip ToolTipTemperatureMin) = MakeSlider(500, 60, "Temperature Min", 15, 10, 20, 1, "bijbehorende uitleg");
-            TrackBarTemperatureMin.ValueChanged += (object o, EventArgs ea) => { Settings.MinTemp = TrackBarTemperatureMin.Value; };
-            TextBoxTemperatureMin.Leave += (object o, EventArgs ea) => { Settings.MinTemp = int.Parse(TextBoxTemperatureMin.Text); };
+            TrackBarTemperatureMin.ValueChanged += (object o, EventArgs ea) => { MiT = TrackBarTemperatureMin.Value; };
+            TextBoxTemperatureMin.Leave += (object o, EventArgs ea) => { MiT = int.Parse(TextBoxTemperatureMin.Text); };
+            trackBars.Add(TrackBarTemperatureMin); //8
 
             (TrackBar TrackBarTemperatureMax, TextBox TextBoxTemperatureMax, ToolTip ToolTipTemperatureMax) = MakeSlider(500, 140, "Temperature Max", 25, 20, 30, 1, "bijbehorende uitleg");
-            TrackBarTemperatureMax.ValueChanged += (object o, EventArgs ea) => { Settings.MaxTemp = TrackBarTemperatureMax.Value; };
-            TextBoxTemperatureMax.Leave += (object o, EventArgs ea) => {  Settings.MaxTemp = int.Parse(TextBoxTemperatureMax.Text); };
+            TrackBarTemperatureMax.ValueChanged += (object o, EventArgs ea) => { MaT = TrackBarTemperatureMax.Value; };
+            TextBoxTemperatureMax.Leave += (object o, EventArgs ea) => {  MaT = int.Parse(TextBoxTemperatureMax.Text); };
+            trackBars.Add(TrackBarTemperatureMax); //9
 
             (TrackBar TrackBarWalkEnergy, TextBox TextBoxWalkEnergy, ToolTip ToolTipWalkEnergy) = MakeSlider(500, 220, "Walk Energy Cost", 1, 5, 30, 10, "bijbehorende uitleg");
-            TrackBarWalkEnergy.ValueChanged += (object o, EventArgs ea) => { Settings.WalkEnergy = TrackBarWalkEnergy.Value / 100f; };
-            TextBoxWalkEnergy.Leave += (object o, EventArgs ea) => { Settings.WalkEnergy = float.Parse(TextBoxWalkEnergy.Text); };
+            TrackBarWalkEnergy.ValueChanged += (object o, EventArgs ea) => { WE = TrackBarWalkEnergy.Value / 100f; };
+            TextBoxWalkEnergy.Leave += (object o, EventArgs ea) => { WE = float.Parse(TextBoxWalkEnergy.Text); };
+            trackBars.Add(TrackBarWalkEnergy); //10
 
             (TrackBar TrackBarJumpEnergy, TextBox TextBoxJumpEnergy, ToolTip ToolTipJumpEnergy) = MakeSlider(500, 300, "Jump Energy Cost", 1, 5, 30, 10, "bijbehorende uitleg");
-            TrackBarJumpEnergy.ValueChanged += (object o, EventArgs ea) => { Settings.JumpEnergy = TrackBarJumpEnergy.Value / 10000f; };
-            TextBoxJumpEnergy.Leave += (object o, EventArgs ea) => { Settings.JumpEnergy = float.Parse(TextBoxJumpEnergy.Text); };
+            TrackBarJumpEnergy.ValueChanged += (object o, EventArgs ea) => { JE = TrackBarJumpEnergy.Value / 10000f; };
+            TextBoxJumpEnergy.Leave += (object o, EventArgs ea) => { JE = float.Parse(TextBoxJumpEnergy.Text); };
+            trackBars.Add(TrackBarJumpEnergy); //11
 
             (TrackBar TrackBarPassiveEnergy, TextBox TextBoxPassiveEnergy, ToolTip ToolTipPassiveEnergy) = MakeSlider(500, 380, "Passive Energy Cost", 1, 5, 30, 10, "bijbehorende uitleg");
-            TrackBarPassiveEnergy.ValueChanged += (object o, EventArgs ea) => { Settings.PassiveEnergy = TrackBarPassiveEnergy.Value / 1000000f; };
-            TextBoxPassiveEnergy.Leave += (object o, EventArgs ea) => { Settings.PassiveEnergy = float.Parse(TextBoxPassiveEnergy.Text); };
+            TrackBarPassiveEnergy.ValueChanged += (object o, EventArgs ea) => { PE = TrackBarPassiveEnergy.Value / 1000000f; };
+            TextBoxPassiveEnergy.Leave += (object o, EventArgs ea) => { PE = float.Parse(TextBoxPassiveEnergy.Text); };
+            trackBars.Add(TrackBarPassiveEnergy); //12
 
             this.Controls.Add(exit);
         }
@@ -409,8 +424,8 @@ namespace IntroProject
             textBox.ForeColor = Color.White;
             trackBar.Value = (int) (basevalue * scale);
             textBox.Text = basevalue.ToString();
-            trackBar.ValueChanged += (object o, EventArgs ea) => { textBox.Text = (Math.Round(trackBar.Value * (1.0/scale), 2)).ToString(); };
-            textBox.Leave += (object o, EventArgs ea) => { trackBar.Value = Convert.ToInt32(double.Parse(textBox.Text) * scale); };
+            trackBar.ValueChanged += (object o, EventArgs ea) => { textBox.Text = (Math.Round(trackBar.Value * (1.0/scale), 2)).ToString(); changed = true; };
+            textBox.Leave += (object o, EventArgs ea) => { trackBar.Value = Convert.ToInt32(double.Parse(textBox.Text) * scale); changed = true; };
             textBox.Location = new Point((x+400), (y+30));
             textBox.Size = sliderTextBoxSize;
             trackBar.AutoSize = false;
@@ -460,27 +475,79 @@ namespace IntroProject
         {
 
         }
-
-        public void Prep()
+        public void ImplementChanges()
         {
-            TE = Settings.TotalEntities;
-            SE = Settings.StartEntities;
-            MiT = Settings.MinTemp;
-            MaT = Settings.MaxTemp;
-            SL = Settings.MiddleHeight;
-        }
-        public void Warning()
-        {
-            if (
-            TE != Settings.TotalEntities ||
-            SE != Settings.StartEntities ||
-            MiT != Settings.MinTemp ||
-            MaT != Settings.MaxTemp ||
-            SL != Settings.MiddleHeight)
+            if (changed)
             {
-                MessageBox.Show("For the changes to take effect, restart is required. \n" +
-                    "This is done by clicking the squared terminate button.", "Requires restart");
+                DialogResult implement = MessageBox.Show("Some Settings have been changed. \n" +
+                    "Are you sure you want to implement these changes?", "Implement Changes?", MessageBoxButtons.YesNo);
+                if (implement == DialogResult.Yes)
+                {
+                    ImplementSettings();
+                    if (
+                    TE != Settings.TotalEntities ||
+                    SE != Settings.StartEntities ||
+                    MH != Settings.MiddleHeight ||
+                    MiT != Settings.MinTemp ||
+                    MaT != Settings.MaxTemp)
+                    {
+                        DialogResult restart = MessageBox.Show("Some of these Settings require a restart. \n" +
+                            "Are you sure you want to implement these changes?", "Restart?", MessageBoxButtons.YesNo);
+                        if (restart == DialogResult.Yes)
+                        {
+                            Settings.TotalEntities = TE;
+                            Settings.StartEntities = SE;
+                            Settings.MiddleHeight = MH;
+                            Settings.MinTemp = MiT;
+                            Settings.MaxTemp = MaT;
+                            //implement restart function with new values
+                        }
+                        else if (restart == DialogResult.No)
+                        {
+                            trackBars[1].Value = Settings.TotalEntities;
+                            trackBars[2].Value = Settings.StartEntities;
+                            trackBars[4].Value = (int) Settings.MiddleHeight * 100;
+                            trackBars[8].Value = Settings.MinTemp;
+                            trackBars[9].Value = Settings.MaxTemp;
+                        }
+                    }
+                }
+                else if (implement == DialogResult.No)
+                {
+                    RevertSettings();
+                }
             }
+        }
+        private void ImplementSettings()
+        {
+            Settings.StepSize = Sp;
+            Settings.HatchSpeed = HS;
+            Settings.MatingCost = MC;
+            Settings.GrassGrowth = GG;
+            Settings.GrassMaxFeed = GMF;
+            Settings.WalkEnergy = WE;
+            Settings.JumpEnergy = JE;
+            Settings.PassiveEnergy = PE;
+            Settings.AddHeatMap = HM;
+            Settings.LanguageIndex = LI;
+        }
+        private void RevertSettings()
+        {
+            trackBars[0].Value = (int) Settings.StepSize * 100;
+            trackBars[1].Value = Settings.TotalEntities;
+            trackBars[2].Value = Settings.StartEntities;
+            trackBars[3].Value = Settings.HatchSpeed;
+            trackBars[4].Value = (int) Settings.MiddleHeight * 100;
+            trackBars[5].Value = (int) Settings.MatingCost * 100;
+            trackBars[6].Value = Settings.GrassGrowth;
+            trackBars[7].Value = Settings.GrassMaxFeed;
+            trackBars[8].Value = Settings.MinTemp;
+            trackBars[9].Value = Settings.MaxTemp;
+            trackBars[10].Value = (int) Settings.WalkEnergy * 10;
+            trackBars[11].Value = (int) Settings.JumpEnergy * 10;
+            trackBars[12].Value = (int) Settings.PassiveEnergy * 10;
+            // Settings.AddHeatMap = HM; MOET HIER NOG INPUT VOOR MAKEN
+            // Settings.LanguageIndex = LI; MOET HIER NOG INPUT VOOR MAKEN
         }
     }
 

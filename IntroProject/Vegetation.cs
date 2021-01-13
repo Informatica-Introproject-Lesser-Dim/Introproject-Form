@@ -136,12 +136,9 @@ namespace IntroProject
                     result.Add(g);
             return result;
         }
-        public void UpdateGrass()
+        public static void UpdateGrass()
         {
-            foreach (Grass g in grass)
-            {
-                g.Update();
-            }
+            Grass.Update();
         }
     }
 
@@ -159,8 +156,8 @@ namespace IntroProject
         private int foodStart;
         private int time;
         public bool visible = false;
-        private int growRange = Settings.GrassGrowth;
-        private int feedMax = Settings.GrassMaxFeed;
+        private static int growRange = Settings.GrassGrowth;
+        private static int feedMax = Settings.GrassMaxFeed;
 
         public Grass(int size) { //random creation
 
@@ -204,7 +201,7 @@ namespace IntroProject
             return (int)(foodStart + added);
         }
 
-        public void Update ()
+        public static void Update ()
         {
             growRange = Settings.GrassGrowth;
             feedMax = Settings.GrassMaxFeed;

@@ -22,7 +22,7 @@ namespace IntroProject
         private Route route;
         private Creature target;
 
-        private float MateWeight = Settings.MatingCost;
+        private static float MateWeight = Settings.MatingCost;
         private Grass myFood;
         private double sleep = 0;
         private Goal goal = Goal.Nothing;
@@ -407,7 +407,7 @@ namespace IntroProject
                 else this.energyVal += grass.getVal(this.chunk.vegetation.currentTime);
             }
         }
-        public void Update()
+        public static void Update()
         {
             MateWeight = Settings.MatingCost;
         }

@@ -345,10 +345,9 @@ namespace IntroProject
             float grass = nullLevel + pos * 0.7f;
             heights = new float[6] { -1f, deepSea, seaLevel, sand, grass, 1f };
         }
-        public void Update()
+        public static void Update()
         {
-            vegetation.UpdateGrass();
-            //Still have to make an SeaLevel method that makes dependent on the seaLevel variable its array.
+            Vegetation.UpdateGrass();
         }
     }
 }
