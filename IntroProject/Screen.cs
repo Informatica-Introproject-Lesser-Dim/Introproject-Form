@@ -303,7 +303,7 @@ namespace IntroProject
         private float Sp, MH, MC, WE, JE, PE;
         private bool changed, HM;
         private OpenFileDialog openFileDialog;
-        private List<TrackBar> trackBars;
+        private List<TrackBar> trackBars = new List<TrackBar>();
         public SettingsMenu(int w, int h, EventHandler exitMenu) 
 
         {
