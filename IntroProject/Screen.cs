@@ -186,7 +186,7 @@ namespace IntroProject
                 oldTime = oldTime + dt;
                 map.TimeStep(dt.TotalMilliseconds);
             }
-            pea.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(108, 116, 150)), 0, 0, this.Width, this.Height);
+            pea.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(108, 116, 150)), 0, 0, this.Width, this.Height); // Is dit wel nodig, dat het elke keer wordt gedaan?
             if (camAutoMove)
             {
                 xCam = this.Width / 2 - selected.GlobalLoc.X;
@@ -197,11 +197,11 @@ namespace IntroProject
             
             if (selected != null)
             {
-                pea.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(50, 0, 0, 0)), 1500, 100, 200, 100);
+                pea.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(50, 0, 0, 0)), this.Width - 500, 100, 200, 100);
                 pea.Graphics.DrawString(selected.GetType().ToString().Substring(13, selected.GetType().ToString().Length - 13) + "\n" + 
                                         "Energy: " + Math.Round(selected.energyVal, 2), 
-                                        font, new SolidBrush(Color.Black), 
-                                        1510, 110);
+                                        font, new SolidBrush(Color.Black),
+                                        this.Width - 490, 110);
             }
             this.Invalidate();
         }
