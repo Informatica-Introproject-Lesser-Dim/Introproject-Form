@@ -39,13 +39,19 @@ namespace IntroProject
             gene.@class = this.GetType().Name;
         }
 
-        public Creature(Gene gene, double energy) {
+        private void TransferParentInfo(Gene gene, double energy)
+        {
             this.gene = gene;
             this.energyVal = energy;
             maxEnergy = this.gene.Size;
 
             gene.@class = this.GetType().Name;
         }
+        public Creature(Gene gene, double energy) =>
+            TransferParentInfo(gene, energy);
+
+        public virtual Creature FromParentInfo(Gene gene, double energy) =>
+            new Creature(gene, energy);
 
         public static int calcDistancePow2(EntityType type, Hexagon place, Point point) { //enter the world relative position for point
             List<Entity> targets = new List<Entity>();
@@ -105,7 +111,8 @@ namespace IntroProject
         {
             double transferredEnergy =  this.energyVal * (this.gene.energyDistribution * MateWeight);
             energyVal -= transferredEnergy;
-            Creature child = new Creature(this.gene * other.gene, transferredEnergy);
+            Creature child = other.FromParentInfo(this.gene * other.gene, transferredEnergy);
+
             child.x = this.x;
             child.y = this.y;
             child.sleep = 20;

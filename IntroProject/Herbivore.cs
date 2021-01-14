@@ -8,5 +8,9 @@ namespace IntroProject
             color = Color.Red;
         }
         public Herbivore(Creature parentA, Creature parentB) : base(parentA, parentB) { }
+        public Herbivore(Gene gene, double energy) : base(gene, energy) { }
+
+        public override Creature FromParentInfo(Gene gene, double energy) =>
+            new Herbivore(gene, energy);
     }
 }
