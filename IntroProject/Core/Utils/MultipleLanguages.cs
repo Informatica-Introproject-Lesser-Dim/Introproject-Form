@@ -7,6 +7,11 @@ namespace IntroProject.Core.Utils
     using Language = String;
     public class MultipleLanguages
     {
+        private static readonly Lazy<MultipleLanguages> lazy = new Lazy<MultipleLanguages>
+                                                        (() => new MultipleLanguages());
+
+        public static MultipleLanguages Instance { get { return lazy.Value; } }
+
         bool debugdisplayedText = true;
 
         public Dictionary<Language, Dictionary<string, string>> translations = new Dictionary<Language, Dictionary<string, string>>();
