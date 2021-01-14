@@ -299,10 +299,10 @@ namespace IntroProject
     class SettingsMenu : UserControl
     {
         public bool warned = true;
-        private int TE, SE, HS, MiT, MaT, GG, GMF, LI;
-        private float Sp, MH, MC, WE, JE, PE;
+        private int TE = 50, SE = 20, HS, MiT = 15, MaT = 25, GG, GMF, LI;
+        private float Sp, MH = 0, MC, WE, JE, PE;
         private bool changed, HM;
-        private OpenFileDialog openFileDialog;
+        private OpenFileDialog openFileDialog = new OpenFileDialog();
         private List<TrackBar> trackBars = new List<TrackBar>();
         public SettingsMenu(int w, int h, EventHandler exitMenu) 
 
@@ -404,6 +404,9 @@ namespace IntroProject
             TextBoxPassiveEnergy.Leave += (object o, EventArgs ea) => { PE = float.Parse(TextBoxPassiveEnergy.Text); };
             trackBars.Add(TrackBarPassiveEnergy); //12
 
+            //Add Heat toggle
+            //Add Language choicebox
+
             this.Controls.Add(exit);
         }
         private (TrackBar, TextBox, ToolTip) MakeSlider(int x, int y, String name, float basevalue, int minvalue, int maxvalue, int scale, String uitleg)
@@ -473,7 +476,20 @@ namespace IntroProject
 
         private void import(string[] settings)
         {
-
+            trackBars[0].Value = (int) float.Parse(settings[0]) * 100;
+            trackBars[1].Value = int.Parse(settings[1]);
+            trackBars[2].Value = int.Parse(settings[2]);
+            trackBars[3].Value = int.Parse(settings[3]);
+            trackBars[4].Value = (int)float.Parse(settings[4]) * 100;
+            trackBars[5].Value = (int)float.Parse(settings[5]) * 100;
+            trackBars[6].Value = int.Parse(settings[6]);
+            trackBars[7].Value = int.Parse(settings[7]);
+            trackBars[8].Value = int.Parse(settings[8]);
+            trackBars[9].Value = int.Parse(settings[9]);
+            trackBars[10].Value = (int)float.Parse(settings[10]) * 10;
+            trackBars[11].Value = (int)float.Parse(settings[11]) * 10;
+            trackBars[12].Value = (int)float.Parse(settings[12]) * 10;
+            //input values naar AddHeatMap & LanguageIndex
         }
         public void ImplementChanges()
         {
@@ -533,19 +549,19 @@ namespace IntroProject
         }
         private void RevertSettings()
         {
-            trackBars[0].Value = (int) Settings.StepSize * 100;
+            trackBars[0].Value = (int) (Settings.StepSize * 100f);
             trackBars[1].Value = Settings.TotalEntities;
             trackBars[2].Value = Settings.StartEntities;
             trackBars[3].Value = Settings.HatchSpeed;
-            trackBars[4].Value = (int) Settings.MiddleHeight * 100;
-            trackBars[5].Value = (int) Settings.MatingCost * 100;
+            trackBars[4].Value = (int) ((Settings.MiddleHeight + 1f) * 50f);
+            trackBars[5].Value = (int) (Settings.MatingCost * 100f);
             trackBars[6].Value = Settings.GrassGrowth;
             trackBars[7].Value = Settings.GrassMaxFeed;
             trackBars[8].Value = Settings.MinTemp;
             trackBars[9].Value = Settings.MaxTemp;
-            trackBars[10].Value = (int) Settings.WalkEnergy * 10;
-            trackBars[11].Value = (int) Settings.JumpEnergy * 10;
-            trackBars[12].Value = (int) Settings.PassiveEnergy * 10;
+            trackBars[10].Value = (int) (Settings.WalkEnergy * 100f);
+            trackBars[11].Value = (int) (Settings.JumpEnergy * 10000f);
+            trackBars[12].Value = (int) (Settings.PassiveEnergy * 1000000f);
             // Settings.AddHeatMap = HM; MOET HIER NOG INPUT VOOR MAKEN
             // Settings.LanguageIndex = LI; MOET HIER NOG INPUT VOOR MAKEN
         }
