@@ -33,6 +33,14 @@ namespace IntroProject
             }
         }
 
+        public Point ChunckRelLoc
+        {
+            get
+            {
+                return new Point(this.x, this.y);
+            }
+        }
+
         public void PerishToDeathPile()
         {
             dead = true;

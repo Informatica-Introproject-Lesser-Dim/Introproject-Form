@@ -203,6 +203,14 @@ namespace IntroProject
             return searchPoint(bias, hunger, 3);
         }
 
+        public double CarnivoreActive(double bias, double livingBias) {
+            double result = 0;
+            for (int i = 10; i >=0 ; i--) {
+                result = result*bias + this.searchPoint(i, EntityType.Herbivore).Count*livingBias + (2- livingBias)*this.searchPoint(i, EntityType.Plant).Count;
+            }
+            return result;
+        }
+
         private double searchPoint(double bias, double hunger, int l) { //later on account for distance of different creatures
             double result = this.FoodValue();
             if (l == 0)
