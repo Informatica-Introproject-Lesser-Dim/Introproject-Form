@@ -31,7 +31,7 @@ namespace IntroProject
         protected Goal goal = Goal.Nothing;
         private bool passive = false;
         public double coolDown = 200; //cooldown so the creature doesnt continuously attempt mating
-        float maxEnergy;
+        protected float maxEnergy;
         public double stamina;
 
         public Creature()
@@ -94,13 +94,6 @@ namespace IntroProject
                 if (calcDist2(e, point) < dist)
                     dist = calcDist2(e, point);
             return dist;
-        }
-
-        public void calcFoodDist() {
-            int dist = (int)(Math.Sqrt(calcDistancePow2(EntityType.Plant, this.chunk, new Point(x + this.chunk.x, y + this.chunk.y))));
-            if (dist > 255)
-                dist = 255;
-            this.color = Color.FromArgb(255 - dist, 50, 50);
         }
 
         public static int calcDist2(Entity e, Point p) {
@@ -171,7 +164,7 @@ namespace IntroProject
             }
 
             if (this.goal == Goal.Creature) {
-                if (!SprintToCreature(dt))
+                if (SprintToCreature(dt))
                     goal = Goal.Nothing;
                 return;
             }
@@ -188,7 +181,7 @@ namespace IntroProject
         }
 
         protected virtual bool SprintToCreature(double dt) {
-            return false;
+            return true;
         }
 
         private void mateActive() {

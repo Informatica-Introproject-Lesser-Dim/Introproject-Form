@@ -7,7 +7,15 @@ namespace IntroProject
     public class Carnivore : Creature
     {
         private Entity targetFood;
-        public Carnivore() : base() { }
+        public Carnivore() 
+        {
+            energyVal = 600; //start with quite a lot so they dont die too quickly
+            gene = new CarnivoreGene();
+            maxEnergy = this.gene.Size;
+
+            gene.@class = this.GetType().Name;
+            stamina = gene.SprintDuration;
+        }
 
         public Carnivore(Creature parentA, Creature parentB) : base(parentA, parentB) { }
 
@@ -15,7 +23,7 @@ namespace IntroProject
         {
             List<Entity> herbivores = new List<Entity>();
             List<Entity> deathPiles = new List<Entity>();
-            for(int i = 0; i < 4; i++)
+            for(int i = 0; i < 5; i++)
                 herbivores =  herbivores.Concat(chunk.searchPoint(i, EntityType.Herbivore)).ToList();
             for (int i = 0; i < 6; i++)
                 deathPiles = deathPiles.Concat(chunk.searchPoint(i, EntityType.Plant)).ToList();
@@ -51,33 +59,34 @@ namespace IntroProject
         protected override bool SprintToCreature(double dt)
         {
             if (target == null)
-                return false;
+                return true;
             if (target.dead)
-                return false;
+                return true;
             if (stamina <= 0)
-                return false;
+                return true;
 
             Point targetLoc = target.GlobalLoc;
-            double dx = targetLoc.X - this.GlobalLoc.X;
-            double dy = targetLoc.Y - this.GlobalLoc.Y;
+            double dx = this.GlobalLoc.X - targetLoc.X;
+            double dy = this.GlobalLoc.Y - targetLoc.Y ;
             double dist = (dx * dx + dy * dy);
             if (dist < 25) 
             {
                 eat(target);
-                return false;
+                return true;
             }
-                
 
-            double scale = dt * this.gene.SprintSpeed / dist;
-            dx *= scale;
-            dy *= scale;
+            dx *= 1 / dist;
+            dy *= 1 / dist;
 
-            X += (int)dx;
-            Y += (int)dy;
+            dx *= dt * this.gene.SprintSpeed;
+            dy *= dt * this.gene.SprintSpeed;
+
+            X += dx;
+            Y += dy;
 
             stamina -= 2*dt;
 
-            int[] hexPos = this.chunk.parent.PosToHexPos(x, y);
+            int[] hexPos = this.chunk.parent.PosToHexPos(GlobalLoc.X, GlobalLoc.Y);
             Hexagon newHex = this.chunk.parent[hexPos[0], hexPos[1]];
             if (newHex != this.chunk) 
             {
@@ -85,7 +94,7 @@ namespace IntroProject
                 this.chunk.moveEntity(this, newHex);
             }
             
-            return true;
+            return false;
         }
         protected override void getActiveRoute()
         {
@@ -113,6 +122,16 @@ namespace IntroProject
                 this.color = Color.Purple;
             }
         }
+
+        
+
+        public override void draw(Graphics g, int hexX, int hexY, Entity e)
+        {
+            g.FillEllipse(new SolidBrush(Color.LimeGreen), hexX + x - r, hexY + y - r, r * 2, r * 2);
+            if (selected)
+                g.DrawEllipse(Pens.LightGreen, hexX + x - r, hexY + y - r, r * 2, r * 2);
+        }
+        
 
 
         public Carnivore(Gene gene, double energy) : base(gene, energy) { }

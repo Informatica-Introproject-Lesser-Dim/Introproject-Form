@@ -16,11 +16,11 @@ namespace IntroProject
         protected Guid id = Guid.NewGuid();
         protected double X,Y;
 
-        public int x { get => (int)X;
-            set => X = value;
+        public int x { get { return (int)X; }
+            set { X = value; }
         }
-        public int y { get => (int)X;
-            set => Y = value;
+        public int y { get { return (int)Y; }
+            set { Y = value; }
         }
 
         protected const int r = 10;

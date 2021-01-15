@@ -146,7 +146,10 @@ namespace IntroProject
                 Herbivore herbivore = new Herbivore();
                 herbivore.x = 0;
                 map.placeRandom(herbivore);
-                herbivore.calcFoodDist();
+            }
+            for (int i = 0; i < 1; i++)
+            {
+                map.placeRandom(new Carnivore());
             }
         }
 
