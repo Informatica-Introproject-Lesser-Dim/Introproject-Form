@@ -30,9 +30,9 @@ namespace IntroProject
         public float sexualPreference { get { return ToInfinity(Fenotype[3] / 2 + 0.5f) + 50; } } //to infinity but still needs to have at least 50
         public float energyDistribution { get { return Fenotype[4] / 3 + 0.33f; /* Settings.MatingCost */ } } //just a percentage between 0 and 1
         //Second Allel
-        public float PassivePreference { get { return ToInfinity(Fenotype[5] / 2 + 0.5f)/5; } }
-        public float PassiveBias { get { return Fenotype[6]/3 + 2.0f/3; } }// positive and to infinity
-        public float ActiveBias { get { return (Fenotype[7]/2 + 0.5f) * (1 - PassiveBias) + this.PassiveBias; } } //active must be higher than passive
+        public float PassivePreference { get { return ToInfinity(Fenotype[5] / 2 + 0.5f)/5; } }// positive and to infinity
+        public float PassiveBias { get { return Fenotype[6]/3 + 2.0f/3; } }
+        public float ActiveBias { get { return Fenotype[7]/2 + 0.5f; } } //active must be higher than passive
         public float ActivePreference { get { return ToInfinity(Fenotype[8] / 2 + 0.5f) / 15 + this.PassiveBias; } }
         //Third Allel
         public virtual float Velocity { get; } //within certain max and min values
@@ -287,7 +287,7 @@ namespace IntroProject
 
         public override float SprintDuration { get { return (Fenotype[11] / 2 + 0.5f)* 990 + 10; } }
 
-        public float LivingTargetBias { get { return ToInfinity(Fenotype[16] / 2 + 0.5f) / 5; } }
+        public float LivingTargetBias { get { return Fenotype[16] / 2 + 0.5f; } }
 
         public static CarnivoreGene operator +(CarnivoreGene a, CarnivoreGene b)
         {

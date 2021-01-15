@@ -135,7 +135,7 @@ namespace IntroProject
             return true;
         }
 
-        private double calcQuality(Route r) {
+        protected virtual double calcQuality(Route r) {
             double val = r.endHex.active(gene.ActiveBias, (gene.Size - energy) * gene.HungerBias);
             r.quality = val;
             return val;
@@ -148,7 +148,7 @@ namespace IntroProject
 
     class SingleTargetAStar : AStar  //the same mechanism except you're aiming towards a specific target now
     {
-        private Creature theTarget;
+        private Entity theTarget;
         public SingleTargetAStar(Point loc, Hexagon chunck, Gene gene, int size, double energy, Creature theTarget) : base() {
 
             this.theTarget = theTarget;
@@ -156,7 +156,7 @@ namespace IntroProject
 
         }
 
-        public Creature GetCreature() 
+        public Entity GetCreature() 
         {
             return theTarget; 
         }
@@ -168,7 +168,7 @@ namespace IntroProject
                 return null;
             if (!isDone(current))
                 return null;
-            this.current.addEnd(new Point(theTarget.x, theTarget.y));
+            this.current.addEnd(theTarget.ChunckRelLoc);
 
             return this.current;
         }
@@ -188,9 +188,53 @@ namespace IntroProject
         }
     }
 
-    class CarnivoreAStar 
+    class CarnivoreAStar : AStar
     {
-    
+        private Entity theTarget;
+        public CarnivoreAStar(Point loc, Hexagon chunck, Gene gene, int size, double energy) : base(loc,chunck,gene,size,energy)
+        {
+
+        }
+
+        protected override double calcQuality(Route r)
+        {
+            double val = r.endHex.CarnivoreActive(gene.ActiveBias, ((CarnivoreGene)gene).LivingTargetBias);
+            r.quality = val;
+            return val;
+        }
+
+        protected override bool isDone(Route r)
+            //is done when you're in the chunck of a deathpile, or when you're 3 chunks from a creature
+        {
+            if (r.endHex.getByType(EntityType.Plant).Count > 0)
+                return true;
+            for (int i = 0; i < 3; i++)
+                if (r.endHex.searchPoint(i, EntityType.Herbivore).Count > 0)
+                    return true;
+            return false;
+        }
+
+        public override Route getResult()
+        {
+            //test of het result wel naar het einde gaat
+            if (current == null)
+                return null;
+
+
+            List<Entity> targets = current.endHex.getByType(EntityType.Plant);
+            if (targets.Count > 0)
+                current.addEnd(targets[0].ChunckRelLoc);
+            return this.current;
+        }
+
+        public DeathPile getFood() 
+        {
+            List<Entity> targets = current.endHex.getByType(EntityType.Plant);
+            if (targets.Count == 0)
+                return null;
+            return (DeathPile)targets[0]; 
+            //it is extremely rare for there to be multiple deathpiles in one chunck, therefore the first one is chosen
+        }
     }
 
 
