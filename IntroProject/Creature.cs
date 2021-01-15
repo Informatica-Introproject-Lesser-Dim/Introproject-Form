@@ -165,6 +165,14 @@ namespace IntroProject
                 return;
             }
 
+            if (this.goal == Goal.Creature) {
+                if (SprintToCreature(dt))
+                    return;
+                else
+                    goal = Goal.Nothing;
+            }
+                
+
             if (this.goal == Goal.Mate) 
                 this.mateActive();
 
@@ -173,6 +181,10 @@ namespace IntroProject
             else {
                 passiveSearch();
             }
+        }
+
+        protected virtual bool SprintToCreature(double dt) {
+            return false;
         }
 
         private void mateActive() {

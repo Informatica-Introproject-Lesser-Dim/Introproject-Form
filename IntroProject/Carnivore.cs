@@ -39,7 +39,8 @@ namespace IntroProject
             if (herbivores.Count > 0) {
                 Entity herbivore = findClosest(herbivores);
                 //make a straight line to this
-
+                target = herbivore;
+                goal = Goal.Creature;
                 return;
             }
 
@@ -47,6 +48,14 @@ namespace IntroProject
             activeSearch();
         }
 
+        protected override bool SprintToCreature(double dt)
+        {
+            //move to the creature
+            //return true if you're still busy
+            //eat at the end
+            //return false when you run out of stamina or if you eat the creature
+            return true;
+        }
         protected override void getActiveRoute()
         {
             CarnivoreAStar aStar = new CarnivoreAStar(new Point(this.x, this.y), this.chunk, this.gene, this.chunk.size, this.energyVal);
