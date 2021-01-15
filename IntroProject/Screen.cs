@@ -23,7 +23,13 @@ namespace IntroProject
 
             this.Size = new Size(1800, 1200);
             mapscr = new MapScreen(this.Size);
-            settingsMenu = new SettingsMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { settingsMenu.RevertSettings(); mapscr.UpdateVars(); settingsMenu.Hide(); if (!mapscr.buttonPaused) mapscr.paused = false; });
+            settingsMenu = new SettingsMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { 
+                settingsMenu.RevertSettings(); 
+                mapscr.UpdateVars(settingsMenu.newMap); 
+                settingsMenu.newMap = false; 
+                settingsMenu.Hide(); 
+                if (!mapscr.buttonPaused) mapscr.paused = false; 
+            });
             helpMenu = new HelpMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { helpMenu.Hide(); if (!mapscr.buttonPaused) mapscr.paused = false; });
             statisticsMenu = new StatisticsMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { statisticsMenu.Hide(); if (!mapscr.buttonPaused) mapscr.paused = false; });
             dropMenu = new DropMenu(Size.Width/10, Size.Height, 
@@ -72,6 +78,7 @@ namespace IntroProject
         int yCam = 0;
         public const int size = 35;
         public Button plus = new ButtonImaged(Properties.Resources.Plus_icon);
+        private Button play = new ButtonImaged(Properties.Resources.Play_icon);
 
         private Entity selected;
 
@@ -84,7 +91,6 @@ namespace IntroProject
         {
             Path.initializePaths(size); //THIS NEEDS TO BE CALLED BEFORE ANY CREATURES ARE MOVED OR PATHS CREATED ETC
 
-            Button play = new ButtonImaged(Properties.Resources.Play_icon);
             Button stop = new ButtonImaged(Properties.Resources.Stop_icon);
             Button pause = new ButtonImaged(Properties.Resources.Pause_icon);
 
@@ -102,8 +108,9 @@ namespace IntroProject
             play.Location = new Point(40, 5);
             stop.Location = new Point(105, 5);
 
-            play.Click += (object o, EventArgs ea) => { play.Hide(); paused = false; buttonPaused = false; oldTime = DateTime.Now; };
+            play.Click += Play_Click;
             pause.Click += (object o, EventArgs ea) => { play.Show(); paused = true; buttonPaused = true; };
+            stop.Click += (object o, EventArgs ea) => { play.Show(); paused = true; buttonPaused = true; play.Click += NewMap; play.Click -= Play_Click;  };
 
             this.Controls.Add(play); 
             this.Controls.Add(pause);
@@ -112,8 +119,28 @@ namespace IntroProject
             this.Size = new Size(w, h);
             this.Paint += drawScreen;
 
+            MakeMap();
+
+            this.MouseClick += MapClick;
+        }
+
+        private void Play_Click(object sender, EventArgs e)
+        {
+            play.Hide();
+            paused = false;
+            buttonPaused = false;
+            oldTime = DateTime.Now;
+        }
+
+        private void NewMap(object sender, EventArgs e)
+        {
+            MakeMap();
+            play.Click -= NewMap;
+            play.Click += Play_Click;
+        }
+        public void MakeMap()
+        {
             map = new Map(100, 70, size, 0);
-            
             for (int i = 0; i < Settings.StartEntities; i++)
             {
                 Herbivore herbivore = new Herbivore();
@@ -121,8 +148,6 @@ namespace IntroProject
                 map.placeRandom(herbivore);
                 herbivore.calcFoodDist();
             }
-
-            this.MouseClick += MapClick;
         }
 
         public void MapClick(object o, MouseEventArgs mea) {
@@ -215,13 +240,13 @@ namespace IntroProject
                 return handeleparam;
             }
         }
-        public void UpdateVars()
+        public void UpdateVars(bool newMap)
         {
             Calculator.Update();
-            //In clicked Stop Button method, make new map. With new variable values that require restart.
-
-            //Here Seperate update for current map...
-            map.Update();
+            if (newMap)
+                MakeMap();
+            else
+                map.Update();
         }
     }
     internal class ButtonImaged : Button
@@ -302,7 +327,7 @@ namespace IntroProject
         public bool warned = true;
         private int TE, SE, HS, MiT, MaT, GG, GMF;
         private float Sp, MH, MC, WE, JE, PE;
-        private bool changed;
+        public bool changed, newMap = false;
         private OpenFileDialog openFileDialog = new OpenFileDialog();
         private CheckBox AddHeat;
         private ComboBox languageIndex;
@@ -620,7 +645,7 @@ namespace IntroProject
                             Settings.MiddleHeight = MH;
                             Settings.MinTemp = MiT;
                             Settings.MaxTemp = MaT;
-                            //implement restart function with new values
+                            newMap = true;
                         }
                         else if (restart == DialogResult.No)
                         {
