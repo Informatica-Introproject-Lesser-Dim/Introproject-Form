@@ -6,11 +6,12 @@ using System.Linq;
 
 namespace IntroProject
 {
-    enum Goal {
+    public enum Goal {
         Food,
         Mate,
         Water, //might be implemented later
-        Nothing
+        Nothing,
+        Creature
     }
 
 
@@ -19,13 +20,15 @@ namespace IntroProject
         public Gene gene { get; protected set; }
         public int Alive;
         public bool isReadyToMate { get => coolDown == 0; }
-        private Route route;
+        protected Route route;
         private Creature target;
+
+        
 
         private static float MateWeight = Settings.MatingCost;
         private Grass myFood;
-        private double sleep = 0;
-        private Goal goal = Goal.Nothing;
+        protected double sleep = 0;
+        protected Goal goal = Goal.Nothing;
         private bool passive = false;
         public double coolDown = 200; //cooldown so the creature doesnt continuously attempt mating
         float maxEnergy;
@@ -37,6 +40,30 @@ namespace IntroProject
             maxEnergy = this.gene.Size;
 
             gene.@class = this.GetType().Name;
+        }
+
+        protected Entity findClosest(List<Entity> targets) {
+
+            Entity result = targets[0];
+            double dist = calcDistancePow2(result);
+
+            foreach (Entity e in targets) {
+
+                double newDist = calcDistancePow2(e);
+                if (dist > newDist) {
+                    result = e;
+                    dist = newDist;
+                }
+                    
+
+            }
+            return result;
+        }
+
+        private double calcDistancePow2(Entity e) {
+            double dx = e.GlobalLoc.X - this.GlobalLoc.X;
+            double dy = e.GlobalLoc.Y - this.GlobalLoc.Y;
+            return dx * dx + dy * dy;
         }
 
         private void TransferParentInfo(Gene gene, double energy)
@@ -170,7 +197,7 @@ namespace IntroProject
             this.goal = Goal.Nothing;
         }
 
-        public void passiveSearch() {
+        public virtual void passiveSearch() {
             //check wether the place you are is ok
             goal = Goal.Food;
             if (passiveCheck(this.chunk))
@@ -231,7 +258,7 @@ namespace IntroProject
             return gene.PassiveBias < passiveVal(hex);
         }
 
-        private bool matingSearch() { //returns true if it's succesfull
+        protected virtual bool matingSearch() { //returns true if it's succesfull
             if (this.coolDown > 0)
                 return false;
             if (this.gene.Gender == 1)
@@ -239,22 +266,29 @@ namespace IntroProject
             if (this.energyVal < this.gene.energyDistribution * this.gene.Size / 2 + 50)
                 return false;
 
-            List<Entity> herbivores = new List<Entity>();//find all creatures
+            EntityType targetType = EntityType.Herbivore;
+            if (this is Carnivore)
+                targetType = EntityType.Carnivore;
+
+            List<Entity> creatures = new List<Entity>();//find all creatures
             for (int i = 0; i < 8; i++)
-                herbivores =  herbivores.Concat(chunk.searchPoint(i, EntityType.Herbivore)).ToList();
+                creatures =  creatures.Concat(chunk.searchPoint(i, targetType)).ToList();
 
 
-            List<Creature> creatures = new List<Creature>(); 
+            List<Creature> accepted = new List<Creature>();
 
-            foreach (Entity e in herbivores) //select the few that exceed your preference 
+
+            
+
+            foreach (Entity e in creatures) //select the few that exceed your preference 
                 if (((Creature)e).gene.Gender == 1 && ((Creature)e).energyVal > this.gene.sexualPreference)
-                    creatures.Add((Creature)e);
+                    accepted.Add((Creature)e);
 
-            if (creatures.Count == 0)
+            if (accepted.Count == 0)
                 return false;
 
             bool temp = false;
-            foreach (Entity e in herbivores)
+            foreach (Entity e in accepted)
                 temp = temp || ((Creature) e).available(this); //turns into true if at least one says yes
             if (!temp)
                 return false;
@@ -306,12 +340,16 @@ namespace IntroProject
             return hex.Passive(hunger, gene.DistanceBias);
         }
 
-        public void activeSearch() { //right now this is still normal Astar, this needs to change to the new vegetation update
+        public void activeSearch() { 
             if (matingSearch())
                 return;
             //check if it's possible to mate first
-            AStar aStar = new AStar(new Point(this.x, this.y), this.chunk, this.gene, this.chunk.size,this.energyVal);
-            route = aStar.getResult();
+
+            this.getActiveRoute();
+        }
+
+        protected virtual void getActiveRoute() {
+            AStar aStar = new AStar(new Point(this.x, this.y), this.chunk, this.gene, this.chunk.size, this.energyVal);
 
             if (route != null)
             {
@@ -321,20 +359,25 @@ namespace IntroProject
                     goal = Goal.Food;
                     this.color = Color.FromArgb(150, 50, 50);
                 }
-                else {
+                else
+                {
                     goal = Goal.Nothing;
                 }
-                
-                
-                if (route.quality < gene.ActivePreference) {
+
+
+                if (route.quality < gene.ActivePreference)
+                {
                     this.color = Color.FromArgb(50, 50, 50);
                     goal = Goal.Nothing;
                 }
-                    
+
             }
-            else { sleep = 20;
+            else
+            {
+                sleep = 20;
                 this.color = Color.Purple;
             }
+        
         }
 
         public void checkSurroundings() {
