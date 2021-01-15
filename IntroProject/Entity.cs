@@ -14,7 +14,15 @@ namespace IntroProject
     public abstract class Entity
     {
         protected Guid id = Guid.NewGuid();
-        public int x,y;
+        protected double X,Y;
+
+        public int x { get => (int)X;
+            set => X = value;
+        }
+        public int y { get => (int)X;
+            set => Y = value;
+        }
+
         protected const int r = 10;
         public Hexagon chunk;
         protected Color color;
@@ -29,7 +37,7 @@ namespace IntroProject
         {
             get
             {
-                return new Point(chunk.x + this.x, chunk.y + this.y);
+                return new Point(chunk.x +(int) this.x, chunk.y + (int)this.y);
             }
         }
 

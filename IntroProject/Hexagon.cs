@@ -117,6 +117,11 @@ namespace IntroProject
                 this[dir].addEntity(e);
         }
 
+        public void moveEntity(Entity e, Hexagon hex) {
+            if (entities.Remove(e))
+                hex.addEntity(e);
+        }
+
         public static Point calcSide(int size, int dir) {
             int x, y;
             switch (dir % 3)

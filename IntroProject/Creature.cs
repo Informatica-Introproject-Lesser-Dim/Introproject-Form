@@ -32,6 +32,7 @@ namespace IntroProject
         private bool passive = false;
         public double coolDown = 200; //cooldown so the creature doesnt continuously attempt mating
         float maxEnergy;
+        public double stamina;
 
         public Creature()
         {
@@ -40,6 +41,7 @@ namespace IntroProject
             maxEnergy = this.gene.Size;
 
             gene.@class = this.GetType().Name;
+            stamina = gene.SprintDuration;
         }
 
         protected Entity findClosest(List<Entity> targets) {
@@ -73,6 +75,7 @@ namespace IntroProject
             maxEnergy = this.gene.Size;
 
             gene.@class = this.GetType().Name;
+            stamina = gene.SprintDuration;
         }
         public Creature(Gene gene, double energy) =>
             TransferParentInfo(gene, energy);
@@ -150,7 +153,8 @@ namespace IntroProject
         }
 
         public void activate(double dt) {
-
+            if (stamina < gene.SprintDuration)
+                stamina += dt;
             this.energyVal -= Calculator.StandardEnergyCost(gene)*dt;
             if (this.coolDown > 0)
                 coolDown -= dt;
@@ -167,10 +171,9 @@ namespace IntroProject
             }
 
             if (this.goal == Goal.Creature) {
-                if (SprintToCreature(dt))
-                    return;
-                else
+                if (!SprintToCreature(dt))
                     goal = Goal.Nothing;
+                return;
             }
                 
 
@@ -442,6 +445,7 @@ namespace IntroProject
                         return;
                     }
                     this.chunk.moveEntity(this, route.getDir());
+                    energyVal -= Calculator.JumpCost(this.gene);
                     return;
                 }
                 currentLoc = route.getPos();

@@ -50,10 +50,41 @@ namespace IntroProject
 
         protected override bool SprintToCreature(double dt)
         {
-            //move to the creature
-            //return true if you're still busy
-            //eat at the end
-            //return false when you run out of stamina or if you eat the creature
+            if (target == null)
+                return false;
+            if (target.dead)
+                return false;
+            if (stamina <= 0)
+                return false;
+
+            Point targetLoc = target.GlobalLoc;
+            double dx = targetLoc.X - this.GlobalLoc.X;
+            double dy = targetLoc.Y - this.GlobalLoc.Y;
+            double dist = (dx * dx + dy * dy);
+            if (dist < 25) 
+            {
+                eat(target);
+                return false;
+            }
+                
+
+            double scale = dt * this.gene.SprintSpeed / dist;
+            dx *= scale;
+            dy *= scale;
+
+            X += (int)dx;
+            Y += (int)dy;
+
+            stamina -= 2*dt;
+
+            int[] hexPos = this.chunk.parent.PosToHexPos(x, y);
+            Hexagon newHex = this.chunk.parent[hexPos[0], hexPos[1]];
+            if (newHex != this.chunk) 
+            {
+                energyVal -= Calculator.JumpCost(gene);
+                this.chunk.moveEntity(this, newHex);
+            }
+            
             return true;
         }
         protected override void getActiveRoute()
