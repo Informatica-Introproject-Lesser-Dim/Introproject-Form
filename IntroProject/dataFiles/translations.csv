@@ -1,2 +1,21 @@
 ﻿Ref,Dutch,English
 helpText,Hallo! Heb je zin om wat evolutie in actie te zien? Er is zat te zien; Laten we starten,Hey there; Good to have you learning evolution with us! There is a lot to learn so let's get started
+SDforSpeed,Snelheid,Speed
+SDmaxEntity,Maximaal aantal aanwezige wezens,Maximum possible amount of creatures
+SDstartingCountEntity,Begin aantal aanwezige wezens,Number of creatures at start
+SDhatchSpeed,Groeisnelheid kinderen,GrowSpeed childern
+SDseaLevel,Waterpeil,Sealevel
+SDmatingCost,Energie kosten van voortplanten,Energy cost for mating
+SDgrassGrowSpeed,Hoe snel groeit gras,Speed of grass growth
+SDgrassMaxEnergy,Maximale voedingswaarde gras,Maximum foodvalue of grass
+SDminTemp,Minimale temperatuur,Minimum temperature
+SDmaxTemp,Maximale temperatuur,Maximum temperature
+SDwalkEnergyCost,Energie kosten voor lopen,Energy cost for 
+SDjumpEnergyCost,Energie kosten voor klimmen,Energy cost for climbing
+SDpassiveEnergyCost,Energieverlies als een wezen niks doet,Energy loss if creature does nothing
+CBheatMap,Temperatuurkaart,Heatmap
+BTimportSettings,Importeer instellingen,Import settings
+DRchangedSettings0,Sommige instellingen zijn veranderd. Weet je zeker dat je deze instellingen wil behouden?,Some Settings have been changed. Are you sure you want to implement these changes?
+DRchangedSettings1,Sla veranderingen op,Save these changes
+DRdoYouWantToRestart0,Een aantal van deze veranderingen hebben een nieuwe kaart nodig. Weet je zeker dat je het proces wil herstarten?,Some of these settings require a restart. Are you sure you want to implement these changes?
+DRdoYouWantToRestart1,Herstarten?,Restart?
