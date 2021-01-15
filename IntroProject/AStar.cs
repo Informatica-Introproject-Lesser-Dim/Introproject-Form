@@ -149,7 +149,7 @@ namespace IntroProject
     class SingleTargetAStar : AStar  //the same mechanism except you're aiming towards a specific target now
     {
         private Entity theTarget;
-        public SingleTargetAStar(Point loc, Hexagon chunck, Gene gene, int size, double energy, Creature theTarget) : base() {
+        public SingleTargetAStar(Point loc, Hexagon chunck, Gene gene, int size, double energy, Entity theTarget) : base() {
 
             this.theTarget = theTarget;
             this.InitializeEverything(loc, chunck, gene, size, energy*3);

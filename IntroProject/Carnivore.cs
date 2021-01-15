@@ -25,7 +25,16 @@ namespace IntroProject
                 Entity deathPile = findClosest(deathPiles);
                 //make a route to this
 
-                return;
+                SingleTargetAStar aStar = new SingleTargetAStar(new Point(this.x, this.y), this.chunk, this.gene, this.chunk.size, this.energyVal, deathPile);
+                route = aStar.getResult();
+
+                if (route != null)
+                {
+                    goal = Goal.Food;
+                    this.color = Color.Pink;
+                    this.target = deathPile;
+                    return;
+                }
             }
             if (herbivores.Count > 0) {
                 Entity herbivore = findClosest(herbivores);
@@ -40,35 +49,29 @@ namespace IntroProject
 
         protected override void getActiveRoute()
         {
-            //AStar aStar = new AStar(new Point(this.x, this.y), this.chunk, this.gene, this.chunk.size, this.energyVal);
-            //route = 
+            CarnivoreAStar aStar = new CarnivoreAStar(new Point(this.x, this.y), this.chunk, this.gene, this.chunk.size, this.energyVal);
+            route = aStar.getResult();
 
-            //if (route != null)
-            //{
-            //    targetFood = aStar.getTarget();
-            //    if (targetFood != null)
-            //    {
-            //        goal = Goal.Food;
-            //        this.color = Color.FromArgb(150, 50, 50);
-            //    }
-            //    else
-            //    {
-            //        goal = Goal.Nothing;
-            //    }
+            if (route != null)
+            {
+                targetFood = aStar.getFood();
+                if (targetFood != null)
+                {
+                    goal = Goal.Food;
+                    this.color = Color.FromArgb(150, 50, 50);
+                }
+                else
+                {
+                    goal = Goal.Nothing;
+                    this.color = Color.FromArgb(50, 50, 50);
+                }
 
-
-            //    if (route.quality < gene.ActivePreference)
-            //    {
-            //        this.color = Color.FromArgb(50, 50, 50);
-            //        goal = Goal.Nothing;
-            //    }
-
-            //}
-            //else
-            //{
-            //    sleep = 20;
-            //    this.color = Color.Purple;
-            //}
+            }
+            else
+            {
+                sleep = 20;
+                this.color = Color.Purple;
+            }
         }
 
 

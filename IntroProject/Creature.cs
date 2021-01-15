@@ -21,9 +21,9 @@ namespace IntroProject
         public int Alive;
         public bool isReadyToMate { get => coolDown == 0; }
         protected Route route;
-        private Creature target;
+        private Creature mateTarget;
 
-        
+        protected Entity target;
 
         private static float MateWeight = Settings.MatingCost;
         private Grass myFood;
@@ -180,14 +180,14 @@ namespace IntroProject
                 this.goalReset();
                 return;
             }
-            if (target == null) {
+            if (mateTarget == null) {
                 this.goalReset();
                 return;
             }
-            if (target.goal != Goal.Mate) //if the female has moved on he will do something else
+            if (mateTarget.goal != Goal.Mate) //if the female has moved on he will do something else
                 this.goalReset();
 
-            this.target.sleep = 10; //ensures the female keeps patiently waiting for their mate
+            this.mateTarget.sleep = 10; //ensures the female keeps patiently waiting for their mate
 
             return;
         }
@@ -328,7 +328,7 @@ namespace IntroProject
             if (route != null) {
                 goal = Goal.Mate;
                 this.color = Color.Pink;
-                this.target = creature;
+                this.mateTarget = creature;
                 return true;
             }
             return false;
@@ -398,7 +398,7 @@ namespace IntroProject
             
             if (route != null) {
                 if (goal == Goal.Mate) {
-                    if (target.goal != Goal.Mate) {
+                    if (mateTarget.goal != Goal.Mate) {
                         this.route = null;
                         this.goal = Goal.Nothing;
                         return;
@@ -422,7 +422,7 @@ namespace IntroProject
                         if (goal == Goal.Food)
                             eat(myFood);
                         if (goal == Goal.Mate)
-                            MateWithFemale(target);
+                            MateWithFemale(mateTarget);
                         myFood = null;
                         sleep += 30;
                         return;
