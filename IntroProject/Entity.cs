@@ -14,7 +14,7 @@ namespace IntroProject
     public abstract class Entity
     {
         protected Guid id = Guid.NewGuid();
-        public int x,y;
+        public int x, y;
         protected const int r = 10;
         public Hexagon chunk;
         protected Color color;
@@ -25,21 +25,8 @@ namespace IntroProject
         public bool selected = false;
         public bool eaten = false;
 
-        public Point GlobalLoc
-        {
-            get
-            {
-                return new Point(chunk.x + this.x, chunk.y + this.y);
-            }
-        }
-
-        public Point ChunckRelLoc
-        {
-            get
-            {
-                return new Point(this.x, this.y);
-            }
-        }
+        public Point GlobalLoc { get => new Point(chunk.x + this.x, chunk.y + this.y); }
+        public Point ChunckRelLoc { get => new Point(this.x, this.y); }
 
         public void PerishToDeathPile()
         {
@@ -47,7 +34,7 @@ namespace IntroProject
             if (chunk != null)
             {
                 chunk.removeEntity(this);
-                chunk.addEntity(new DeathPile(this.x, this.y, 150));
+                chunk.addEntity(new DeathPile(x, y, 150));
             }
         }
 
@@ -58,8 +45,8 @@ namespace IntroProject
             return energyVal;
         }
 
-
-        public virtual void draw(Graphics g, int hexX, int hexY, Entity e) {
+        public virtual void draw(Graphics g, int hexX, int hexY, Entity e)
+        {
             if (e is DeathPile)
             {
                 g.FillEllipse(new SolidBrush(color), hexX + x - r, hexY + y - r, r, r);
@@ -68,7 +55,8 @@ namespace IntroProject
                 g.FillEllipse(new SolidBrush(color), hexX + x - r - disp, hexY + y - r + disp, r, r);
                 g.FillEllipse(new SolidBrush(color), hexX + x - r - disp, hexY + y - r - disp, r, r);
             }
-            else {
+            else
+            {
                 g.FillEllipse(new SolidBrush(color), hexX + x - r, hexY + y - r, r * 2, r * 2);
                 if (selected)
                     g.DrawEllipse(Pens.LightGreen, hexX + x - r, hexY + y - r, r * 2, r * 2);
