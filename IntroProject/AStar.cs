@@ -5,40 +5,34 @@ using System.Text;
 
 namespace IntroProject
 {
-    class AStar
-    { //this is where every entity saves it's jumpheight and speed etc 
+    class AStar //this is where every entity saves it's jumpheight and speed etc 
+    { 
         private RouteList routeList;
         private Route result;
-        protected Route current;
-        private static int Tag = 0; //every time you check a hexagon: give it a tag so that if you enter it again you'll know it's already been used in a route
+        private Route best;
         private Grass goal;
         protected Gene gene;
-        private double maxCost;
-        private double energy;
-        private Route best;
-
+        protected Route current;
+        private static int Tag = 0; //every time you check a hexagon: give it a tag so that if you enter it again you'll know it's already been used in a route
+        private double maxCost, energy;
         private int maxLength = 300;
 
         //when you initialize an AStar object it starts calculating the best route and then you're able to ask for the Route
-        public AStar(Point loc, Hexagon chunck, Gene gene, int size, double energy) {
-
-            this.InitializeEverything(loc,chunck,gene,size,energy);
-
-        }
-
+        public AStar(Point loc, Hexagon chunck, Gene gene, int size, double energy) => 
+            this.InitializeEverything(loc, chunck, gene, size, energy);
+        
         protected AStar()
         {
             //just a default constructor that should not normally be used
         }
 
-
-        protected void InitializeEverything(Point loc, Hexagon chunck, Gene gene, int size, double energy) {
-
+        protected void InitializeEverything(Point loc, Hexagon chunck, Gene gene, int size, double energy)
+        {
             Tag++;
             this.energy = energy;
+            this.gene = gene;
             maxCost = energy; //default value for now
 
-            this.gene = gene;
             //add the starting point
             mark(chunck);
             Route temp = new Route(loc, size, chunck);
@@ -47,8 +41,8 @@ namespace IntroProject
 
             //start with the few base routes
             Route current;
-            while ((current = routeList.Pop()) != null)
-            { //add a test wether the current route is null aka no route has been found
+            while ((current = routeList.Pop()) != null) //add a test wether the current route is null aka no route has been found
+            { 
                 if (isDone(current))
                     break;
                 if (best == null)
@@ -57,6 +51,7 @@ namespace IntroProject
                     best = current;
                 expandPoint(current);
             }
+
             //now put the end point into current and have it as a result
             if (current == null)
             {
@@ -66,6 +61,7 @@ namespace IntroProject
             }
             this.current = current.Clone();
             Point end = new Point(0, 0);
+
             if (current.endHex.vegetation.FoodLocations().Count > 0)
             {
                 goal = current.endHex.bestFood(Hexagon.calcSide(size, (current.lastDir + 3) % 6));
@@ -74,24 +70,17 @@ namespace IntroProject
             current.addEnd(end);
             result = current;
         }
-        public virtual Route getResult() {
-            return result;
-        }
 
-        public Grass getTarget() {
-            return goal;
-        }
+        public virtual Route getResult() => result;
 
-        private void addDir(Route r, int dir) {
+        public Grass getTarget() => goal;
+
+        private void addDir(Route r, int dir)
+        {
             //test if you can even go there etc and then add it to the route list
             Hexagon goal = r.endHex[dir];
             
-
-            if (goal == null)
-                return;
-            if (goal.heightOfTile - r.endHex.heightOfTile > gene.JumpHeight) //if the jumpheight is too high
-                return;
-            if (goal.Tag == Tag)
+            if (goal == null || goal.heightOfTile - r.endHex.heightOfTile > gene.JumpHeight || goal.Tag == Tag)
                 return;
             goal.Tag = Tag;//tag it so we dont use it again
             Route result = r.addAndClone(dir);
@@ -101,7 +90,8 @@ namespace IntroProject
             routeList.Add(new RouteElement(cost, result));
         }
 
-        protected virtual float calcCost(Route r) { //lowest cost = best route
+        protected virtual float calcCost(Route r) //lowest cost route = best route
+        { 
             //distance squared to the closest bit of food
             double quality = calcQuality(r);
 
@@ -116,7 +106,8 @@ namespace IntroProject
             return current - (float)quality; //note that expected distance is still squared at this point
         }
 
-        private void expandPoint(Route r) {
+        private void expandPoint(Route r)
+        {
             //call addDir for every direction except the one you came from
             int not = (r.lastDir + 3) % 6;
             if (r.lastDir == -1)
@@ -126,7 +117,8 @@ namespace IntroProject
                     addDir(r, i);
         }
 
-        protected virtual bool isDone(Route r) {
+        protected virtual bool isDone(Route r)
+        {
             double val = r.quality;
             if (val < gene.ActivePreference)
                 return false;
@@ -135,25 +127,24 @@ namespace IntroProject
             return true;
         }
 
-        protected virtual double calcQuality(Route r) {
+        protected virtual double calcQuality(Route r)
+        {
             double val = r.endHex.active(gene.ActiveBias, (gene.Size - energy) * gene.HungerBias);
             r.quality = val;
             return val;
         }
 
-        private void mark(Hexagon hex) {
-            hex.Tag = Tag;
-        }
+        private void mark(Hexagon hex) => hex.Tag = Tag;
     }
 
     class SingleTargetAStar : AStar  //the same mechanism except you're aiming towards a specific target now
     {
         private Entity theTarget;
-        public SingleTargetAStar(Point loc, Hexagon chunck, Gene gene, int size, double energy, Entity theTarget) : base() {
 
+        public SingleTargetAStar(Point loc, Hexagon chunck, Gene gene, int size, double energy, Entity theTarget) : base()
+        {
             this.theTarget = theTarget;
-            this.InitializeEverything(loc, chunck, gene, size, energy*3);
-
+            InitializeEverything(loc, chunck, gene, size, energy*3);
         }
 
         public Entity GetCreature() 
@@ -168,9 +159,9 @@ namespace IntroProject
                 return null;
             if (!isDone(current))
                 return null;
-            this.current.addEnd(theTarget.ChunckRelLoc);
-
-            return this.current;
+            
+            current.addEnd(theTarget.ChunckRelLoc);
+            return current;
         }
 
         protected override float calcCost(Route r)
@@ -182,15 +173,14 @@ namespace IntroProject
             return (float)expected + current;
         }
 
-        protected override bool isDone(Route r)
-        {
-            return r.endHex == theTarget.chunk; //done when you land in  the same chunk
-        }
+        protected override bool isDone(Route r) =>
+            r.endHex == theTarget.chunk; //done when you land in  the same chunk
     }
 
     class CarnivoreAStar : AStar
     {
         private Entity theTarget;
+
         public CarnivoreAStar(Point loc, Hexagon chunck, Gene gene, int size, double energy) : base(loc,chunck,gene,size,energy)
         {
 
@@ -220,11 +210,11 @@ namespace IntroProject
             if (current == null)
                 return null;
 
-
             List<Entity> targets = current.endHex.getByType(EntityType.Plant);
             if (targets.Count > 0)
                 current.addEnd(targets[0].ChunckRelLoc);
-            return this.current;
+
+            return current;
         }
 
         public DeathPile getFood() 
@@ -243,20 +233,23 @@ namespace IntroProject
     {
         public int Length = 0;
         private RouteElement first;
-        public RouteList() {
+
+        public RouteList()
+        {
         
         }
 
-        public void Add(RouteElement n) {
+        public void Add(RouteElement n)
+        {
             Length++;
             if (first == null) { first = n; return; } //become the first element if there are no elements
             if (first.cost < n.cost) { first.Add(n); return; } //if you have a higher cost then you get passed down the list
             n.next = first; //replacing the first element
             first = n;
-
         }
 
-        public Route Pop() { //pop the best route from the list
+        public Route Pop() //pop the best route from the list
+        { 
             if (first == null)
                 return null;
             Length--;
@@ -266,27 +259,31 @@ namespace IntroProject
         }
     }
 
-    class RouteElement {
-
+    class RouteElement
+    {
         public RouteElement next;
         public Route route;
         public float cost;
-        public RouteElement(float cost, Route r) {
+
+        public RouteElement(float cost, Route r)
+        {
             this.cost = cost;
             route = r;
         }
-        public RouteElement(float cost, Route r, RouteElement next) {
+
+        public RouteElement(float cost, Route r, RouteElement next)
+        {
             this.cost = cost;
             this.next = next;
             route = r;
         }
 
-        public void Add(RouteElement n)
-        { //options: append, continue or insert
+        public void Add(RouteElement n) //options: append, continue or insert
+        { 
             if (next == null) { next = n; return; } 
             if (next.cost < n.cost) { next.Add(n); return; }
             n.next = next;
-            this.next = n;
+            next = n;
         }
     }
 }

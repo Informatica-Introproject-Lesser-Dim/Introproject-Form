@@ -66,7 +66,7 @@ namespace IntroProject
             targetTime = new Random().Next(min, max);
 
         //just call this every step in "hexagon"
-        public void actvate(double time) {
+        public void prime(double time) {
             currentTime = time;
             if (targetTime > currentTime)
                 return; //you basicly dont have to do anything untill you hit the target time

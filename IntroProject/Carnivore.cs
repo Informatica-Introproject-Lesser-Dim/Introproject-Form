@@ -21,22 +21,24 @@ namespace IntroProject
                 deathPiles = deathPiles.Concat(chunk.searchPoint(i, EntityType.Plant)).ToList();
 
             //preference to deathPiles
-            if (deathPiles.Count > 0) {
+            if (deathPiles.Count > 0)
+            {
                 Entity deathPile = findClosest(deathPiles);
+                
                 //make a route to this
-
-                SingleTargetAStar aStar = new SingleTargetAStar(new Point(this.x, this.y), this.chunk, this.gene, this.chunk.size, this.energyVal, deathPile);
+                SingleTargetAStar aStar = new SingleTargetAStar(new Point(x, y), chunk, gene, chunk.size, energyVal, deathPile);
                 route = aStar.getResult();
 
                 if (route != null)
                 {
                     goal = Goal.Food;
-                    this.color = Color.Pink;
-                    this.target = deathPile;
+                    color = Color.Pink;
+                    target = deathPile;
                     return;
                 }
             }
-            if (herbivores.Count > 0) {
+            if (herbivores.Count > 0)
+            {
                 Entity herbivore = findClosest(herbivores);
                 //make a straight line to this
                 target = herbivore;
@@ -67,24 +69,24 @@ namespace IntroProject
                 if (targetFood != null)
                 {
                     goal = Goal.Food;
-                    this.color = Color.FromArgb(150, 50, 50);
+                    color = Color.FromArgb(150, 50, 50);
                 }
                 else
                 {
                     goal = Goal.Nothing;
-                    this.color = Color.FromArgb(50, 50, 50);
+                    color = Color.FromArgb(50, 50, 50);
                 }
 
             }
             else
             {
                 sleep = 20;
-                this.color = Color.Purple;
+                color = Color.Purple;
             }
         }
 
-
         public Carnivore(Gene gene, double energy) : base(gene, energy) { }
+
         public override Creature FromParentInfo(Gene gene, double energy) =>
             new Carnivore(gene, energy);
     }

@@ -20,15 +20,16 @@ namespace IntroProject
         {
             InitializeComponent();
 
-
-            this.Size = new Size(1800, 1200);
-            mapscr = new MapScreen(this.Size);
-            settingsMenu = new SettingsMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { 
+            Size = new Size(1800, 1200);
+            mapscr = new MapScreen(Size);
+            settingsMenu = new SettingsMenu(Size.Width, Size.Height, (object o, EventArgs ea) =>
+            { 
                 settingsMenu.RevertSettings(); 
                 mapscr.UpdateVars(settingsMenu.newMap); 
                 settingsMenu.newMap = false; 
                 settingsMenu.Hide(); 
-                if (!mapscr.buttonPaused) mapscr.paused = false; 
+                if (!mapscr.buttonPaused)
+                    mapscr.paused = false; 
             });
             helpMenu = new HelpMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { helpMenu.Hide(); if (!mapscr.buttonPaused) mapscr.paused = false; });
             statisticsMenu = new StatisticsMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { statisticsMenu.Hide(); if (!mapscr.buttonPaused) mapscr.paused = false; });
@@ -38,11 +39,12 @@ namespace IntroProject
                                    (object o, EventArgs ea) => { statisticsMenu.Show(); statisticsMenu.BringToFront(); mapscr.paused = true; },          
                                     mapscr.plus);
             dropMenu.Dock = DockStyle.Right;
-            this.Controls.Add(dropMenu);
-            this.Controls.Add(mapscr);
-            this.Controls.Add(settingsMenu);
-            this.Controls.Add(helpMenu);
-            this.Controls.Add(statisticsMenu);
+
+            Controls.Add(dropMenu);
+            Controls.Add(mapscr);
+            Controls.Add(settingsMenu);
+            Controls.Add(helpMenu);
+            Controls.Add(statisticsMenu);
             dropMenu.Hide();
             settingsMenu.Hide();
             statisticsMenu.Hide();
@@ -68,23 +70,18 @@ namespace IntroProject
     {
         Map map;
 
-        public bool paused = true;
-        public bool buttonPaused = true;
+        public bool paused = true, buttonPaused = true;
         bool camAutoMove = false;
         int[] pos = new int[2] { 0, 0 };
         Font font = new Font("Arial", 12);
-        int n = 0;
-        int xCam = 0;
-        int yCam = 0;
+        int xCam = 0, yCam = 0, n = 0;
         public const int size = 35;
         public Button plus = new ButtonImaged(Properties.Resources.Plus_icon);
         private Button play = new ButtonImaged(Properties.Resources.Play_icon);
-
         private Entity selected;
 
         DateTime oldTime = DateTime.Now;
         TimeSpan dt;
-
 
         public MapScreen(Size size) : this(size.Width, size.Height) { }
         public MapScreen(int w, int h)
@@ -124,7 +121,7 @@ namespace IntroProject
             this.MouseClick += MapClick;
         }
 
-        private void Play_Click(object sender, EventArgs e)
+        private void Play_Click(object sender, EventArgs ea)
         {
             play.Hide();
             paused = false;
@@ -132,12 +129,13 @@ namespace IntroProject
             oldTime = DateTime.Now;
         }
 
-        private void NewMap(object sender, EventArgs e)
+        private void NewMap(object sender, EventArgs ea)
         {
             MakeMap();
             play.Click -= NewMap;
             play.Click += Play_Click;
         }
+
         public void MakeMap()
         {
             map = new Map(100, 70, size, 0);
@@ -177,21 +175,18 @@ namespace IntroProject
                     else
                         this.yCam += (int)(size * (0.5 * Hexagon.sqrt3));
                     break;
-                
                 case Keys.Down:
                     if (this.yCam - (size * 0.5 * Hexagon.sqrt3) <= -(map.tiles[map.width - 1, map.height - 1].y - 0.5 * Size.Height))
                         this.yCam = (int)-(map.tiles[map.width - 1, map.height - 1].y - 0.5 * Size.Height);
                     else
                         this.yCam -= (int)(size * (0.5 * Hexagon.sqrt3));
                     break;
-                
                 case Keys.Left:
                     if (this.xCam + (size * (3.0 / 2)) >= 0.5 * Size.Width)
                         this.xCam = (int)(0.5 * Size.Width);
                     else
                         this.xCam += (int)(size * (3.0 / 2));
                     break;
-                
                 case Keys.Right:
                     if (this.xCam - (size * (3.0 / 2)) <= -(map.tiles[map.width - 1, map.height - 1].x - 0.5 * Size.Width))
                         this.xCam = (int)-(map.tiles[map.width - 1, map.height - 1].x - 0.5 * Size.Width);
@@ -206,29 +201,31 @@ namespace IntroProject
 
         public void drawScreen(object o, PaintEventArgs pea) 
         {
-            if (paused == false) {
+            if (!paused)
+            {
                 dt = DateTime.Now - oldTime;
                 oldTime = oldTime + dt;
                 map.TimeStep(dt.TotalMilliseconds);
             }
-            pea.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(108, 116, 150)), 0, 0, this.Width, this.Height); // Is dit wel nodig, dat het elke keer wordt gedaan?
+
+            pea.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(108, 116, 150)), 0, 0, Width, Height); // Is dit wel nodig, dat het elke keer wordt gedaan?
             if (camAutoMove)
             {
-                xCam = this.Width / 2 - selected.GlobalLoc.X;
-                yCam = this.Height / 2 - selected.GlobalLoc.Y;
+                xCam = Width / 2 - selected.GlobalLoc.X;
+                yCam = Height / 2 - selected.GlobalLoc.Y;
             }
-            map.draw(pea.Graphics, xCam, yCam, this.Width, this.Height);
+            map.draw(pea.Graphics, xCam, yCam, Width, Height);
             n++;
             
             if (selected != null)
             {
-                pea.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(50, 0, 0, 0)), this.Width - 500, 100, 200, 100);
+                pea.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(50, 0, 0, 0)), Width - 500, 100, 200, 100);
                 pea.Graphics.DrawString(selected.GetType().ToString().Substring(13, selected.GetType().ToString().Length - 13) + "\n" + 
                                         "Energy: " + Math.Round(selected.energyVal, 2), 
                                         font, new SolidBrush(Color.Black),
-                                        this.Width - 490, 110);
+                                        Width - 490, 110);
             }
-            this.Invalidate();
+            Invalidate();
         }
 
         protected override CreateParams CreateParams
@@ -276,67 +273,68 @@ namespace IntroProject
             ButtonImaged help = new ButtonImaged(Properties.Resources.Help_icon);
             ButtonImaged min = new ButtonImaged(Properties.Resources.Minus_icon);
 
-            int edge = Math.Min((int)(Size.Width / 1.2), (int)Size.Height / 7);
-            Size groot = new Size(edge, edge);
-            int locY = (int)(Size.Height * .40);
+            int edge = Math.Min((int)(Size.Width * 1.2), Size.Height / 7);
+            int locY = (int)(Size.Height * .4);
             int marge = (int)(edge * .2);
-            
+            Size big = new Size(edge, edge);
+
             statistics.Location = new Point(Size.Width/10, locY);
-            settings.Location = new Point(Size.Width / 10, locY + groot.Width + marge);
-            help.Location = new Point(Size.Width / 10, locY + 2*groot.Width + 2 *marge);
+            settings.Location = new Point(Size.Width / 10, locY + big.Width + marge);
+            help.Location = new Point(Size.Width / 10, locY + 2*big.Width + 2 *marge);
             min.Location = new Point(5, 5);
             min.BringToFront();
 
             settings.Click += settingsMenuOnClick;
             statistics.Click += statisticsMenuOnClick;
             help.Click += helpMenuOnClick;
-            min.Click += (object o, EventArgs ea) => { this.Hide(); plus.Show(); };
+            min.Click += (object o, EventArgs ea) => { Hide(); plus.Show(); };
 
-            this.Controls.Add(min);
-            this.Controls.Add(statistics);
-            this.Controls.Add(settings);
-            this.Controls.Add(help);
+            Controls.Add(min);
+            Controls.Add(statistics);
+            Controls.Add(settings);
+            Controls.Add(help);
 
-            this.BackColor = Color.DimGray;
-            this.Size = new Size(w, h);
+            BackColor = Color.DimGray;
+            Size = new Size(w, h);
 
             Resize += (object o, EventArgs ea) =>
             {
-                edge = Math.Min((int)(Size.Width / 1.2), (int)Size.Height / 7);
+                edge = Math.Min((int)(Size.Width * 1.2), Size.Height / 7);
 
-                groot = new Size(edge, edge);
-                statistics.Size = groot;
-                settings.Size = groot;
-                help.Size = groot;
-                min.Size = groot / 3;
+                big = new Size(edge, edge);
+                statistics.Size = big;
+                settings.Size = big;
+                help.Size = big;
+                min.Size = big / 3;
                 
-                locY = (int)(Size.Height * .40);
+                locY = (int)(Size.Height * .4);
                 marge = (int)(edge * .2);
 
                 statistics.Location = new Point(Size.Width / 10, locY);
-                settings.Location = new Point(Size.Width / 10, locY + groot.Width + marge);
-                help.Location = new Point(Size.Width / 10, locY + 2*groot.Width + 2 * marge);
+                settings.Location = new Point(Size.Width / 10, locY + big.Width + marge);
+                help.Location = new Point(Size.Width / 10, locY + 2 * big.Width + 2 * marge);
             };
-
         }
     }
 
     class SettingsMenu : UserControl
     {
         MultipleLanguages multipleLanguages = new MultipleLanguages();
-        public bool warned = true;
-        private int TE, SE, HS, MiT, MaT, GG, GMF;
-        private float Sp, MH, MC, WE, JE, PE;
-        public bool changed, newMap = false;
+        public bool changed, newMap = false, warned = true;
+
         private OpenFileDialog openFileDialog = new OpenFileDialog();
         private CheckBox AddHeat;
         private ComboBox languageIndex;
         private List<TrackBar> trackBars = new List<TrackBar>();
+        private int TE, SE, HS, MiT, MaT, GG, GMF;
+        private float Sp, MH, MC, WE, JE, PE;
+
         public SettingsMenu(int w, int h, EventHandler exitMenu)
         {
-            this.BackColor = Color.FromArgb(123, 156, 148);
-            this.Size = new Size(w, h);
+            BackColor = Color.FromArgb(123, 156, 148);
+            Size = new Size(w, h);
             int edge = Math.Max((int)(Size.Width / 36), (int)(Size.Height / 36));
+
             StartSettings();
 
             Button exit = new ButtonImaged(Properties.Resources.X_icon);
@@ -357,6 +355,7 @@ namespace IntroProject
 
             //Makes the Save Settings Button
             int n = (2 * (Size.Width / 3)) + 40, m = (6 * (Size.Height / 10)) + 60;
+
             Button SaveSetts = new Button();
             SaveSetts.Location = new Point(n, m);
             SaveSetts.Size = new Size(edge * 2, edge * 2);
@@ -463,11 +462,13 @@ namespace IntroProject
 
             this.Controls.Add(exit);
         }
-        private (TrackBar, TextBox, ToolTip) MakeSlider(int x, int y, String name, float basevalue, int minvalue, int maxvalue, int scale, String uitleg)
-        { //Makes a TrackBar with connected Textbox, which are returned for specialzation
-            Size sliderTextBoxSize = new Size(30, 20);
 
+        //Makes a TrackBar with connected Textbox, which are returned for specialzation
+        private (TrackBar, TextBox, ToolTip) MakeSlider(int x, int y, String name, float basevalue, int minvalue, int maxvalue, int scale, String uitleg)
+        { 
+            Size sliderTextBoxSize = new Size(30, 20);
             int w = (x * (Size.Width/3))+ 40, h = (y * (Size.Height / 10)) + 60;
+
             Label label = new Label();
             label.Size = new Size(200, 20);
             label.Text = name;
@@ -508,9 +509,9 @@ namespace IntroProject
             this.Controls.Add(textBox);
             this.Controls.Add(label);
             
-
             return (trackBar, textBox, toolTip);
         }
+
         private void makeHeatBox(int x, int y, string name, string uitleg)
         {
             int w = (x * (Size.Width / 3)) + 40, h = (y * (Size.Height / 10)) + 60;
@@ -541,8 +542,8 @@ namespace IntroProject
             
             Controls.Add(AddHeat);
             Controls.Add(label);
-
         }
+
         public void makeLanguageBox(int x, int y, string name, string uitleg)
         {
             int w = (x * (Size.Width / 3)) + 40, h = (y * (Size.Height / 10)) + 60;
@@ -577,8 +578,8 @@ namespace IntroProject
             Controls.Add(label);
 
         }
-        public void ImportSettings(object o, EventArgs ea)
-        { //Imports settings from a given txt file
+        public void ImportSettings(object o, EventArgs ea) //Imports settings from a given txt file
+        { 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 try
@@ -594,6 +595,7 @@ namespace IntroProject
                         settings[i] = lineInfo;
                         i++;
                     }
+
                     sr.Close();
                     import(settings);
                 }
@@ -604,8 +606,9 @@ namespace IntroProject
                 }
             }
         }
-        private void import(string[] settings)
-        { //imports all the values to the sliders
+
+        private void import(string[] settings) //imports all the values to the sliders
+        { 
             trackBars[0].Value = (int) float.Parse(settings[0]) * 100;
             trackBars[1].Value = int.Parse(settings[1]);
             trackBars[2].Value = int.Parse(settings[2]);
@@ -622,22 +625,21 @@ namespace IntroProject
             AddHeat.Checked = bool.Parse(settings[13]);
             languageIndex.SelectedIndex = int.Parse(settings[14]);
         }
+
         public void ImplementChanges(object o, EventArgs ea)
         {
             if (changed || languageIndex.SelectedIndex != Settings.LanguageIndex || AddHeat.Checked != Settings.AddHeatMap)
             {
                 DialogResult implement = MessageBox.Show(multipleLanguages.DisplayText("DRchangedSettings0"), multipleLanguages.DisplayText("DRchangedSettings1"), MessageBoxButtons.YesNo);
+                
                 if (implement == DialogResult.Yes)
                 {
                     ImplementSettings();
-                    if (
-                    TE != Settings.TotalEntities ||
-                    SE != Settings.StartEntities ||
-                    MH != Settings.MiddleHeight ||
-                    MiT != Settings.MinTemp ||
-                    MaT != Settings.MaxTemp)
+
+                    if (TE != Settings.TotalEntities || SE != Settings.StartEntities || MH != Settings.MiddleHeight ||  MiT != Settings.MinTemp || MaT != Settings.MaxTemp)
                     {
                         DialogResult restart = MessageBox.Show(multipleLanguages.DisplayText("DRdoYouWantToRestart0"), multipleLanguages.DisplayText("DRdoYouWantToRestart1"), MessageBoxButtons.YesNo);
+                        
                         if (restart == DialogResult.Yes)
                         {
                             Settings.TotalEntities = TE;
@@ -659,8 +661,8 @@ namespace IntroProject
                 }
             }
         }
-        //Gives all abstract between values their start value, preventing implementation problems
-        private void StartSettings()
+
+        private void StartSettings() //Gives all abstract between values their start value, preventing implementation problems
         {
             TE = Settings.TotalEntities;
             SE = Settings.StartEntities;
@@ -676,6 +678,7 @@ namespace IntroProject
             JE = Settings.JumpEnergy;
             PE = Settings.PassiveEnergy;
         }
+
         private void ImplementSettings()
         {
             Settings.StepSize = Sp;
@@ -689,6 +692,7 @@ namespace IntroProject
             Settings.AddHeatMap = AddHeat.Checked;
             Settings.LanguageIndex = languageIndex.SelectedIndex;
         }
+
         public void RevertSettings()
         {
             trackBars[0].Value = (int) (Settings.StepSize * 100f);
@@ -711,7 +715,6 @@ namespace IntroProject
 
     class HelpMenu : UserControl
     {
-
         public HelpMenu(int w, int h, EventHandler exitMenu)
         {
             this.BackColor = Color.FromArgb(123, 156, 148);
@@ -754,7 +757,6 @@ namespace IntroProject
             Button statname4 = ButtonList("statistics");
             Button statname5 = ButtonList("statistics");
             Button statname6 = ButtonList("statistics");
-
         }
 
         private Button ButtonList(String name) //makes a button and next call makes a button under the previus.
