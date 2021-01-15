@@ -197,7 +197,7 @@ namespace IntroProject
         }
 
         protected override double calcQuality(Route r)
-        {
+        {   //calculates the quality and also saves it in the route
             double val = r.endHex.CarnivoreActive(gene.ActiveBias, ((CarnivoreGene)gene).LivingTargetBias);
             r.quality = val;
             return val;
@@ -220,7 +220,7 @@ namespace IntroProject
             if (current == null)
                 return null;
 
-
+            //if there is something you can eat in the last hexagon then add this end point to the route
             List<Entity> targets = current.endHex.getByType(EntityType.Plant);
             if (targets.Count > 0)
                 current.addEnd(targets[0].ChunckRelLoc);

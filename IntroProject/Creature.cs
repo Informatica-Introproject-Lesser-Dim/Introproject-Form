@@ -158,7 +158,8 @@ namespace IntroProject
             if (this.energyVal <= 0)
                 this.dead = true;
 
-            if (sleep > 0) {
+            if (sleep > 0)
+            {
                 sleep -= dt;
                 if (goal != Goal.Mate)
                     this.color = Color.FromArgb(50, 50, 150);
@@ -362,6 +363,7 @@ namespace IntroProject
 
         protected virtual void getActiveRoute() {
             AStar aStar = new AStar(new Point(this.x, this.y), this.chunk, this.gene, this.chunk.size, this.energyVal);
+            route = aStar.getResult();
 
             if (route != null)
             {
