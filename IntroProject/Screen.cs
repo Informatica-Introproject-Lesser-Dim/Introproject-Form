@@ -23,7 +23,13 @@ namespace IntroProject
 
             this.Size = new Size(1800, 1200);
             mapscr = new MapScreen(this.Size);
-            settingsMenu = new SettingsMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { settingsMenu.ImplementChanges(); mapscr.UpdateVars(); settingsMenu.Hide(); if (!mapscr.buttonPaused) mapscr.paused = false; });
+            settingsMenu = new SettingsMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { 
+                settingsMenu.RevertSettings(); 
+                mapscr.UpdateVars(settingsMenu.newMap); 
+                settingsMenu.newMap = false; 
+                settingsMenu.Hide(); 
+                if (!mapscr.buttonPaused) mapscr.paused = false; 
+            });
             helpMenu = new HelpMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { helpMenu.Hide(); if (!mapscr.buttonPaused) mapscr.paused = false; });
             statisticsMenu = new StatisticsMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { statisticsMenu.Hide(); if (!mapscr.buttonPaused) mapscr.paused = false; });
             dropMenu = new DropMenu(Size.Width/10, Size.Height, 
@@ -72,6 +78,7 @@ namespace IntroProject
         int yCam = 0;
         public const int size = 35;
         public Button plus = new ButtonImaged(Properties.Resources.Plus_icon);
+        private Button play = new ButtonImaged(Properties.Resources.Play_icon);
 
         private Entity selected;
 
@@ -84,7 +91,6 @@ namespace IntroProject
         {
             Path.initializePaths(size); //THIS NEEDS TO BE CALLED BEFORE ANY CREATURES ARE MOVED OR PATHS CREATED ETC
 
-            Button play = new ButtonImaged(Properties.Resources.Play_icon);
             Button stop = new ButtonImaged(Properties.Resources.Stop_icon);
             Button pause = new ButtonImaged(Properties.Resources.Pause_icon);
 
@@ -102,8 +108,9 @@ namespace IntroProject
             play.Location = new Point(40, 5);
             stop.Location = new Point(105, 5);
 
-            play.Click += (object o, EventArgs ea) => { play.Hide(); paused = false; buttonPaused = false; oldTime = DateTime.Now; };
+            play.Click += Play_Click;
             pause.Click += (object o, EventArgs ea) => { play.Show(); paused = true; buttonPaused = true; };
+            stop.Click += (object o, EventArgs ea) => { play.Show(); paused = true; buttonPaused = true; play.Click += NewMap; play.Click -= Play_Click;  };
 
             this.Controls.Add(play); 
             this.Controls.Add(pause);
@@ -112,8 +119,28 @@ namespace IntroProject
             this.Size = new Size(w, h);
             this.Paint += drawScreen;
 
+            MakeMap();
+
+            this.MouseClick += MapClick;
+        }
+
+        private void Play_Click(object sender, EventArgs e)
+        {
+            play.Hide();
+            paused = false;
+            buttonPaused = false;
+            oldTime = DateTime.Now;
+        }
+
+        private void NewMap(object sender, EventArgs e)
+        {
+            MakeMap();
+            play.Click -= NewMap;
+            play.Click += Play_Click;
+        }
+        public void MakeMap()
+        {
             map = new Map(100, 70, size, 0);
-            
             for (int i = 0; i < Settings.StartEntities; i++)
             {
                 Herbivore herbivore = new Herbivore();
@@ -121,8 +148,6 @@ namespace IntroProject
                 map.placeRandom(herbivore);
                 herbivore.calcFoodDist();
             }
-
-            this.MouseClick += MapClick;
         }
 
         public void MapClick(object o, MouseEventArgs mea) {
@@ -215,13 +240,13 @@ namespace IntroProject
                 return handeleparam;
             }
         }
-        public void UpdateVars()
+        public void UpdateVars(bool newMap)
         {
             Calculator.Update();
-            //In clicked Stop Button method, make new map. With new variable values that require restart.
-
-            //Here Seperate update for current map...
-            map.Update();
+            if (newMap)
+                MakeMap();
+            else
+                map.Update();
         }
     }
     internal class ButtonImaged : Button
@@ -300,19 +325,19 @@ namespace IntroProject
     {
         MultipleLanguages multipleLanguages = new MultipleLanguages();
         public bool warned = true;
-        private int TE = 50, SE = 20, HS, MiT = 15, MaT = 25, GG, GMF, LI;
-        private float Sp, MH = 0, MC, WE, JE, PE;
-        private bool changed, HM;
+        private int TE, SE, HS, MiT, MaT, GG, GMF;
+        private float Sp, MH, MC, WE, JE, PE;
+        public bool changed, newMap = false;
         private OpenFileDialog openFileDialog = new OpenFileDialog();
         private CheckBox AddHeat;
         private ComboBox languageIndex;
         private List<TrackBar> trackBars = new List<TrackBar>();
-        public SettingsMenu(int w, int h, EventHandler exitMenu) 
-
+        public SettingsMenu(int w, int h, EventHandler exitMenu)
         {
             this.BackColor = Color.FromArgb(123, 156, 148);
             this.Size = new Size(w, h);
-            int edge = Math.Max((int)(Size.Width / 18), (int)(Size.Height / 18));
+            int edge = Math.Max((int)(Size.Width / 36), (int)(Size.Height / 36));
+            StartSettings();
 
             Button exit = new ButtonImaged(Properties.Resources.X_icon);
             exit.Location = new Point(2, 2);
@@ -327,122 +352,151 @@ namespace IntroProject
             importSet.BackColor = Color.White;
             importSet.Text = "Import Settings";
             importSet.Click += ImportSettings;
+            importSet.Click += ImplementChanges;
+
+
+            //Makes the Save Settings Button
+            int n = (2 * (Size.Width / 3)) + 40, m = (6 * (Size.Height / 10)) + 60;
+            Button SaveSetts = new Button();
+            SaveSetts.Location = new Point(n, m);
+            SaveSetts.Size = new Size(edge * 2, edge * 2);
+            SaveSetts.FlatAppearance.BorderColor = Color.FromArgb(123, 156, 148);
+            SaveSetts.BackColor = Color.White;
+            SaveSetts.Text = "Save Settings";
+            SaveSetts.Click += ImplementChanges;
 
             this.Controls.Add(exit);
             this.Controls.Add(importSet);
+            this.Controls.Add(SaveSetts);
 
+            //Resize Method for the buttons
             Resize += (object o, EventArgs ea) =>
             {
+                int n = (2 * (Size.Width / 3)) + 40, m = (6 * (Size.Height / 10)) + 60;
                 edge = Math.Max((int)(Size.Width / 36), (int)(Size.Height / 36));
                 exit.Size = new Size(edge, edge);
                 importSet.Size = new Size(edge * 2, edge * 2);
                 importSet.Location = new Point(Size.Width - (edge * 2) - 16, 5);
+                SaveSetts.Size = new Size(edge * 2, edge * 2);
+                SaveSetts.Location = new Point(n, m);
             };
-            /* Each triple sentence is an slider group, First the construnction, where after the TrackBar specific event and textbox equivelent handlers.
+            /* Each triple sentence is an slider group, First the construnction, where after the TrackBar specific event and textbox equivalent handlers.
                Don't forget, slider values are integers. So there is a scale in every thing
                If the scale is a visual addition, don't forget to remove it from the trackbar value.
+               MakeSlider takes: x & y, name, Scaled value, flat minimum, flat maximum, scalar, explenation.
             */
             int r = 100, s = 10000, t = 1000000, value;
             float fvalue;
 
-            (TrackBar TrackBarSpeed, TextBox TextBoxSpeed, ToolTip ToolTipSpeed) = MakeSlider(40, 60, multipleLanguages.DisplayText("SDforSpeed"), Settings.StepSize, 25, 400, 100, "bijbehorende uitleg");
+            (TrackBar TrackBarSpeed, TextBox TextBoxSpeed, ToolTip ToolTipSpeed) = MakeSlider(0, 0, multipleLanguages.DisplayText("SDforSpeed"), Settings.StepSize, 25, 400, 100, "bijbehorende uitleg");
             TrackBarSpeed.ValueChanged += (object o, EventArgs ea) => { Sp = TrackBarSpeed.Value / (float)r; };
             TextBoxSpeed.Leave += (object o, EventArgs ea) => { Sp = float.Parse(TextBoxSpeed.Text); };
             trackBars.Add(TrackBarSpeed); //0
 
-            (TrackBar TrackBarTotalEntities, TextBox TextBoxTotalEntities, ToolTip ToolTipTotalEntities) = MakeSlider(40, 140, multipleLanguages.DisplayText("SDmaxEntity"), Settings.TotalEntities, 40, 100, 1, "bijbehorende uitleg");
+            (TrackBar TrackBarTotalEntities, TextBox TextBoxTotalEntities, ToolTip ToolTipTotalEntities) = MakeSlider(0, 1, multipleLanguages.DisplayText("SDmaxEntity"), Settings.TotalEntities, 40, 100, 1, "bijbehorende uitleg");
             TrackBarTotalEntities.ValueChanged += (object o, EventArgs ea) => { TE = TrackBarTotalEntities.Value; };
             TextBoxTotalEntities.Leave += (object o, EventArgs ea) => { TE = int.Parse(TextBoxTotalEntities.Text); };
             trackBars.Add(TrackBarTotalEntities); //1
 
-            (TrackBar TrackBarStartEntities, TextBox TextBoxStartEntities, ToolTip ToolTipSTartEntities) = MakeSlider(40, 220, multipleLanguages.DisplayText("SDstartingCountEntity"), Settings.StartEntities, 10, 40, 1, "bijbehorende uitleg");
+            (TrackBar TrackBarStartEntities, TextBox TextBoxStartEntities, ToolTip ToolTipSTartEntities) = MakeSlider(0, 2, multipleLanguages.DisplayText("SDstartingCountEntity"), Settings.StartEntities, 10, 40, 1, "bijbehorende uitleg");
             TrackBarStartEntities.ValueChanged += (object o, EventArgs ea) => { SE = TrackBarStartEntities.Value; };
             TextBoxStartEntities.Leave += (object o, EventArgs ea) => { SE = int.Parse(TextBoxStartEntities.Text); };
             trackBars.Add(TrackBarStartEntities); //2
 
-            (TrackBar TrackBarHatchSpeed, TextBox TextBoxHatchSpeed, ToolTip ToolTipHatchSpeed) = MakeSlider(40, 300, multipleLanguages.DisplayText("SDhatchSpeed"), Settings.HatchSpeed, 10, 100, 1, "bijbehorende uitleg");
+            (TrackBar TrackBarHatchSpeed, TextBox TextBoxHatchSpeed, ToolTip ToolTipHatchSpeed) = MakeSlider(0, 3, multipleLanguages.DisplayText("SDhatchSpeed"), Settings.HatchSpeed, 10, 100, 1, "bijbehorende uitleg");
             TrackBarHatchSpeed.ValueChanged += (object o, EventArgs ea) => { HS = TrackBarHatchSpeed.Value; };
             TextBoxHatchSpeed.Leave += (object o, EventArgs ea) => { HS = int.Parse(TextBoxHatchSpeed.Text); };
             trackBars.Add(TrackBarHatchSpeed); //3
 
             fvalue = (Settings.MiddleHeight + 1f) / 2f;
-            (TrackBar TrackBarMiddleHeight, TextBox TextBoxMiddleHeight, ToolTip ToolTipMiddleHeight) = MakeSlider(40, 380, multipleLanguages.DisplayText("SDseaLevel"), fvalue, 0, 99, 100, "bijbehorende uitleg");
+            (TrackBar TrackBarMiddleHeight, TextBox TextBoxMiddleHeight, ToolTip ToolTipMiddleHeight) = MakeSlider(0, 4, multipleLanguages.DisplayText("SDseaLevel"), fvalue, 0, 99, 100, "bijbehorende uitleg");
             TrackBarMiddleHeight.ValueChanged += (object o, EventArgs ea) => { MH = (TrackBarMiddleHeight.Value/50f) - 0.99f; };
             TextBoxMiddleHeight.Leave += (object o, EventArgs ea) => { MH = float.Parse(TextBoxMiddleHeight.Text) - 0.99f; };
             trackBars.Add(TrackBarMiddleHeight); //4
 
-            (TrackBar TrackBarMatingCost, TextBox TextBoxMatingCost, ToolTip ToolTipMatingCost) = MakeSlider(40, 500, multipleLanguages.DisplayText("SDmatingCost"), Settings.MatingCost, 20, 150, 100, "bijbehorende uitleg");
+            (TrackBar TrackBarMatingCost, TextBox TextBoxMatingCost, ToolTip ToolTipMatingCost) = MakeSlider(0, 5, multipleLanguages.DisplayText("SDmatingCost"), Settings.MatingCost, 20, 150, 100, "bijbehorende uitleg");
             TrackBarMatingCost.ValueChanged += (object o, EventArgs ea) => { MC = TrackBarMatingCost.Value / (float)r; };
             TextBoxMatingCost.Leave += (object o, EventArgs ea) => { MC = float.Parse(TextBoxMatingCost.Text); };
             trackBars.Add(TrackBarMatingCost); //5
 
-            (TrackBar TrackBarGrassGrowth, TextBox TextBoxGrassGrowth, ToolTip ToolTipGrassGrowth) = MakeSlider(40, 580, multipleLanguages.DisplayText("SDgrassGrowSpeed"), Settings.GrassGrowth, 100, 500, 1, "bijbehorende uitleg");
+            (TrackBar TrackBarGrassGrowth, TextBox TextBoxGrassGrowth, ToolTip ToolTipGrassGrowth) = MakeSlider(0, 6, multipleLanguages.DisplayText("SDgrassGrowSpeed"), Settings.GrassGrowth, 100, 500, 1, "bijbehorende uitleg");
             TrackBarGrassGrowth.ValueChanged += (object o, EventArgs ea) => { GG = TrackBarGrassGrowth.Value; };
             TextBoxGrassGrowth.Leave += (object o, EventArgs ea) => { GG = int.Parse(TextBoxGrassGrowth.Text); };
             trackBars.Add(TrackBarGrassGrowth); //6
 
-            (TrackBar TrackBarGrassMaxFeed, TextBox TextBoxGrassMaxFeed, ToolTip ToolTipGrassMaxFeed) = MakeSlider(40, 660, multipleLanguages.DisplayText("SDgrassMaxEnergy"), Settings.GrassMaxFeed, 1000, 3000, 1, "bijbehorende uitleg");
+            (TrackBar TrackBarGrassMaxFeed, TextBox TextBoxGrassMaxFeed, ToolTip ToolTipGrassMaxFeed) = MakeSlider(0, 7, multipleLanguages.DisplayText("SDgrassMaxEnergy"), Settings.GrassMaxFeed, 1000, 3000, 1, "bijbehorende uitleg");
             TrackBarGrassMaxFeed.ValueChanged += (object o, EventArgs ea) => { GMF = TrackBarGrassMaxFeed.Value; };
             TextBoxGrassMaxFeed.Leave += (object o, EventArgs ea) => { GMF = int.Parse(TextBoxGrassMaxFeed.Text); };
             trackBars.Add(TrackBarGrassMaxFeed); //7
 
-            (TrackBar TrackBarTemperatureMin, TextBox TextBoxTemperatureMin, ToolTip ToolTipTemperatureMin) = MakeSlider(500, 60, multipleLanguages.DisplayText("SDminTemp"), Settings.MinTemp, 10, 20, 1, "bijbehorende uitleg");
+            (TrackBar TrackBarTemperatureMin, TextBox TextBoxTemperatureMin, ToolTip ToolTipTemperatureMin) = MakeSlider(1, 0, multipleLanguages.DisplayText("SDminTemp"), Settings.MinTemp, 10, 20, 1, "bijbehorende uitleg");
             TrackBarTemperatureMin.ValueChanged += (object o, EventArgs ea) => { MiT = TrackBarTemperatureMin.Value; };
             TextBoxTemperatureMin.Leave += (object o, EventArgs ea) => { MiT = int.Parse(TextBoxTemperatureMin.Text); };
             trackBars.Add(TrackBarTemperatureMin); //8
 
-            (TrackBar TrackBarTemperatureMax, TextBox TextBoxTemperatureMax, ToolTip ToolTipTemperatureMax) = MakeSlider(500, 140, multipleLanguages.DisplayText("SDmaxTemp"), Settings.MaxTemp, 20, 30, 1, "bijbehorende uitleg");
+            (TrackBar TrackBarTemperatureMax, TextBox TextBoxTemperatureMax, ToolTip ToolTipTemperatureMax) = MakeSlider(1, 1, multipleLanguages.DisplayText("SDmaxTemp"), Settings.MaxTemp, 20, 30, 1, "bijbehorende uitleg");
             TrackBarTemperatureMax.ValueChanged += (object o, EventArgs ea) => { MaT = TrackBarTemperatureMax.Value; };
             TextBoxTemperatureMax.Leave += (object o, EventArgs ea) => {  MaT = int.Parse(TextBoxTemperatureMax.Text); };
             trackBars.Add(TrackBarTemperatureMax); //9
 
             value = (int)(Settings.WalkEnergy * (float)r);
-            (TrackBar TrackBarWalkEnergy, TextBox TextBoxWalkEnergy, ToolTip ToolTipWalkEnergy) = MakeSlider(500, 220, multipleLanguages.DisplayText("SDwalkEnergyCost"), value, 5, 30, 1, "bijbehorende uitleg");
+            (TrackBar TrackBarWalkEnergy, TextBox TextBoxWalkEnergy, ToolTip ToolTipWalkEnergy) = MakeSlider(1, 2, multipleLanguages.DisplayText("SDwalkEnergyCost"), value, 5, 30, 1, "bijbehorende uitleg");
             TrackBarWalkEnergy.ValueChanged += (object o, EventArgs ea) => { WE = TrackBarWalkEnergy.Value / (float)r; };
             TextBoxWalkEnergy.Leave += (object o, EventArgs ea) => { WE = float.Parse(TextBoxWalkEnergy.Text); };
             trackBars.Add(TrackBarWalkEnergy); //10
 
             value = (int)(Settings.JumpEnergy * (float)s);
-            (TrackBar TrackBarJumpEnergy, TextBox TextBoxJumpEnergy, ToolTip ToolTipJumpEnergy) = MakeSlider(500, 300, multipleLanguages.DisplayText("SDjumpEnergyCost"), value, 5, 30, 1, "bijbehorende uitleg");
+            (TrackBar TrackBarJumpEnergy, TextBox TextBoxJumpEnergy, ToolTip ToolTipJumpEnergy) = MakeSlider(1, 3, multipleLanguages.DisplayText("SDjumpEnergyCost"), value, 5, 30, 1, "bijbehorende uitleg");
             TrackBarJumpEnergy.ValueChanged += (object o, EventArgs ea) => { JE = TrackBarJumpEnergy.Value / (float)s; };
             TextBoxJumpEnergy.Leave += (object o, EventArgs ea) => { JE = float.Parse(TextBoxJumpEnergy.Text); };
             trackBars.Add(TrackBarJumpEnergy); //11
 
             value = (int)(Settings.PassiveEnergy * (float)t);
-            (TrackBar TrackBarPassiveEnergy, TextBox TextBoxPassiveEnergy, ToolTip ToolTipPassiveEnergy) = MakeSlider(500, 380, multipleLanguages.DisplayText("SDpassiveEnergyCost"), value, 5, 30, 1, "bijbehorende uitleg");
+            (TrackBar TrackBarPassiveEnergy, TextBox TextBoxPassiveEnergy, ToolTip ToolTipPassiveEnergy) = MakeSlider(1, 4, multipleLanguages.DisplayText("SDpassiveEnergyCost"), value, 5, 30, 1, "bijbehorende uitleg");
             TrackBarPassiveEnergy.ValueChanged += (object o, EventArgs ea) => { PE = TrackBarPassiveEnergy.Value / (float)t; };
             TextBoxPassiveEnergy.Leave += (object o, EventArgs ea) => { PE = float.Parse(TextBoxPassiveEnergy.Text); };
             trackBars.Add(TrackBarPassiveEnergy); //12
 
-            makeHeatBox(500, 460, multipleLanguages.DisplayText("CBheatMap"), "Turn Heat Map coloring on/off");
+            makeHeatBox(1, 5, multipleLanguages.DisplayText("CBheatMap"), "Turn Heat Map coloring on/off");
 
-            makeLanguageBox(500, 560, "Language Selection", "Select the which language.");
+            makeLanguageBox(1, 6, "Language Selection", "Select the which language.");
 
             this.Controls.Add(exit);
         }
         private (TrackBar, TextBox, ToolTip) MakeSlider(int x, int y, String name, float basevalue, int minvalue, int maxvalue, int scale, String uitleg)
-        {
+        { //Makes a TrackBar with connected Textbox, which are returned for specialzation
             Size sliderTextBoxSize = new Size(30, 20);
 
+            int w = (x * (Size.Width/3))+ 40, h = (y * (Size.Height / 10)) + 60;
             Label label = new Label();
             label.Size = new Size(200, 20);
             label.Text = name;
             label.ForeColor = Color.White;
-            label.Location = new Point(x, y);
+            label.Location = new Point(w, h);
             label.AutoSize = false;
 
-            TrackBar trackBar = new CustomTrackbar(x, (y+20), minvalue, maxvalue);
+            TrackBar trackBar = new CustomTrackbar(w, (h+20), minvalue, maxvalue);
             TextBox textBox = new TextBox();
             textBox.BackColor = Color.FromArgb(123, 156, 148);
             textBox.BorderStyle = BorderStyle.FixedSingle;
             textBox.ForeColor = Color.White;
             trackBar.Value = (int) (basevalue * scale);
+            trackBar.Size = new Size((Size.Width / 4), 40);
             textBox.Text = basevalue.ToString();
             trackBar.ValueChanged += (object o, EventArgs ea) => { textBox.Text = (Math.Round(trackBar.Value * (1.0/scale), 2)).ToString(); changed = true; };
             textBox.Leave += (object o, EventArgs ea) => { trackBar.Value = Convert.ToInt32(double.Parse(textBox.Text) * scale); changed = true; };
-            textBox.Location = new Point((x+400), (y+30));
+            textBox.Location = new Point((w + (Size.Width / 4)), (h+30));
             textBox.Size = sliderTextBoxSize;
             trackBar.AutoSize = false;
+
+            Resize += (object o, EventArgs ea) =>
+            {
+                int w = (x * (Size.Width / 3)) + 40, h = (y * (Size.Height / 10)) + 60;
+                label.Location = new Point(w, h);
+                trackBar.Size = new Size((Size.Width / 4), 40);
+                trackBar.Location = new Point(w, (h + 20));
+                textBox.Location = new Point((w + (Size.Width / 4)), (h + 30));
+            };
 
             ToolTip toolTip = new ToolTip();
             toolTip.ToolTipIcon = ToolTipIcon.Info;
@@ -459,18 +513,18 @@ namespace IntroProject
         }
         private void makeHeatBox(int x, int y, string name, string uitleg)
         {
+            int w = (x * (Size.Width / 3)) + 40, h = (y * (Size.Height / 10)) + 60;
             AddHeat = new CheckBox();
             Label label = new Label();
-            label.Location = new Point(x, y);
+            label.Location = new Point(w, h);
             label.Size = new Size(200, 20);
             label.ForeColor = Color.White;
             label.AutoSize = false;
             label.Text = name;
 
-            AddHeat.Location = new Point((x+10), (y+20));
+            AddHeat.Location = new Point((w+10), (h+20));
             AddHeat.AutoSize = false;
             AddHeat.Checked = false;
-            AddHeat.CheckedChanged += (object sender, EventArgs e) => { HM = AddHeat.Checked; };
 
             ToolTip toolTip = new ToolTip();
             toolTip.ToolTipIcon = ToolTipIcon.Info;
@@ -478,26 +532,33 @@ namespace IntroProject
             toolTip.SetToolTip(label, uitleg);
             toolTip.SetToolTip(AddHeat, uitleg);
 
+            Resize += (object o, EventArgs ea) =>
+            {
+                int w = (x * (Size.Width / 3)) + 40, h = (y * (Size.Height / 10)) + 60;
+                label.Location = new Point(w, h);
+                AddHeat.Location = new Point((w + 10), (h + 20));
+            };
+            
             Controls.Add(AddHeat);
             Controls.Add(label);
 
         }
         public void makeLanguageBox(int x, int y, string name, string uitleg)
         {
+            int w = (x * (Size.Width / 3)) + 40, h = (y * (Size.Height / 10)) + 60;
             languageIndex = new ComboBox();
             Label label = new Label();
-            label.Location = new Point(x, y);
+            label.Location = new Point(w, h);
             label.Size = new Size(200, 20);
             label.ForeColor = Color.White;
             label.AutoSize = false;
             label.Text = name;
 
-            languageIndex.Location = new Point((x + 10), (y + 20));
+            languageIndex.Location = new Point((w + 10), (h + 20));
             languageIndex.AutoSize = false;
             languageIndex.DropDownStyle = ComboBoxStyle.DropDownList;
             languageIndex.Items.AddRange(new string[] { "Nederlands", "English" });
             languageIndex.SelectedIndex = Settings.LanguageIndex;
-            languageIndex.SelectedIndexChanged += (object sender, EventArgs e) => { LI = languageIndex.SelectedIndex; };
 
             ToolTip toolTip = new ToolTip();
             toolTip.ToolTipIcon = ToolTipIcon.Info;
@@ -505,12 +566,19 @@ namespace IntroProject
             toolTip.SetToolTip(label, uitleg);
             toolTip.SetToolTip(languageIndex, uitleg);
 
+            Resize += (object o, EventArgs ea) =>
+            {
+                int w = (x * (Size.Width / 3)) + 40, h = (y * (Size.Height / 10)) + 60;
+                label.Location = new Point(w, h);
+                languageIndex.Location = new Point((w + 10), (h + 20));
+            };
+
             Controls.Add(languageIndex);
             Controls.Add(label);
 
         }
         public void ImportSettings(object o, EventArgs ea)
-        {
+        { //Imports settings from a given txt file
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 try
@@ -537,7 +605,7 @@ namespace IntroProject
             }
         }
         private void import(string[] settings)
-        {
+        { //imports all the values to the sliders
             trackBars[0].Value = (int) float.Parse(settings[0]) * 100;
             trackBars[1].Value = int.Parse(settings[1]);
             trackBars[2].Value = int.Parse(settings[2]);
@@ -554,9 +622,9 @@ namespace IntroProject
             AddHeat.Checked = bool.Parse(settings[13]);
             languageIndex.SelectedIndex = int.Parse(settings[14]);
         }
-        public void ImplementChanges()
+        public void ImplementChanges(object o, EventArgs ea)
         {
-            if (changed || LI != languageIndex.SelectedIndex || HM != AddHeat.Checked)
+            if (changed || languageIndex.SelectedIndex != Settings.LanguageIndex || AddHeat.Checked != Settings.AddHeatMap)
             {
                 DialogResult implement = MessageBox.Show(multipleLanguages.DisplayText("DRchangedSettings0"), multipleLanguages.DisplayText("DRchangedSettings1"), MessageBoxButtons.YesNo);
                 if (implement == DialogResult.Yes)
@@ -577,7 +645,7 @@ namespace IntroProject
                             Settings.MiddleHeight = MH;
                             Settings.MinTemp = MiT;
                             Settings.MaxTemp = MaT;
-                            //implement restart function with new values
+                            newMap = true;
                         }
                         else if (restart == DialogResult.No)
                         {
@@ -589,11 +657,24 @@ namespace IntroProject
                         }
                     }
                 }
-                else if (implement == DialogResult.No)
-                {
-                    RevertSettings();
-                }
             }
+        }
+        //Gives all abstract between values their start value, preventing implementation problems
+        private void StartSettings()
+        {
+            TE = Settings.TotalEntities;
+            SE = Settings.StartEntities;
+            HS = Settings.HatchSpeed;
+            MiT = Settings.MinTemp;
+            MaT = Settings.MaxTemp;
+            GG = Settings.GrassGrowth;
+            GMF = Settings.GrassMaxFeed;
+            Sp = Settings.StepSize;
+            MH = Settings.MiddleHeight;
+            MC = Settings.MatingCost;
+            WE = Settings.WalkEnergy;
+            JE = Settings.JumpEnergy;
+            PE = Settings.PassiveEnergy;
         }
         private void ImplementSettings()
         {
@@ -608,7 +689,7 @@ namespace IntroProject
             Settings.AddHeatMap = AddHeat.Checked;
             Settings.LanguageIndex = languageIndex.SelectedIndex;
         }
-        private void RevertSettings()
+        public void RevertSettings()
         {
             trackBars[0].Value = (int) (Settings.StepSize * 100f);
             trackBars[1].Value = Settings.TotalEntities;
@@ -706,7 +787,6 @@ namespace IntroProject
             Location = new Point(x, y);
             Padding = Padding.Empty;
             Cursor = Cursors.Hand;
-            Size = new Size(400, 40);
             BackColor = Color.White;
             Minimum = min;
             Maximum = max;
