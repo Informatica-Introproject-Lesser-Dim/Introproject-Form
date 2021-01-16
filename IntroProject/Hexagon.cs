@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
+using IntroProject.Core.Math;
+
 namespace IntroProject
 {
     
-    public class Hexagon
+    public class Hexagon : Point2D
     {
         public int size;
         public static double sqrt3 = Math.Sqrt(3);
         public static double sqrt2 = Math.Sqrt(2);
-        public int x, y;
         public Color color;
         public double heightOfTile; //the height between -1  and 1
         public double longitudeOnMap;

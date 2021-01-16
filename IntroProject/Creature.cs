@@ -1,8 +1,10 @@
-﻿using IntroProject.Core.Error;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+
+using IntroProject.Core.Error;
+using IntroProject.Core.Math;
 
 namespace IntroProject
 {
@@ -85,25 +87,23 @@ namespace IntroProject
         public virtual Creature FromParentInfo(Gene gene, double energy) =>
             new Creature(gene, energy);
 
-        public static int calcDistancePow2(EntityType type, Hexagon place, Point point) { //enter the world relative position for point
+        public static double calcDistancePow2(EntityType type, Hexagon place, Point point) { //enter the world relative position for point
             List<Entity> targets = new List<Entity>();
             for (int l = 0; targets.Count == 0 && l < 10; l++)
                 targets = place.searchPoint(l, type);
             if (targets.Count == 0)
                 return 10000000; //just a big number so stuff doesnt break
-            int dist = calcDist2(targets[0], point);
+            double dist = calcDist2(targets[0], point);
             foreach (Entity e in targets)
                 if (calcDist2(e, point) < dist)
                     dist = calcDist2(e, point);
             return dist;
         }
 
-        public static int calcDist2(Entity e, Point p) {
-            int x2 = e.x + e.chunk.x;
-            int y2 = e.y + e.chunk.y;
-            int dx = p.X - x2;
-            int dy = p.Y - y2;
-            return dx * dx + dy * dy;
+        public static double calcDist2(Entity e, Point p)
+        {
+            Point2D p2 = e + e.chunk;
+            return Trigonometry.DistancePow2((p.X, p.Y), (p2.X, p2.Y));
         }
 
         public Creature(Creature parentA, Creature parentB) : this(parentA.gene, parentB.gene) { }
@@ -112,8 +112,6 @@ namespace IntroProject
 
         public void eat(Entity entity) {
             if (entity == null)
-                return;
-            if (entity.dead)
                 return;
             this.energyVal += entity.BeingEaten();
             this.sleep = 30;
@@ -141,6 +139,8 @@ namespace IntroProject
                 child = other.FromParentInfo((HerbivoreGene)this.gene * (HerbivoreGene)other.gene, transferredEnergy);
             else if (this is Carnivore)
                 child = other.FromParentInfo((CarnivoreGene)this.gene * (CarnivoreGene)other.gene, transferredEnergy);
+            else
+                return;
 
             child.x = this.x;
             child.y = this.y;
@@ -436,7 +436,12 @@ namespace IntroProject
                     if (route.isDone()) {
                         route = null; //put any functions wich are to activate when the route is done here
                         if (goal == Goal.Food)
-                            eat(myFood);
+                        {
+                            if (this is Carnivore)
+                                eat(((Carnivore)this).targetFood);
+                            if (this is Herbivore)
+                                eat(myFood);
+                        }
                         if (goal == Goal.Mate)
                             MateWithFemale(mateTarget);
                         myFood = null;

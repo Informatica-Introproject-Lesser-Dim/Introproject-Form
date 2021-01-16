@@ -6,7 +6,7 @@ namespace IntroProject
 {
     public class Carnivore : Creature
     {
-        private Entity targetFood;
+        public Entity targetFood;
         public Carnivore() 
         {
             energyVal = 600; //start with quite a lot so they dont die too quickly

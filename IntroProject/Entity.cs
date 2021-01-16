@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 
+using IntroProject.Core.Math;
+
 namespace IntroProject
 {
     public enum EntityType
@@ -11,17 +13,9 @@ namespace IntroProject
         Entity,
         Creature
     }
-    public abstract class Entity
+    public abstract class Entity : Point2D
     {
         protected Guid id = Guid.NewGuid();
-        protected double X,Y;
-
-        public int x { get { return (int)X; }
-            set { X = value; }
-        }
-        public int y { get { return (int)Y; }
-            set { Y = value; }
-        }
 
         protected const int r = 10;
         public Hexagon chunk;

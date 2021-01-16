@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 using IntroProject.Core.Utils;
 
-namespace IntroProjectTest
+namespace IntroProjectTest.Core.Utils
 {
     class MultipleLanguagesTest
     {
