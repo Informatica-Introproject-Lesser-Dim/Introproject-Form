@@ -25,7 +25,7 @@ namespace IntroProject
 
         protected Entity target;
 
-        private static float MateWeight = Settings.MatingCost;
+        protected static float MateWeight = Settings.MatingCost;
         private Grass myFood;
         protected double sleep = 0;
         protected Goal goal = Goal.Nothing;
@@ -130,11 +130,15 @@ namespace IntroProject
             this.goalReset();
         }
 
-        public void MateWithMale(Creature other)
+        public virtual void MateWithMale(Creature other)
         {
             double transferredEnergy =  this.energyVal * (this.gene.energyDistribution * MateWeight);
             energyVal -= transferredEnergy;
-            Creature child = other.FromParentInfo(this.gene * other.gene, transferredEnergy);
+            Creature child = null;
+            if (this is Herbivore)
+                child = other.FromParentInfo((HerbivoreGene)this.gene * (HerbivoreGene)other.gene, transferredEnergy);
+            else if (this is Carnivore)
+                child = other.FromParentInfo((CarnivoreGene)this.gene * (CarnivoreGene)other.gene, transferredEnergy);
 
             child.x = this.x;
             child.y = this.y;

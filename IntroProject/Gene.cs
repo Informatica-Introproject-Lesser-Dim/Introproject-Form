@@ -177,10 +177,7 @@ namespace IntroProject
             return b;
         }
 
-        public static Gene operator *(Gene a, Gene b) =>
-            (a + b).Mutate();
-
-        public Gene Mutate() {
+        public virtual Gene Mutate() {
             Random random = new Random();
             //choosing a random gene wich is to be mutated
             int i;
@@ -218,10 +215,7 @@ namespace IntroProject
             return new HerbivoreGene(this.Genotype);
         }
 
-        public static Gene operator +(Gene a, Gene b)
-        {
-            return new HerbivoreGene(a.getAllel(), b.getAllel());
-        }
+        
 
         public bool Equals(Gene other) {
             //just basic checking every gene
@@ -253,16 +247,16 @@ namespace IntroProject
         public HerbivoreGene(List<float[]>[] genoType) : base(genoType) { }
         public HerbivoreGene(List<float[]> a, List<float[]> b) : base(a, b) { }
 
-        public static HerbivoreGene operator +(HerbivoreGene a, HerbivoreGene b)
-        {
-            return new HerbivoreGene(a.getAllel(), b.getAllel());
-        }
-
         public override float Velocity { get { return (Fenotype[9] / 2 + 0.5f) * 4.5f + 0.5f; } } //within certain max and min values
 
         public override float SprintSpeed { get { return (Fenotype[10]/2 + 0.5f)*2 + 1 + Velocity; } }
 
         public override float SprintDuration { get { return (Fenotype[11] / 2 + 0.5f) * 990 + 10; } }
+
+        public static HerbivoreGene operator *(HerbivoreGene a, HerbivoreGene b) =>
+            (HerbivoreGene) (a + b).Mutate();
+        public static HerbivoreGene operator +(HerbivoreGene a, HerbivoreGene b) =>
+            new HerbivoreGene(a.getAllel(), b.getAllel());
     }
 
     public class CarnivoreGene : Gene
@@ -279,9 +273,10 @@ namespace IntroProject
 
         public float LivingTargetBias { get { return Fenotype[16] / 2 + 0.5f; } }
 
-        public static CarnivoreGene operator +(CarnivoreGene a, CarnivoreGene b)
-        {
-            return new CarnivoreGene(a.getAllel(), b.getAllel());
-        }
+        public static CarnivoreGene operator *(CarnivoreGene a, CarnivoreGene b) =>
+            (CarnivoreGene)(a + b).Mutate();
+        public static CarnivoreGene operator +(CarnivoreGene a, CarnivoreGene b) =>
+            new CarnivoreGene(a.getAllel(), b.getAllel());
+        
     }
 }

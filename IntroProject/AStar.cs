@@ -17,7 +17,7 @@ namespace IntroProject
         private double energy;
         private Route best;
 
-        private int maxLength = 300;
+        private int maxLength = 200;
 
         //when you initialize an AStar object it starts calculating the best route and then you're able to ask for the Route
         public AStar(Point loc, Hexagon chunck, Gene gene, int size, double energy) {
