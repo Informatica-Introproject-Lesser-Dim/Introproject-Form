@@ -4,6 +4,16 @@
     {
         public double X;
         public double Y;
+        public int x
+        {
+          get => (int)X;
+          set => X = value;
+        }
+        public int y
+        {
+          get => (int)Y;
+          set => Y = value;
+        }
     }
 
     public static class Trigonometry
