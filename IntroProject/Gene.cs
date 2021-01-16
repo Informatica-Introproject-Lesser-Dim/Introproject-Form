@@ -91,16 +91,6 @@ namespace IntroProject
             calcFenotype();
         }
 
-        private float NormDist(float range) {
-            return NormDist()*range;
-        }
-
-        //get a random value between -1 and 1 (will go according to the normal distribution later on)
-        private float NormDist() {
-            random = new Random();
-            return (float)((random.NextDouble() - 0.5) * 2);
-        }
-
         public float ToInfinity(float x) {
             if (x == 1 || x == -1)
                 return 0;
@@ -116,7 +106,7 @@ namespace IntroProject
                         if (lookupTable[i, j] == 2)
                             temp.Add(random.Next(0, 3)%2);
                         else
-                            temp.Add(NormDist(0.75f));
+                            temp.Add(Calculator.NormDist(0, 0.25, -0.75, 0.75));
                     }
                 if (temp.Count == 0)
                     continue;
@@ -211,7 +201,7 @@ namespace IntroProject
             //range is the amount of you can go in a certain direction
             //mutatescale is how much of the range you're allowed to use
             //val is the actual random number used
-            float val = NormDist(1); //value between -1 and 1
+            float val = Calculator.NormDist(0, 0.35, -1, 1); //value between -1 and 1
             float range = x + 1; //amount of space left of the x
             if (val > 0) 
                 range = 2 - range; //amount of space to the right
