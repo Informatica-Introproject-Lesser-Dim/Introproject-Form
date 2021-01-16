@@ -21,6 +21,10 @@ namespace IntroProject
             return EnergyPerMeter(gene) * gene.Velocity;
         }
 
+        public static float SprintEnergyPerTic(Gene gene) {
+            return moveBias * gene.SprintSpeed * gene.SprintSpeed * StandardEnergyCost(gene);
+        }
+
         public static float StandardEnergyCost(Gene gene) {
             return standardBias * gene.Size;
         }

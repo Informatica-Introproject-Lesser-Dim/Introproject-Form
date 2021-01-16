@@ -147,7 +147,7 @@ namespace IntroProject
                 herbivore.x = 0;
                 map.placeRandom(herbivore);
             }
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 5; i++)
             {
                 map.placeRandom(new Carnivore());
             }
@@ -212,7 +212,11 @@ namespace IntroProject
             if (paused == false) {
                 dt = DateTime.Now - oldTime;
                 oldTime = oldTime + dt;
-                map.TimeStep(dt.TotalMilliseconds);
+                double mil = dt.TotalMilliseconds;
+                if (mil > 100)
+                    mil = 100;
+                
+                map.TimeStep(mil);
             }
             pea.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(108, 116, 150)), 0, 0, this.Width, this.Height); // Is dit wel nodig, dat het elke keer wordt gedaan?
             if (camAutoMove)

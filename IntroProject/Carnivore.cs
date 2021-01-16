@@ -19,6 +19,7 @@ namespace IntroProject
 
         public Carnivore(Creature parentA, Creature parentB) : base(parentA, parentB) { }
 
+
         public override void passiveSearch()
         {
             List<Entity> herbivores = new List<Entity>();
@@ -66,14 +67,17 @@ namespace IntroProject
                 return true;
 
             Point targetLoc = target.GlobalLoc;
-            double dx = this.GlobalLoc.X - targetLoc.X;
-            double dy = this.GlobalLoc.Y - targetLoc.Y ;
+            double dx =  targetLoc.X - this.GlobalLoc.X;
+            double dy =  targetLoc.Y - this.GlobalLoc.Y;
+
             double dist = (dx * dx + dy * dy);
             if (dist < 25) 
             {
                 eat(target);
                 return true;
             }
+
+            dist = System.Math.Sqrt(dist);
 
             dx *= 1 / dist;
             dy *= 1 / dist;
@@ -84,7 +88,10 @@ namespace IntroProject
             X += dx;
             Y += dy;
 
+            energyVal -= Calculator.SprintEnergyPerTic(gene);
             stamina -= 2*dt;
+
+            
 
             int[] hexPos = this.chunk.parent.PosToHexPos(GlobalLoc.X, GlobalLoc.Y);
             Hexagon newHex = this.chunk.parent[hexPos[0], hexPos[1]];
@@ -118,7 +125,7 @@ namespace IntroProject
             }
             else
             {
-                sleep = 20;
+                sleep = 50;
                 this.color = Color.Purple;
             }
         }
