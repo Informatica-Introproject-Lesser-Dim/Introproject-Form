@@ -15,6 +15,22 @@
           set => Y = value;
         }
 
+        public Point2D()
+        {
+            this.X = 0;
+            this.Y = 0;
+        }
+
+        /// <summary>
+        /// Should be used as it was Point2D(double X, double Y)
+        /// It circumvents C# not inheriting base class constructors implicitly
+        /// </summary>
+        public void SetPosition(double X, double Y)
+        {
+            this.X = X;
+            this.Y = Y;
+        }
+
         public static Point2D operator +(Point2D a, Point2D b)
         {
             a.X += b.X;
