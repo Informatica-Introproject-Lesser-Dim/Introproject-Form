@@ -28,6 +28,7 @@ namespace IntroProject
         protected Color color;
         public bool dead = false;
         public double energyVal = 100;
+        public int gender = -1;
         public bool isAlive { get => energyVal > 0; }
         private int disp = 4;
         public bool selected = false;
