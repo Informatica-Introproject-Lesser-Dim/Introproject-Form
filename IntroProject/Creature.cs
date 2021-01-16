@@ -113,8 +113,6 @@ namespace IntroProject
         public void eat(Entity entity) {
             if (entity == null)
                 return;
-            if (entity.dead)
-                return;
             this.energyVal += entity.BeingEaten();
             this.sleep = 30;
         }
@@ -438,7 +436,12 @@ namespace IntroProject
                     if (route.isDone()) {
                         route = null; //put any functions wich are to activate when the route is done here
                         if (goal == Goal.Food)
-                            eat(myFood);
+                        {
+                            if (this is Carnivore)
+                                eat(((Carnivore)this).targetFood);
+                            if (this is Herbivore)
+                                eat(myFood);
+                        }
                         if (goal == Goal.Mate)
                             MateWithFemale(mateTarget);
                         myFood = null;
