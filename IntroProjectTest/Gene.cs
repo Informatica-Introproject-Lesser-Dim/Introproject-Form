@@ -37,7 +37,6 @@ namespace IntroProjectTest
                     Assert.IsFalse(ReferenceEquals(stableGeneSetA, stableGeneSetA * stableGeneSetA));
                 }
 
-                [Test]
                 public void TestOrderOfAddingGenesResultsInSameFenotype() 
                 {
                     List<float[]> a = stableGeneSetA.getAllel();
@@ -102,7 +101,6 @@ namespace IntroProjectTest
                     Assert.AreEqual(unstableGeneSetB, cloneB);
                 }
 
-                [Test]
                 public void TestGeneChangesWhenMutating()
                 {
                     Assert.IsFalse(unstableGeneSetA.CloneTyped().Mutate().Equals(unstableGeneSetA));
