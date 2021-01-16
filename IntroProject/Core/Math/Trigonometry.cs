@@ -24,17 +24,34 @@
         /// <summary>
         /// Should be used as it was Point2D(double X, double Y)
         /// It circumvents C# not inheriting base class constructors implicitly
+        /// It returns itself to allow chaining
         /// </summary>
-        public void SetPosition(double X, double Y)
+        public Point2D SetPosition(double X, double Y)
         {
             this.X = X;
             this.Y = Y;
+
+            return this;
         }
 
         public static Point2D operator +(Point2D a, Point2D b)
         {
             a.X += b.X;
             a.Y += b.Y;
+            return a;
+        }
+
+        public static Point2D operator -(Point2D a, Point2D b)
+        {
+            a.X -= b.X;
+            a.Y -= b.Y;
+            return a;
+        }
+
+        public static Point2D operator *(Point2D a, double scale)
+        {
+            a.X *= scale;
+            a.Y *= scale;
             return a;
         }
     }
