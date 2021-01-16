@@ -10,7 +10,7 @@ namespace IntroProject
 
         private List<float[]>[] Genotype; //we beginnen met velocity en jumpheight en courage maar dat verranderd later
         protected List<float> Fenotype;
-        private Random random;
+        private Random random = new Random();
         // All between -1 and 1, will be scaled in their respective dependents
 
         //if mutateScale is at 1 then if your random device gives you a 1 you go all the way to the extreme value (wich happens to be 1) 
@@ -28,7 +28,7 @@ namespace IntroProject
         public float HungerBias { get { return ToInfinity(Fenotype[2]/2 + 0.5f); } }//positive and to infinity
 
         public float sexualPreference { get { return ToInfinity(Fenotype[3] / 2 + 0.5f) + 50; } } //to infinity but still needs to have at least 50
-        public float energyDistribution { get { return Fenotype[4] / 3 + 0.33f; /* Settings.MatingCost */ } } //just a percentage between 0 and 1
+        public float energyDistribution { get { return Fenotype[4] / 3 + 0.16f; /* Settings.MatingCost */ } } //just a percentage between 0 and 1
         //Second Allel
         public float PassivePreference { get { return ToInfinity(Fenotype[5] / 2 + 0.5f)/10; } }// positive and to infinity
         public float PassiveBias { get { return Fenotype[6]/3 + 2.0f/3; } }
@@ -57,6 +57,8 @@ namespace IntroProject
 
         public float WalkCost { get { return 1.25f - Fenotype[18] / 4 ; } }
 
+
+
         //-1 for "gene isnt used"
         //0 for the average
         //1 for the biggest
@@ -68,7 +70,6 @@ namespace IntroProject
         protected Func<bool> willMutate = () => true;
 
         public Gene() {
-            random = new Random();
             //you have two parts of the genotype, these two parts do exactly the same and code for the same genes
             //within that you have the different allels each allel contains a few values and each value decides an attribute
             //the allels can differ in size, all the genes in one allel are given to the next generation as one
@@ -76,11 +77,11 @@ namespace IntroProject
             //just add random genes here, dont forget to edit the lookup table and create a poperty accordingly
 
             
-            int isMale = random.Next(0, 2);
+            int isMale = (int)(random.NextDouble() * 2);
             if (isMale == 1)
             {
-                Genotype[0][0][0] = 1;
-                Genotype[1][0][0] = 0;
+                Genotype[0][0][0] = 0;
+                Genotype[1][0][0] = 1;
             }
             else {
                 Genotype[0][0][0] = 0;
@@ -141,10 +142,10 @@ namespace IntroProject
             int start = 0;
 
             float[] dominant = null; //the male gene is the "dominant" gene
-            if (Genotype[0][1][1] == 1)
-                dominant = Genotype[0][1];
-            else if (Genotype[1][1][1] == 1)
-                dominant = Genotype[1][1];
+            if (Genotype[0][0][0] == 1)
+                dominant = Genotype[0][0];
+            else if (Genotype[1][0][0] == 1)
+                dominant = Genotype[1][0];
 
             if (dominant != null) {
                 start = 1; //if this gene is already added it needs to be skipped in the main for loop
@@ -163,7 +164,7 @@ namespace IntroProject
             List<float[]> result = new List<float[]>();
             for (int i = 0; i < Genotype[0].Count; i++)
             {
-                result.Add((float[]) Genotype[random.Next(0, 2)][i].Clone()); //here could be a cloning by reference problem but it's probably fine
+                result.Add((float[]) Genotype[(int)(random.NextDouble()* 2)][i].Clone()); //here could be a cloning by reference problem but it's probably fine
             }
             return result;
         } 
@@ -178,7 +179,6 @@ namespace IntroProject
         }
 
         public virtual Gene Mutate() {
-            Random random = new Random();
             //choosing a random gene wich is to be mutated
             int i;
             int j;
@@ -198,6 +198,9 @@ namespace IntroProject
             //range is the amount of you can go in a certain direction
             //mutatescale is how much of the range you're allowed to use
             //val is the actual random number used
+            if (n == 2)
+                return x;
+
             float val = Calculator.NormDist(0, 0.35, -1, 1); //value between -1 and 1
             float range = x + 1; //amount of space left of the x
             if (val > 0) 

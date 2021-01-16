@@ -42,6 +42,7 @@ namespace IntroProject
 
             gene.@class = this.GetType().Name;
             stamina = gene.SprintDuration;
+            gender = gene.Gender;
         }
 
         protected Entity findClosest(List<Entity> targets) {
@@ -76,6 +77,7 @@ namespace IntroProject
 
             gene.@class = this.GetType().Name;
             stamina = gene.SprintDuration;
+            gender = gene.Gender;
         }
         public Creature(Gene gene, double energy) =>
             TransferParentInfo(gene, energy);
@@ -126,14 +128,14 @@ namespace IntroProject
             this.coolDown = 300;
             other.coolDown = 300;
             other.MateWithMale(this);
-            this.energyVal -= (int) (this.gene.Size * (0.1 * MateWeight)); //the males barely lose any energy
+            this.energyVal -= MateWeight * 100; //the males barely lose any energy
             this.goalReset();
         }
 
         public virtual void MateWithMale(Creature other)
         {
-            double transferredEnergy =  this.energyVal * (this.gene.energyDistribution * MateWeight);
-            energyVal -= transferredEnergy;
+            double transferredEnergy =  this.energyVal * this.gene.energyDistribution ;
+            energyVal -= transferredEnergy + MateWeight * 100;
             Creature child = null;
             if (this is Herbivore)
                 child = other.FromParentInfo((HerbivoreGene)this.gene * (HerbivoreGene)other.gene, transferredEnergy);

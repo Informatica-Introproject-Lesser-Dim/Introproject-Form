@@ -147,7 +147,7 @@ namespace IntroProject
                 herbivore.x = 0;
                 map.placeRandom(herbivore);
             }
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 0; i++)
             {
                 map.placeRandom(new Carnivore());
             }
@@ -231,10 +231,20 @@ namespace IntroProject
             {
                 pea.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(50, 0, 0, 0)), this.Width - 500, 100, 200, 100);
                 pea.Graphics.DrawString(selected.GetType().ToString().Substring(13, selected.GetType().ToString().Length - 13) + "\n" + 
-                                        "Energy: " + Math.Round(selected.energyVal, 2), 
+                                        "Energy: " + Math.Round(selected.energyVal, 2) + "\nGender: " + selected.gender, 
                                         font, new SolidBrush(Color.Black),
                                         this.Width - 490, 110);
             }
+
+            int[] genders = map.countMalesAndFemales();
+
+            pea.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(50, 0, 0, 0)), 50, 200, 200, 100);
+            pea.Graphics.DrawString("Male Count: " + genders[0].ToString() +
+                                    "\nMales Born: " + map.malesAdded +
+                                    "\nFemale Count: " + genders[1].ToString() +
+                                    "\nFemales Born:" + map.femalesAdded
+                                        , font, new SolidBrush(Color.Black),
+                                        60, 210);
             this.Invalidate();
         }
 
