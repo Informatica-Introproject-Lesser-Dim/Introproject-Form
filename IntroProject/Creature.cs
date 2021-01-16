@@ -139,6 +139,8 @@ namespace IntroProject
                 child = other.FromParentInfo((HerbivoreGene)this.gene * (HerbivoreGene)other.gene, transferredEnergy);
             else if (this is Carnivore)
                 child = other.FromParentInfo((CarnivoreGene)this.gene * (CarnivoreGene)other.gene, transferredEnergy);
+            else
+                return;
 
             child.x = this.x;
             child.y = this.y;
