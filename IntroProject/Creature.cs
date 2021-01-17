@@ -133,7 +133,7 @@ namespace IntroProject
         {
             double transferredEnergy =  this.energyVal * this.gene.energyDistribution ;
             energyVal -= transferredEnergy + MateWeight * 100;
-            Creature child = null;
+            Creature child;
             if (this is Herbivore)
                 child = other.FromParentInfo((HerbivoreGene)this.gene * (HerbivoreGene)other.gene, transferredEnergy);
             else if (this is Carnivore)
