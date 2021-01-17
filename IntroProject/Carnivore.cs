@@ -19,9 +19,6 @@ namespace IntroProject
             stamina = gene.SprintDuration;
         }
 
-        public Carnivore(Creature parentA, Creature parentB) : base(parentA, parentB) { }
-
-
         public override void passiveSearch()
         {
             List<Entity> herbivores = new List<Entity>();

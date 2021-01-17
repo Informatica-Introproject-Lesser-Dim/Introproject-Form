@@ -103,10 +103,6 @@ namespace IntroProject
         public static double calcDist2(Entity e, Point2D p) =>
             Trigonometry.DistancePow2(p, e + e.chunk);
 
-        public Creature(Creature parentA, Creature parentB) : this(parentA.gene, parentB.gene) { }
-
-        public Creature(Gene parentA, Gene parentB) { }
-
         public void eat(Entity entity)
         {
             if (entity == null)
