@@ -20,11 +20,8 @@ namespace IntroProject
         //when you initialize an AStar object it starts calculating the best route and then you're able to ask for the Route
         public AStar(Point loc, Hexagon chunck, Gene gene, int size, double energy) => 
             this.InitializeEverything(loc, chunck, gene, size, energy);
-        
-        protected AStar()
-        {
-            //just a default constructor that should not normally be used
-        }
+
+        protected AStar() { }//just a default constructor that should not normally be used
 
         protected void InitializeEverything(Point loc, Hexagon chunck, Gene gene, int size, double energy)
         {
@@ -147,10 +144,7 @@ namespace IntroProject
             InitializeEverything(loc, chunck, gene, size, energy*3);
         }
 
-        public Entity GetCreature() 
-        {
-            return theTarget; 
-        }
+        public Entity GetCreature() => theTarget;
 
         public override Route getResult()
         {
@@ -186,15 +180,14 @@ namespace IntroProject
 
         }
 
-        protected override double calcQuality(Route r)
-        {   //calculates the quality and also saves it in the route
+        protected override double calcQuality(Route r) //calculates the quality and also saves it in the route
+        {   
             double val = r.endHex.CarnivoreActive(gene.ActiveBias, ((CarnivoreGene)gene).LivingTargetBias);
             r.quality = val;
             return val;
         }
 
-        protected override bool isDone(Route r)
-            //is done when you're in the chunck of a deathpile, or when you're 3 chunks from a creature
+        protected override bool isDone(Route r) //is done when you're in the chunck of a deathpile, or when you're 3 chunks from a creature
         {
             if (r.endHex.getByType(EntityType.Plant).Count > 0)
                 return true;
@@ -235,10 +228,7 @@ namespace IntroProject
         public int Length = 0;
         private RouteElement first;
 
-        public RouteList()
-        {
-        
-        }
+        public RouteList(){ }
 
         public void Add(RouteElement n)
         {

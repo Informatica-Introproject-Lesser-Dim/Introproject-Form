@@ -144,11 +144,9 @@ namespace IntroProject
                     Fenotype.Add(dominant[j]);
             }
 
-            for (int i = start; i < Genotype[0].Count; i++) {
-                for (int j = 0; j < Genotype[0][i].Length; j++) {
+            for (int i = start; i < Genotype[0].Count; i++) 
+                for (int j = 0; j < Genotype[0][i].Length; j++)
                     Fenotype.Add(geneCalc(Genotype[0][i][j], Genotype[1][i][j],lookupTable[i,j]));
-                }
-            }
         }
 
         public List<float[]> getAllel()
@@ -208,10 +206,7 @@ namespace IntroProject
 
         public Gene CloneTyped() => (Gene)this.Clone();
 
-        public Object Clone()
-        {
-            return new HerbivoreGene(Genotype);
-        }
+        public Object Clone() => new HerbivoreGene(Genotype);
 
         public bool Equals(Gene other)
         {
@@ -271,6 +266,5 @@ namespace IntroProject
             (CarnivoreGene)(a + b).Mutate();
         public static CarnivoreGene operator +(CarnivoreGene a, CarnivoreGene b) =>
             new CarnivoreGene(a.getAllel(), b.getAllel());
-        
     }
 }

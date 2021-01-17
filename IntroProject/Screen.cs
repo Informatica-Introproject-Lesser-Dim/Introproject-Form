@@ -68,22 +68,22 @@ namespace IntroProject
 
     class MapScreen : UserControl
     {
-        Map map;
-
-        public bool paused = true, buttonPaused = true;
-        bool camAutoMove = false;
-        int[] pos = new int[2] { 0, 0 };
-        Font font = new Font("Arial", 12);
-        int xCam = 0, yCam = 0, n = 0;
-        public const int size = 35;
-        public Button plus = new ButtonImaged(Properties.Resources.Plus_icon);
-        private Button play = new ButtonImaged(Properties.Resources.Play_icon);
-        private Entity selected;
-
         DateTime oldTime = DateTime.Now;
         TimeSpan dt;
 
+        public Button plus = new ButtonImaged(Properties.Resources.Plus_icon);
+        private Button play = new ButtonImaged(Properties.Resources.Play_icon);
+        private Entity selected;
+        private Map map;
+        private Font font = new Font("Arial", 12);
+        public bool paused = true, buttonPaused = true;
+        bool camAutoMove = false;
+        int[] pos = new int[2] { 0, 0 };
+        int xCam = 0, yCam = 0, n = 0;
+        public const int size = 35;
+
         public MapScreen(Size size) : this(size.Width, size.Height) { }
+
         public MapScreen(int w, int h)
         {
             Path.initializePaths(size); //THIS NEEDS TO BE CALLED BEFORE ANY CREATURES ARE MOVED OR PATHS CREATED ETC
@@ -95,11 +95,11 @@ namespace IntroProject
             plus.Location = new Point(1800 - 66, 5);
             this.Controls.Add(plus);
 
-            Size middel = new Size(60, 60);
+            Size method = new Size(60, 60);
             
-            pause.Size = middel;
-            play.Size = middel;
-            stop.Size = middel;
+            pause.Size = method;
+            play.Size = method;
+            stop.Size = method;
 
             pause.Location = new Point(40, 5);
             play.Location = new Point(40, 5);
@@ -109,16 +109,16 @@ namespace IntroProject
             pause.Click += (object o, EventArgs ea) => { play.Show(); paused = true; buttonPaused = true; };
             stop.Click += (object o, EventArgs ea) => { play.Show(); paused = true; buttonPaused = true; play.Click += NewMap; play.Click -= Play_Click;  };
 
-            this.Controls.Add(play); 
-            this.Controls.Add(pause);
-            this.Controls.Add(stop);
+            Controls.Add(play); 
+            Controls.Add(pause);
+            Controls.Add(stop);
 
-            this.Size = new Size(w, h);
-            this.Paint += drawScreen;
+            Size = new Size(w, h);
+            Paint += drawScreen;
 
             MakeMap();
 
-            this.MouseClick += MapClick;
+            MouseClick += MapClick;
         }
 
         private void Play_Click(object sender, EventArgs ea)
@@ -139,19 +139,18 @@ namespace IntroProject
         public void MakeMap()
         {
             map = new Map(100, 70, size, 0);
+
             for (int i = 0; i < Settings.StartEntities; i++)
             {
-                Herbivore herbivore = new Herbivore();
-                herbivore.x = 0;
+                Herbivore herbivore = new Herbivore{x = 0};
                 map.placeRandom(herbivore);
             }
             for (int i = 0; i < 0; i++)
-            {
                 map.placeRandom(new Carnivore());
-            }
         }
 
-        public void MapClick(object o, MouseEventArgs mea) {
+        public void MapClick(object o, MouseEventArgs mea)
+        {
             if (selected != null)
             { 
                 selected.selected = false;
@@ -173,28 +172,28 @@ namespace IntroProject
             switch (keyData)
             {
                 case Keys.Up:
-                    if (this.yCam + (size * (0.5 * Hexagon.sqrt3)) >= 0.5 * Size.Height)
-                        this.yCam = (int)(0.5 * Size.Height);
+                    if (yCam + (size * (0.5 * Hexagon.sqrt3)) >= 0.5 * Size.Height)
+                        yCam = (int)(0.5 * Size.Height);
                     else
-                        this.yCam += (int)(size * (0.5 * Hexagon.sqrt3));
+                        yCam += (int)(size * (0.5 * Hexagon.sqrt3));
                     break;
                 case Keys.Down:
-                    if (this.yCam - (size * 0.5 * Hexagon.sqrt3) <= -(map.tiles[map.width - 1, map.height - 1].y - 0.5 * Size.Height))
-                        this.yCam = (int)-(map.tiles[map.width - 1, map.height - 1].y - 0.5 * Size.Height);
+                    if (yCam - (size * 0.5 * Hexagon.sqrt3) <= -(map.tiles[map.width - 1, map.height - 1].y - 0.5 * Size.Height))
+                        yCam = (int)-(map.tiles[map.width - 1, map.height - 1].y - 0.5 * Size.Height);
                     else
-                        this.yCam -= (int)(size * (0.5 * Hexagon.sqrt3));
+                        yCam -= (int)(size * (0.5 * Hexagon.sqrt3));
                     break;
                 case Keys.Left:
-                    if (this.xCam + (size * (3.0 / 2)) >= 0.5 * Size.Width)
-                        this.xCam = (int)(0.5 * Size.Width);
+                    if (xCam + (size * (3.0 / 2)) >= 0.5 * Size.Width)
+                        xCam = (int)(0.5 * Size.Width);
                     else
-                        this.xCam += (int)(size * (3.0 / 2));
+                        xCam += (int)(size * (3.0 / 2));
                     break;
                 case Keys.Right:
-                    if (this.xCam - (size * (3.0 / 2)) <= -(map.tiles[map.width - 1, map.height - 1].x - 0.5 * Size.Width))
-                        this.xCam = (int)-(map.tiles[map.width - 1, map.height - 1].x - 0.5 * Size.Width);
+                    if (xCam - (size * (3.0 / 2)) <= -(map.tiles[map.width - 1, map.height - 1].x - 0.5 * Size.Width))
+                        xCam = (int)-(map.tiles[map.width - 1, map.height - 1].x - 0.5 * Size.Width);
                     else
-                        this.xCam -= (int)(size * (3.0 / 2));
+                        xCam -= (int)(size * (3.0 / 2));
                     break;
             }
             camAutoMove = false;
@@ -208,10 +207,7 @@ namespace IntroProject
             {
                 dt = DateTime.Now - oldTime;
                 oldTime = oldTime + dt;
-                double mil = dt.TotalMilliseconds;
-                if (mil > 100)
-                    mil = 100;
-                
+                double mil = Math.Min(dt.TotalMilliseconds, 100);
                 map.TimeStep(mil);
             }
 
@@ -249,11 +245,12 @@ namespace IntroProject
         {
             get
             {
-                CreateParams handeleparam = base.CreateParams;
-                handeleparam.ExStyle |= 0x02000000;
-                return handeleparam;
+                CreateParams handleparam = base.CreateParams;
+                handleparam.ExStyle |= 0x02000000;
+                return handleparam;
             }
         }
+
         public void UpdateVars(bool newMap)
         {
             Calculator.Update();
@@ -263,6 +260,7 @@ namespace IntroProject
                 map.Update();
         }
     }
+
     internal class ButtonImaged : Button
     {
         public ButtonImaged(Image bgI)
@@ -477,11 +475,11 @@ namespace IntroProject
 
             makeLanguageBox(1, 6, "Language Selection", "Select the which language.");
 
-            this.Controls.Add(exit);
+            Controls.Add(exit);
         }
 
         //Makes a TrackBar with connected Textbox, which are returned for specialzation
-        private (TrackBar, TextBox, ToolTip) MakeSlider(int x, int y, String name, float basevalue, int minvalue, int maxvalue, int scale, String uitleg)
+        private (TrackBar, TextBox, ToolTip) MakeSlider(int x, int y, string name, float basevalue, int minvalue, int maxvalue, int scale, string uitleg)
         { 
             Size sliderTextBoxSize = new Size(30, 20);
             int w = (x * (Size.Width/3))+ 40, h = (y * (Size.Height / 10)) + 60;
@@ -522,9 +520,9 @@ namespace IntroProject
             toolTip.SetToolTip(label, uitleg);
             toolTip.SetToolTip(trackBar, uitleg);
 
-            this.Controls.Add(trackBar);
-            this.Controls.Add(textBox);
-            this.Controls.Add(label);
+            Controls.Add(trackBar);
+            Controls.Add(textBox);
+            Controls.Add(label);
             
             return (trackBar, textBox, toolTip);
         }
@@ -593,12 +591,10 @@ namespace IntroProject
 
             Controls.Add(languageIndex);
             Controls.Add(label);
-
         }
         public void ImportSettings(object o, EventArgs ea) //Imports settings from a given txt file
         { 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
                 try
                 {
                     StreamReader sr = new StreamReader(openFileDialog.FileName);
@@ -621,7 +617,6 @@ namespace IntroProject
                     MessageBox.Show($"Security error.\n\nError message: {ex.Message}\n\n" +
                     $"Details:\n\n{ex.StackTrace}");
                 }
-            }
         }
 
         private void import(string[] settings) //imports all the values to the sliders
@@ -763,22 +758,23 @@ namespace IntroProject
         int r = 0;
         public StatisticsMenu(int w, int h, EventHandler exitMenu)
         {
-            this.BackColor = Color.FromArgb(123, 156, 148);
-            this.Size = new Size(w, h);
-            int edge = Math.Max((int)(Size.Width / 36), (int)(Size.Height / 36));
+            BackColor = Color.FromArgb(123, 156, 148);
+            Size = new Size(w, h);
+            int edge = Math.Max(Size.Width, Size.Height) / 36;
 
             Button exit = new ButtonImaged(Properties.Resources.X_icon);
             exit.Location = new Point(2, 2);
             exit.Size = new Size(edge, edge);
             exit.FlatAppearance.BorderColor = Color.FromArgb(123, 156, 148);
             exit.Click += exitMenu;
-            this.Controls.Add(exit);
+            Controls.Add(exit);
 
             Resize += (object o, EventArgs ea) =>
             {
-                edge = Math.Max((int)(Size.Width / 36), (int)(Size.Height / 36));
+                edge = Math.Max(Size.Width, Size.Height) / 36;
                 exit.Size = new Size(edge, edge);
             };
+
             Button statname1 = ButtonList("statistics");
             Button statname2 = ButtonList("statistics");
             Button statname3 = ButtonList("statistics");
@@ -790,22 +786,22 @@ namespace IntroProject
         private Button ButtonList(String name) //makes a button and next call makes a button under the previus.
         {
             r++;
-            int i = r, y = Math.Min((int)Size.Width / 30, (int)Size.Height / 20) + 10;
+            int i = r, y = Math.Min(Size.Width / 30, Size.Height / 20) + 10;
             Button button = new Button();
             button.Text = name;
             button.Location = new Point(0, i*y);
-            button.Size = new Size(this.Width / 12, this.Height / 20);
+            button.Size = new Size(Width / 12, Height / 20);
             button.BackColor = Color.White;
 
             Resize += (object o, EventArgs ea) =>
             {
-                y = Math.Min((int)Size.Width / 30, (int)Size.Height / 20) + 10;
+                y = Math.Min(Size.Width / 30, Size.Height / 20) + 10;
 
                 button.Location = new Point(0, i*y);
-                button.Size = new Size(this.Width / 12, this.Height / 20);
+                button.Size = new Size(Width / 12, Height / 20);
             };
 
-            this.Controls.Add(button);
+            Controls.Add(button);
             return button;
         }
     }

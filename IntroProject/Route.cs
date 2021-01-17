@@ -10,16 +10,14 @@ namespace IntroProject
     public class Route
     {
         List<int> points; //all the different exits from the hexagons
-        Point2D start = new Point2D();
-        Point2D end = new Point2D();
+        Point2D start = new Point2D(), end = new Point2D();
         List<float> distances; //length of the path untill this point
         Hexagon EndHex;
 
         private int hex, size; //number and size of current hexagon in the list
         private float pos; //position within current hex
 
-        public int amountWaterTiles = 0;
-        public int lastDir = -1;
+        public int amountWaterTiles = 0, lastDir = -1;
         public double quality = 0;
 
         public Hexagon endHex { get { return EndHex; } set { if (value.heightOfTile < Hexagon.seaLevel) amountWaterTiles++; EndHex = value; } }
@@ -84,11 +82,11 @@ namespace IntroProject
             return result;
         }
 
-        public void addEnd(Point endP) {
+        public void addEnd(Point endP)
+        {
             Point2D end = new Point2D().SetPosition(endP.X, endP.Y);
-
             float dist;
-            Point2D delta;
+
             if (points.Count == 0) //if it's in the same hexagon as the start
                 dist = (float)Trigonometry.Distance(end, start);
             else

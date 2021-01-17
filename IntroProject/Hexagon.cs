@@ -40,7 +40,7 @@ namespace IntroProject
             }
         }
 
-        public Hexagon this[int a] { get { return this.neighbors[a]; } }
+        public Hexagon this[int a] { get { return neighbors[a]; } }
 
         private int width { get { return size * 2; } }//width of a single tile
 
@@ -186,7 +186,7 @@ namespace IntroProject
 
         public Grass bestFood(Point point) //gives you the number of the piece of food you should aim for first
         {
-            List<Grass> grass = this.vegetation.FoodLocations();
+            List<Grass> grass = vegetation.FoodLocations();
             if (grass.Count == 0)
                 return null;
             Grass result = grass[0];
@@ -224,7 +224,7 @@ namespace IntroProject
             double result = 0;
 
             for (int i = 10; i >=0 ; i--)
-                result = result*bias + this.searchPoint(i, EntityType.Herbivore).Count*livingBias + (2- livingBias)*this.searchPoint(i, EntityType.Plant).Count;
+                result = result*bias + searchPoint(i, EntityType.Herbivore).Count*livingBias + (2- livingBias) * searchPoint(i, EntityType.Plant).Count;
             
             return result;
         }
@@ -243,7 +243,7 @@ namespace IntroProject
 
         public double searchLine(int dir, int j, double bias) //new version of searchline that specifically searches for plants
         { 
-            double result = this.FoodValue();
+            double result = FoodValue();
 
             if (j > 0)
             {
@@ -275,7 +275,7 @@ namespace IntroProject
         public List<Entity> searchPoint(int j, EntityType type) //from this point onward search for the closest entity
         { 
             if (j == 0)
-                return this.getByType(type);
+                return getByType(type);
 
             List<Entity> result = new List<Entity>();
 
