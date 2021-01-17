@@ -22,7 +22,7 @@ namespace IntroProject
         
         public float jumpCount { get { return distances.Count; } }
 
-        public float Length { get { if (distances.Count == 0) return 0; return distances[distances.Count - 1]; } }
+        public float Length { get { if (distances.Count == 0) return 0; return distances[^1]; } }
 
         public Route(Point2D start, int size, Hexagon startHex)
         {
@@ -51,7 +51,7 @@ namespace IntroProject
             }
 
             //not the first direction so just using one of the preset curves
-            int entrance = points[points.Count - 1];
+            int entrance = points[^1];
             points.Add(n);
             Curve curve = Path.getCurve((entrance + 3) % 6, n);
             distances.Add((float) curve.Length);
@@ -88,7 +88,7 @@ namespace IntroProject
             else
             {
                 //otherwise calculate the distance from one of the sides
-                Point2D temp = Hexagon.CalcSide(size, (points[points.Count - 1] + 3) % 6);
+                Point2D temp = Hexagon.CalcSide(size, (points[^1] + 3) % 6);
                 dist = (float)Trigonometry.Distance(temp, end);
             }
             distances.Add(dist);
@@ -133,7 +133,7 @@ namespace IntroProject
             {//last part of the route
                 Point2D temp = Hexagon.CalcSide(size, (points[hex - 1] + 3) % 6);
                 Point2D delta = end - temp;
-                double scale = pos / distances[distances.Count - 1];
+                double scale = pos / distances[^1];
                 return temp + delta * scale;
             }
             //otherwise: just use one of the preset curves
