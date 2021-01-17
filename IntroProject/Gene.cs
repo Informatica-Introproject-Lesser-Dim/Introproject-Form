@@ -10,7 +10,7 @@ namespace IntroProject
 
         private List<float[]>[] Genotype; //we beginnen met velocity en jumpheight en courage maar dat verranderd later
         protected List<float> Fenotype;
-        private Random random;
+        private Random random = new Random();
         // All between -1 and 1, will be scaled in their respective dependents
 
         //if mutateScale is at 1 then if your random device gives you a 1 you go all the way to the extreme value (wich happens to be 1) 
@@ -28,12 +28,12 @@ namespace IntroProject
         public float HungerBias { get { return ToInfinity(Fenotype[2]/2 + 0.5f); } }//positive and to infinity
 
         public float sexualPreference { get { return ToInfinity(Fenotype[3] / 2 + 0.5f) + 50; } } //to infinity but still needs to have at least 50
-        public float energyDistribution { get { return Fenotype[4] / 3 + 0.33f; /* Settings.MatingCost */ } } //just a percentage between 0 and 1
+        public float energyDistribution { get { return Fenotype[4] / 3 + 0.16f; /* Settings.MatingCost */ } } //just a percentage between 0 and 1
         //Second Allel
-        public float PassivePreference { get { return ToInfinity(Fenotype[5] / 2 + 0.5f)/5; } }// positive and to infinity
+        public float PassivePreference { get { return ToInfinity(Fenotype[5] / 2 + 0.5f)/10; } }// positive and to infinity
         public float PassiveBias { get { return Fenotype[6]/3 + 2.0f/3; } }
         public float ActiveBias { get { return Fenotype[7]/2 + 0.5f; } } //active must be higher than passive
-        public float ActivePreference { get { return ToInfinity(Fenotype[8] / 2 + 0.5f) / 15 + this.PassiveBias; } }
+        public float ActivePreference { get { return ToInfinity(Fenotype[8] / 2 + 0.5f) / 30 + this.PassivePreference; } }
         //Third Allel
         public virtual float Velocity { get; } //within certain max and min values
 
@@ -54,6 +54,8 @@ namespace IntroProject
 
         public float WalkCost { get { return 1.25f - Fenotype[18] / 4 ; } }
 
+
+
         //-1 for "gene isnt used"
         //0 for the average
         //1 for the biggest
@@ -66,7 +68,6 @@ namespace IntroProject
 
         public Gene()
         {
-            random = new Random();
             //you have two parts of the genotype, these two parts do exactly the same and code for the same genes
             //within that you have the different allels each allel contains a few values and each value decides an attribute
             //the allels can differ in size, all the genes in one allel are given to the next generation as one
@@ -84,17 +85,6 @@ namespace IntroProject
             calcFenotype();
         }
 
-        private float NormDist(float range)
-        {
-            return NormDist()*range;
-        }
-
-        //get a random value between -1 and 1 (will go according to the normal distribution later on)
-        private float NormDist() {
-            random = new Random();
-            return (float)((random.NextDouble() - 0.5) * 2);
-        }
-
         public float ToInfinity(float x)
         {
             if (x == 1 || x == -1)
@@ -105,6 +95,7 @@ namespace IntroProject
         private List<float[]> GenotypeRandom()
         {
             List<float[]> result = new List<float[]>();
+            
             for (int i = 0; i < lookupTable.GetLength(0); i++)
             {
                 List<float> temp = new List<float>();
@@ -114,7 +105,7 @@ namespace IntroProject
                         if (lookupTable[i, j] == 2)
                             temp.Add(random.Next(0, 3)%2);
                         else
-                            temp.Add(NormDist(0.75f));
+                            temp.Add(Calculator.NormDist(0, 0.25, -0.75, 0.75));
                     }
                 if (temp.Count == 0)
                     continue;
@@ -152,10 +143,10 @@ namespace IntroProject
             int start = 0;
 
             float[] dominant = null; //the male gene is the "dominant" gene
-            if (Genotype[0][1][1] == 1)
-                dominant = Genotype[0][1];
-            else if (Genotype[1][1][1] == 1)
-                dominant = Genotype[1][1];
+            if (Genotype[0][0][0] == 1)
+                dominant = Genotype[0][0];
+            else if (Genotype[1][0][0] == 1)
+                dominant = Genotype[1][0];
 
             if (dominant != null) 
             {
@@ -190,11 +181,8 @@ namespace IntroProject
             return b;
         }
 
-        public static Gene operator *(Gene a, Gene b) => (a + b).Mutate();
-
-        public Gene Mutate()
+        public  vitual Gene Mutate()
         {
-            random = new Random();
             //choosing a random, to be mutated gene
             int i, j, k;
             do
@@ -215,7 +203,10 @@ namespace IntroProject
             //range is the amount of you can go in a certain direction
             //mutatescale is how much of the range you're allowed to use
             //val is the actual random number used
-            float val = NormDist(1); //value between -1 and 1
+            if (n == 2)
+                return x;
+
+            float val = Calculator.NormDist(0, 0.35, -1, 1); //value between -1 and 1
             float range = x + 1; //amount of space left of the x
             if (val > 0) 
                 range = 2 - range; //amount of space to the right
@@ -231,11 +222,6 @@ namespace IntroProject
         public Object Clone()
         {
             return new HerbivoreGene(Genotype);
-        }
-
-        public static Gene operator +(Gene a, Gene b)//waarvoor is deze als herbivore al zijn eigen operator heeft?
-        {
-            return new HerbivoreGene(a.getAllel(), b.getAllel());
         }
 
         public bool Equals(Gene other)
@@ -271,14 +257,14 @@ namespace IntroProject
         public HerbivoreGene(List<float[]>[] genoType) : base(genoType) { }
         public HerbivoreGene(List<float[]> a, List<float[]> b) : base(a, b) { }
 
-        public static HerbivoreGene operator +(HerbivoreGene a, HerbivoreGene b)
-        {
-            return new HerbivoreGene(a.getAllel(), b.getAllel());
-        }
-
         public override float Velocity { get { return (Fenotype[9] / 2 + 0.5f) * 4.5f + 0.5f; } } //within certain max and min values
         public override float SprintSpeed { get { return (Fenotype[10]/2 + 0.5f)*2 + 1 + Velocity; } }
         public override float SprintDuration { get { return (Fenotype[11] / 2 + 0.5f) * 990 + 10; } }
+
+        public static HerbivoreGene operator *(HerbivoreGene a, HerbivoreGene b) =>
+            (HerbivoreGene) (a + b).Mutate();
+        public static HerbivoreGene operator +(HerbivoreGene a, HerbivoreGene b) =>
+            new HerbivoreGene(a.getAllel(), b.getAllel());
     }
 
     public class CarnivoreGene : Gene
@@ -295,9 +281,10 @@ namespace IntroProject
 
         public float LivingTargetBias { get { return Fenotype[16] / 2 + 0.5f; } }
 
-        public static CarnivoreGene operator +(CarnivoreGene a, CarnivoreGene b)
-        {
-            return new CarnivoreGene(a.getAllel(), b.getAllel());
-        }
+        public static CarnivoreGene operator *(CarnivoreGene a, CarnivoreGene b) =>
+            (CarnivoreGene)(a + b).Mutate();
+        public static CarnivoreGene operator +(CarnivoreGene a, CarnivoreGene b) =>
+            new CarnivoreGene(a.getAllel(), b.getAllel());
+        
     }
 }

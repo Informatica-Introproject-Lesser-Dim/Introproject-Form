@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
+using IntroProject.Core.Math;
+
 namespace IntroProject
 {
     
-    public class Hexagon
+    public class Hexagon : Point2D
     {
         private Hexagon[] neighbors;
         public List<Entity> entities;
@@ -105,9 +107,27 @@ namespace IntroProject
 
         public void moveEntity(Entity e, int dir)
         {
-            if (entities.Remove(e))
+            if (entities.Contains(e))
+            {
                 this[dir].addEntity(e);
-        }  
+                entities.Remove(e);
+            }
+        }
+
+        public void moveEntity(Entity e, Hexagon hex)
+        {
+            if (entities.Contains(e))
+            {
+                int dx = hex.x - this.x;
+                int dy = hex.y - this.y;
+
+                e.x -= dx;
+                e.y -= dy;
+
+                hex.addEntity(e);
+                entities.Remove(e);
+            }
+        }
 
         public static Point calcSide(int size, int dir)
         {

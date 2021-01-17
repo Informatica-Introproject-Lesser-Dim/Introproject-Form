@@ -1,8 +1,10 @@
-﻿using IntroProject.Core.Error;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+
+using IntroProject.Core.Error;
+using IntroProject.Core.Math;
 
 namespace IntroProject
 {
@@ -24,14 +26,16 @@ namespace IntroProject
         protected Route route;
         private Creature mateTarget;
         protected Entity target;
-
-        private static float MateCost = Settings.MatingCost;
+        
+        protected static float MateCost = Settings.MatingCost;
+        protected static float MateWeight = Settings.MatingCost;
         private Grass myFood;
         protected double sleep = 0;
         protected Goal goal = Goal.Nothing;
         private bool passive = false;
         public double coolDown = 200; //cooldown so the creature doesnt continuously attempt mating
-        float maxEnergy;
+        protected float maxEnergy;
+        public double stamina;
 
         public Creature()
         {
@@ -40,6 +44,8 @@ namespace IntroProject
             maxEnergy = this.gene.Size;
 
             gene.@class = this.GetType().Name;
+            stamina = gene.SprintDuration;
+            gender = gene.Gender;
         }
 
         protected Entity findClosest(List<Entity> targets)
@@ -71,6 +77,8 @@ namespace IntroProject
             maxEnergy = this.gene.Size;
 
             gene.@class = this.GetType().Name;
+            stamina = gene.SprintDuration;
+            gender = gene.Gender;
         }
         public Creature(Gene gene, double energy) =>
             TransferParentInfo(gene, energy);
@@ -78,35 +86,24 @@ namespace IntroProject
         public virtual Creature FromParentInfo(Gene gene, double energy) =>
             new Creature(gene, energy);
 
-        public static int calcDistancePow2(EntityType type, Hexagon place, Point point)//enter the world relative position for point
-        { 
+        public static double calcDistancePow2(EntityType type, Hexagon place, Point point) //enter the world relative position for point
+      
             List<Entity> targets = new List<Entity>();
             for (int i = 0; targets.Count == 0 && i < 10; i++)
                 targets = place.searchPoint(i, type);
             if (targets.Count == 0)
                 return 10000000; //just a big number so stuff doesnt break
-            int dist = calcDist2(targets[0], point);
+            double dist = calcDist2(targets[0], point);
             foreach (Entity e in targets)
                 if (calcDist2(e, point) < dist)
                     dist = calcDist2(e, point);
             return dist;
         }
 
-        public void calcFoodDist()
+        public static double calcDist2(Entity e, Point p)
         {
-            int dist = (int)(Math.Sqrt(calcDistancePow2(EntityType.Plant, this.chunk, new Point(x + this.chunk.x, y + this.chunk.y))));
-            if (dist > 255)
-                dist = 255;
-            this.color = Color.FromArgb(255 - dist, 50, 50);
-        }
-
-        public static int calcDist2(Entity e, Point p)
-        {
-            int x2 = e.x + e.chunk.x;
-            int y2 = e.y + e.chunk.y;
-            int dx = p.X - x2;
-            int dy = p.Y - y2;
-            return dx * dx + dy * dy;
+            Point2D p2 = e + e.chunk;
+            return Trigonometry.DistancePow2((p.X, p.Y), (p2.X, p2.Y));
         }
 
         public Creature(Creature parentA, Creature parentB) : this(parentA.gene, parentB.gene) { }
@@ -116,8 +113,6 @@ namespace IntroProject
         public void eat(Entity entity)
         {
             if (entity == null)
-                return;
-            if (entity.dead)
                 return;
             this.energyVal += entity.BeingEaten();
             this.sleep = 30;
@@ -132,15 +127,22 @@ namespace IntroProject
             this.coolDown = 300;
             other.coolDown = 300;
             other.MateWithMale(this);
-            this.energyVal -= (int) (this.gene.Size * (0.1 * MateCost)); //the males barely lose any energy
+            this.energyVal -= MateWeight * 100; //the males barely lose any energy
+
             this.goalReset();
         }
 
-        public void MateWithMale(Creature other)
+        public virtual void MateWithMale(Creature other)
         {
-            double transferredEnergy =  this.energyVal * (this.gene.energyDistribution * MateCost);
-            energyVal -= transferredEnergy;
-            Creature child = other.FromParentInfo(this.gene * other.gene, transferredEnergy);
+            double transferredEnergy =  this.energyVal * this.gene.energyDistribution ;
+            energyVal -= transferredEnergy + MateWeight * 100;
+            Creature child = null;
+            if (this is Herbivore)
+                child = other.FromParentInfo((HerbivoreGene)this.gene * (HerbivoreGene)other.gene, transferredEnergy);
+            else if (this is Carnivore)
+                child = other.FromParentInfo((CarnivoreGene)this.gene * (CarnivoreGene)other.gene, transferredEnergy);
+            else
+                return;
 
             child.x = this.x;
             child.y = this.y;
@@ -151,8 +153,9 @@ namespace IntroProject
             this.goalReset();
         }
 
-        public void activate(double dt)
-        {
+        public void activate(double dt) {
+            if (stamina < gene.SprintDuration)
+                stamina += dt;
             this.energyVal -= Calculator.StandardEnergyCost(gene)*dt;
             if (this.coolDown > 0)
                 coolDown -= dt;
@@ -171,9 +174,8 @@ namespace IntroProject
             if (this.goal == Goal.Creature)
             {
                 if (SprintToCreature(dt))
-                    return;
-                else
                     goal = Goal.Nothing;
+                return;
             }
                 
 
@@ -186,10 +188,7 @@ namespace IntroProject
                 passiveSearch();
         }
 
-        protected virtual bool SprintToCreature(double dt)
-        {
-            return false;
-        }
+        protected virtual bool SprintToCreature(double dt) => true;
          
         private void mateActive()
         {
@@ -361,6 +360,7 @@ namespace IntroProject
         protected virtual void getActiveRoute() 
         {
             AStar aStar = new AStar(new Point(this.x, this.y), this.chunk, this.gene, this.chunk.size, this.energyVal);
+            route = aStar.getResult();
 
             if (route != null)
             {
@@ -426,14 +426,19 @@ namespace IntroProject
                     {
                         route = null; //put any function to activate when the route is done here
                         if (goal == Goal.Food)
-                            eat(myFood);
-                        else if (goal == Goal.Mate)
+                            if (this is Carnivore)
+                                eat(((Carnivore)this).targetFood);
+                            else
+                                eat(myFood);
+                
+                        if (goal == Goal.Mate)
                             MateWithFemale(mateTarget);
                         myFood = null;
                         sleep += 30;
                         return;
                     }
                     this.chunk.moveEntity(this, route.getDir());
+                    energyVal -= Calculator.JumpCost(this.gene);
                     return;
                 }
                 currentLoc = route.getPos();

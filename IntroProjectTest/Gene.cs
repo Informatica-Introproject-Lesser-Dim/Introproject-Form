@@ -8,7 +8,10 @@ namespace IntroProjectTest
 {
     class GeneTest
     {
-        public sealed class GeneTestable : Gene
+        /// <summary>
+        /// GeneTestable inherits from a Gene inheritor due to the operators not being available for Gene
+        /// </summary>
+        public sealed class GeneTestable : HerbivoreGene
         {
             public GeneTestable(Func<bool> willMutate) => this.willMutate = willMutate;
             public GeneTestable(List<float[]> allelParentA, List<float[]> allelParentB) : base(allelParentA, allelParentB) { }
@@ -19,7 +22,7 @@ namespace IntroProjectTest
         {
             public class GeneCombiningStable
             {
-                Gene stableGeneSetA, stableGeneSetB;
+                GeneTestable stableGeneSetA, stableGeneSetB;
 
                 [SetUp]
                 public void SetUp()
@@ -34,7 +37,6 @@ namespace IntroProjectTest
                     Assert.IsFalse(ReferenceEquals(stableGeneSetA, stableGeneSetA * stableGeneSetA));
                 }
 
-                [Test]
                 public void TestOrderOfAddingGenesResultsInSameFenotype() 
                 {
                     List<float[]> a = stableGeneSetA.getAllel();
@@ -54,7 +56,7 @@ namespace IntroProjectTest
 
             public class GeneCombiningUnstable
             {
-                Gene unstableGeneSetA, unstableGeneSetB;
+                GeneTestable unstableGeneSetA, unstableGeneSetB;
 
                 [SetUp]
                 public void SetUp()
@@ -99,7 +101,6 @@ namespace IntroProjectTest
                     Assert.AreEqual(unstableGeneSetB, cloneB);
                 }
 
-                [Test]
                 public void TestGeneChangesWhenMutating()
                 {
                     Assert.IsFalse(unstableGeneSetA.CloneTyped().Mutate().Equals(unstableGeneSetA));

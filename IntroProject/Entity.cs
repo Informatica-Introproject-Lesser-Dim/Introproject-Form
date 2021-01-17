@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 
+using IntroProject.Core.Math;
+
 namespace IntroProject
 {
     public enum EntityType
@@ -11,20 +13,21 @@ namespace IntroProject
         Entity,
         Creature
     }
-    public abstract class Entity
+    public abstract class Entity : Point2D
     {
         protected Guid id = Guid.NewGuid();
-        public int x, y;
+
         protected const int r = 10;
         public Hexagon chunk;
         protected Color color;
         public bool dead = false;
         public double energyVal = 100;
+        public int gender = -1;
         public bool isAlive { get => energyVal > 0; }
         private int disp = 4;
         public bool selected = false;
         public bool eaten = false;
-
+        
         public Point GlobalLoc { get => new Point(chunk.x + this.x, chunk.y + this.y); }
         public Point ChunckRelLoc { get => new Point(this.x, this.y); }
 

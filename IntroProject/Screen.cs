@@ -6,6 +6,8 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using IntroProject.Core.Utils;
 
+using IntroProject.Core.Utils;
+
 namespace IntroProject
 {
     public partial class HexagonOfLife : Form
@@ -144,7 +146,10 @@ namespace IntroProject
                 Herbivore herbivore = new Herbivore();
                 herbivore.x = 0;
                 map.placeRandom(herbivore);
-                herbivore.calcFoodDist();
+            }
+            for (int i = 0; i < 0; i++)
+            {
+                map.placeRandom(new Carnivore());
             }
         }
 
@@ -205,7 +210,11 @@ namespace IntroProject
             {
                 dt = DateTime.Now - oldTime;
                 oldTime = oldTime + dt;
-                map.TimeStep(dt.TotalMilliseconds);
+                double mil = dt.TotalMilliseconds;
+                if (mil > 100)
+                    mil = 100;
+                
+                map.TimeStep(mil);
             }
 
             pea.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(108, 116, 150)), 0, 0, Width, Height); // Is dit wel nodig, dat het elke keer wordt gedaan?
@@ -221,10 +230,20 @@ namespace IntroProject
             {
                 pea.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(50, 0, 0, 0)), Width - 500, 100, 200, 100);
                 pea.Graphics.DrawString(selected.GetType().ToString().Substring(13, selected.GetType().ToString().Length - 13) + "\n" + 
-                                        "Energy: " + Math.Round(selected.energyVal, 2), 
+                                        "Energy: " + Math.Round(selected.energyVal, 2) + "\nGender: " + selected.gender, 
                                         font, new SolidBrush(Color.Black),
                                         Width - 490, 110);
             }
+            
+            int[] genders = map.countMalesAndFemales();
+
+            pea.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(50, 0, 0, 0)), 50, 200, 200, 100);
+            pea.Graphics.DrawString("Male Count: " + genders[0].ToString() +
+                                    "\nMales Born: " + map.malesAdded +
+                                    "\nFemale Count: " + genders[1].ToString() +
+                                    "\nFemales Born:" + map.femalesAdded
+                                        , font, new SolidBrush(Color.Black),
+                                        60, 210);
             Invalidate();
         }
 
@@ -715,8 +734,13 @@ namespace IntroProject
 
     class HelpMenu : UserControl
     {
+        MultipleLanguages translator = MultipleLanguages.Instance;
+
+        private Label textLabel = new Label();
+        
         public HelpMenu(int w, int h, EventHandler exitMenu)
         {
+            this.translator = new MultipleLanguages();
             this.BackColor = Color.FromArgb(123, 156, 148);
             this.Size = new Size(w, h);
 
@@ -726,6 +750,12 @@ namespace IntroProject
             exit.FlatAppearance.BorderColor = Color.FromArgb(123, 156, 148);
             exit.Click += exitMenu;
 
+            textLabel.Location = new Point(this.Size.Width / 2 - 200, 30);
+            textLabel.Font = new Font("Arial", 22, FontStyle.Regular);
+            textLabel.Size = new Size(400, 300);
+            textLabel.Text = translator.DisplayText("helpText");
+
+            this.Controls.Add(textLabel);
             this.Controls.Add(exit);
         }
     }

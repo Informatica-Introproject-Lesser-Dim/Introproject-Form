@@ -32,8 +32,8 @@ namespace IntroProject
             preGenGrassUnvisible();
             setSpawnTimer();
             Random random = new Random();
-            if (random.NextDouble() < 0.3) //at the start a random chance to grow pretty quickly
-                targetTime = random.Next(0, min * 4);
+            if (random.NextDouble() < 0.1) //at the start a random chance to grow pretty quickly
+                this.Grow(true);
         }
 
         private void matchSpawnStatsWithTileHeight()

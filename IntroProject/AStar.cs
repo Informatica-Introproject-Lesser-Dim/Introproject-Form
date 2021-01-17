@@ -15,7 +15,7 @@ namespace IntroProject
         protected Route current;
         private static int Tag = 0; //every time you check a hexagon: give it a tag so that if you enter it again you'll know it's already been used in a route
         private double maxCost, energy;
-        private int maxLength = 300;
+        private int maxLength = 200;
 
         //when you initialize an AStar object it starts calculating the best route and then you're able to ask for the Route
         public AStar(Point loc, Hexagon chunck, Gene gene, int size, double energy) => 
@@ -187,7 +187,7 @@ namespace IntroProject
         }
 
         protected override double calcQuality(Route r)
-        {
+        {   //calculates the quality and also saves it in the route
             double val = r.endHex.CarnivoreActive(gene.ActiveBias, ((CarnivoreGene)gene).LivingTargetBias);
             r.quality = val;
             return val;
@@ -209,7 +209,8 @@ namespace IntroProject
             //test of het result wel naar het einde gaat
             if (current == null)
                 return null;
-
+                
+            //if there is something you can eat in the last hexagon then add this end point to the route
             List<Entity> targets = current.endHex.getByType(EntityType.Plant);
             if (targets.Count > 0)
                 current.addEnd(targets[0].ChunckRelLoc);

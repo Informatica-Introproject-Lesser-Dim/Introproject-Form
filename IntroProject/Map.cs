@@ -19,6 +19,11 @@ namespace IntroProject
         private List<Entity> deaths;
         private List<Entity> eaten;
         private double time = 0;
+
+        public int malesAdded = 0;
+        public int femalesAdded = 0;
+
+
         private double msPerTick { get { return 30 / Settings.StepSize; } }
 
         public Hexagon[,] tiles;
@@ -71,6 +76,10 @@ namespace IntroProject
 
         public void EntityForceAdd(Entity e) {
             children.Add(e);
+            if (e.gender == 1)
+                malesAdded++;
+            else if (e.gender == 0)
+                femalesAdded++;
         }
 
         public void placeEntity(Entity e, int x, int y) { //no randomness, just normally placing it here
@@ -133,6 +142,18 @@ namespace IntroProject
             if (x >= 0 && x < width && y >= 0 && y < height)
                 return tiles[x, y];
             return null;
+        }
+
+        public int[] countMalesAndFemales() {
+            int males = 0;
+            int females = 0;
+            foreach (Entity e in entities) {
+                if (e.gender == 1)
+                    males++;
+                else if (e.gender == 0)
+                    females++;
+            }
+            return new int[2]{males,females };
         }
 
         private float calcNoise(float x, float y) { //adding multiple perlin noise functions on top of eachother to make it look more natural
