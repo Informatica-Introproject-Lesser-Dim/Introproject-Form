@@ -34,6 +34,12 @@
             return this;
         }
 
+        public void Deconstruct(out int x, out int y)
+        {
+            x = this.x;
+            y = this.y;
+        }
+
         public static Point2D operator +(Point2D a, Point2D b) =>
             new Point2D().SetPosition(a.X + b.X, a.Y + b.Y);
 

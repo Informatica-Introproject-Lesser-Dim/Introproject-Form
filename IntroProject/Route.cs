@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Numerics;
 
 using IntroProject.Core.Math;
 
@@ -81,15 +79,14 @@ namespace IntroProject
             Point2D end = new Point2D().SetPosition(endP.X, endP.Y);
 
             float dist;
-            Point2D delta;
             if (points.Count == 0) { //if it's in the same hexagon as the start
                 dist = (float)Trigonometry.Distance(end, start);
             }
             else
             {
                 //otherwise calculate the distance from one of the sides
-                Point temp = Hexagon.calcSide(size, (points[points.Count - 1] + 3) % 6);
-                dist = (float)Trigonometry.Distance((temp.X, temp.Y), (end.X, end.Y));
+                Point2D temp = Hexagon.CalcSide(size, (points[points.Count - 1] + 3) % 6);
+                dist = (float)Trigonometry.Distance(temp, end);
             }
             distances.Add(dist);
             this.end = end;
@@ -112,35 +109,29 @@ namespace IntroProject
             return points[hex - 1];
         }
 
-        public Point getPos() {
-            Func<Point2D, Point> toPoint = (Point2D p) => new Point((int)p.X, (int)p.Y);
+        public Point2D GetPos() {
             if (hex == distances.Count)
-                return toPoint(end); //already done with the route
+                return end; //already done with the route
             if (hex == 0)
             {//start of the route
-                Point delta;
+                Point2D delta;
                 if (distances.Count == 1)
-                {
-                    delta = toPoint(end) - (Size)toPoint(start);
-                }
+                    delta = end - start;
                 else
-                {
-                    Point temp = Hexagon.calcSide(size, points[0]);
-                    delta = temp - (Size)toPoint(start);
-                }
+                    delta = Hexagon.CalcSide(size, points[0]) - start;
                 double scale = pos / distances[0];
-                return toPoint(start) + new Size((int)(delta.X * scale), (int)(delta.Y * scale));
+                return start + delta * scale;
             }
             if (hex == distances.Count - 1)
             {//last part of the route
-                Point temp = Hexagon.calcSide(size, (points[hex - 1] + 3) % 6);
-                Point delta = toPoint(end) - (Size)temp;
+                Point2D temp = Hexagon.CalcSide(size, (points[hex - 1] + 3) % 6);
+                Point2D delta = end - temp;
                 double scale = pos / distances[distances.Count - 1];
-                return temp + new Size((int)(delta.X * scale), (int)(delta.Y * scale));
+                return temp + delta * scale;
             }
             //otherwise: just use one of the preset curves
             Curve curve = Path.getCurve((points[hex - 1] + 3)%6, points[hex]);
-            return curve.go(pos);
+            return curve.Go(pos);
         }
 
         public bool isDone() {

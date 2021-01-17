@@ -136,7 +136,7 @@ namespace IntroProject
             }
         }
 
-        public static Point calcSide(int size, int dir) {
+        private static (int, int) _calcSide(int size, int dir) {
             int x, y;
             switch (dir % 3)
             {
@@ -157,7 +157,19 @@ namespace IntroProject
             {
                 x *= -1; y *= -1;
             }
+            return (x, y);
+        }
+
+        public static Point calcSide(int size, int dir)
+        {
+            (int x, int y) = _calcSide(size, dir);
             return new Point(x, y);
+        }
+
+        public static Point2D CalcSide(int size, int dir)
+        {
+            (int x, int y) = _calcSide(size, dir);
+            return new Point2D().SetPosition(x, y);
         }
 
         private Func<Entity, bool> entityIsType<T>() =>

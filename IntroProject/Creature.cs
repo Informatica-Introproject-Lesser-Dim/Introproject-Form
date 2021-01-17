@@ -428,11 +428,8 @@ namespace IntroProject
                     }
                 }
 
-                Point currentLoc;
                 if (route.move((float)dt * gene.Velocity)) {
-                    currentLoc = route.getPos();
-                    x = currentLoc.X;
-                    y = currentLoc.Y;
+                    (x, y) = route.GetPos();
                     if (route.isDone()) {
                         route = null; //put any functions wich are to activate when the route is done here
                         if (goal == Goal.Food)
@@ -452,9 +449,7 @@ namespace IntroProject
                     energyVal -= Calculator.JumpCost(this.gene);
                     return;
                 }
-                currentLoc = route.getPos();
-                x = currentLoc.X;
-                y = currentLoc.Y;
+                (x, y) = route.GetPos();
                 return;
             }
             //do whatever and entity should do when it doesnt have a route

@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+
+using IntroProject.Core.Math;
 
 namespace IntroProject
 {
@@ -70,12 +65,12 @@ namespace IntroProject
         private static Curve[] calcCurve(double r, int x, int y, double start, double turn) { //start and the amount it turns are in radians
             double length = 2 * r * Math.PI; //just plain calculating circumfrence of a circle
             length *= turn / (Math.PI * 2);
-            List<Point> points = new List<Point>();
+            List<Point2D> points = new List<Point2D>();
 
             for (double i = length; i >= 0; i -= 0.5) { //calculate all the points in this curve
                 int xPos = x + (int)(r * Math.Cos(start + i / r));
                 int yPos = y + (int)(r * Math.Sin(start + i / r));
-                points.Add(new Point(xPos, yPos));
+                points.Add(new Point2D().SetPosition(xPos, yPos));
             }
 
             return new Curve[2] { new Curve(points, length, false), new Curve(points,length, true) };
@@ -87,10 +82,10 @@ namespace IntroProject
             double sx = dx / length;//step size
             double sy = dy / length;
 
-            List<Point> points = new List<Point>();
+            List<Point2D> points = new List<Point2D>();
 
             for (double i = 0; i <= length; i += 0.5) {//move along the line with the correct step size
-                points.Add(new Point((int)(x2 + sx * i), (int)(y2 + sy * i)));
+                points.Add(new Point2D().SetPosition((int)(x2 + sx * i), (int)(y2 + sy * i)));
             }
 
             return new Curve(points, length, false); 
