@@ -108,7 +108,7 @@ namespace IntroProject
                 if (neighborTile != null)
                     neighborTile.Grow();
 
-                boost = boost / 4; //putting grass on neighbor tiles happens but slower
+                boost /= 4; //putting grass on neighbor tiles happens but slower
             }
 
             targetTime = currentTime + (random.Next((int)(min / fertillity), (int)(max / fertillity)) / boost); //when this is reached a new plant will grow

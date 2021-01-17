@@ -107,11 +107,11 @@ namespace IntroProject
             }
 
             foreach (Entity e in entities)
-                if (e is Creature)
+                if (e is Creature creature)
                 {
-                    ((Creature)e).activate(dt/msPerTick);
-                    if (((Creature)e).dead)
-                        deaths.Add(((Creature)e));
+                    creature.activate(dt/msPerTick);
+                    if (creature.dead)
+                        deaths.Add(creature);
                 }
         }
 

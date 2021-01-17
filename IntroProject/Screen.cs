@@ -207,7 +207,7 @@ namespace IntroProject
             if (!paused)
             {
                 dt = DateTime.Now - oldTime;
-                oldTime = oldTime + dt;
+                oldTime += dt;
                 double mil = Math.Min(dt.TotalMilliseconds, 100);
                 map.TimeStep(mil);
             }
