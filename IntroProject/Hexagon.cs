@@ -15,7 +15,7 @@ namespace IntroProject
         public Vegetation vegetation;
         public Map parent;
         public Color warmth, color;
-        public int size, x, y;
+        public int size;
         public int Tag = -1;
         public static double sqrt3 = Math.Sqrt(3);
         public static double sqrt2 = Math.Sqrt(2);
