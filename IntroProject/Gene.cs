@@ -22,39 +22,30 @@ namespace IntroProject
         //this is just an easy fix but it doesnt matter that much since 
         //you only need to add one line, one value and one mode in the lookup table for every gene you add
         public int Gender { get { return (int)Fenotype[0]; } }// either 0 or 1
-
         public float Size { get { return (Fenotype[1]/2 + 0.5f) * 9700 + 300; } } //within certain max and min values (right now between 100 and 1000)
-
         public float HungerBias { get { return ToInfinity(Fenotype[2]/2 + 0.5f); } }//positive and to infinity
-
         public float sexualPreference { get { return ToInfinity(Fenotype[3] / 2 + 0.5f) + 50; } } //to infinity but still needs to have at least 50
         public float energyDistribution { get { return Fenotype[4] / 3 + 0.16f; /* Settings.MatingCost */ } } //just a percentage between 0 and 1
+
         //Second Allel
         public float PassivePreference { get { return ToInfinity(Fenotype[5] / 2 + 0.5f)/10; } }// positive and to infinity
         public float PassiveBias { get { return Fenotype[6]/3 + 2.0f/3; } }
         public float ActiveBias { get { return Fenotype[7]/2 + 0.5f; } } //active must be higher than passive
         public float ActivePreference { get { return ToInfinity(Fenotype[8] / 2 + 0.5f) / 30 + this.PassivePreference; } }
+
         //Third Allel
         public virtual float Velocity { get; } //within certain max and min values
-
         public virtual float SprintSpeed { get; }
-
         public virtual float SprintDuration { get; }
         public virtual float perception { get { return Fenotype[12] / 2 + 0.5f; } }
         public float Courage { get { return Fenotype[13]; } }//not implemented anywhere yet
 
         //Fourth Allel
         public float DistanceBias { get { return ToInfinity(Fenotype[14] / 2 + 0.5f); } } //it's in the name dummy
-
         public float JumpHeight { get { return Fenotype[15] / 4 + 0.25f; } } //only positive values
-
         public float EatSpeed { get { return Fenotype[17] / 2 + 0.5f; } }
-
         public float SwimCost { get { return Fenotype[18] / 2 + 1.5f; } }
-
         public float WalkCost { get { return 1.25f - Fenotype[18] / 4 ; } }
-
-
 
         //-1 for "gene isnt used"
         //0 for the average
@@ -135,10 +126,8 @@ namespace IntroProject
             }
         }
 
-        private void calcFenotype()
+        private void calcFenotype() //this is basicly turning a 3-dimensional array into a 1-dimensional one
         {
-            //this is basicly turning a 3-dimensional array into a 1-dimensional one
-            
             Fenotype = new List<float>();
             int start = 0;
 
@@ -181,7 +170,7 @@ namespace IntroProject
             return b;
         }
 
-        public  vitual Gene Mutate()
+        public virtual Gene Mutate()
         {
             //choosing a random, to be mutated gene
             int i, j, k;
@@ -235,10 +224,7 @@ namespace IntroProject
             return true;
         }
 
-        public bool EqualFenoType(Gene other)
-        {
-            return other.EqualFenoType(this.Fenotype);
-        }
+        public bool EqualFenoType(Gene other) => other.EqualFenoType(this.Fenotype);
 
         public bool EqualFenoType(List<float> other)
         {

@@ -6,8 +6,6 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using IntroProject.Core.Utils;
 
-using IntroProject.Core.Utils;
-
 namespace IntroProject
 {
     public partial class HexagonOfLife : Form

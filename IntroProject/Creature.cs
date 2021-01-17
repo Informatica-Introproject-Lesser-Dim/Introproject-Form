@@ -64,7 +64,8 @@ namespace IntroProject
             return result;
         }
 
-        private double calcDistancePow2(Entity e) {
+        private double calcDistancePow2(Entity e)
+        {
             double dx = e.GlobalLoc.X - this.GlobalLoc.X;
             double dy = e.GlobalLoc.Y - this.GlobalLoc.Y;
             return dx * dx + dy * dy;
@@ -87,7 +88,7 @@ namespace IntroProject
             new Creature(gene, energy);
 
         public static double calcDistancePow2(EntityType type, Hexagon place, Point point) //enter the world relative position for point
-      
+        { 
             List<Entity> targets = new List<Entity>();
             for (int i = 0; targets.Count == 0 && i < 10; i++)
                 targets = place.searchPoint(i, type);
@@ -153,10 +154,12 @@ namespace IntroProject
             this.goalReset();
         }
 
-        public void activate(double dt) {
+        public void activate(double dt)
+        {
             if (stamina < gene.SprintDuration)
                 stamina += dt;
-            this.energyVal -= Calculator.StandardEnergyCost(gene)*dt;
+            this.energyVal -= Calculator.StandardEnergyCost(gene) * dt;
+
             if (this.coolDown > 0)
                 coolDown -= dt;
 
@@ -178,7 +181,6 @@ namespace IntroProject
                 return;
             }
                 
-
             if (this.goal == Goal.Mate) 
                 this.mateActive();
 
@@ -213,6 +215,7 @@ namespace IntroProject
         public virtual void passiveSearch() //check wether the place you are is ok
         {
             goal = Goal.Food;
+
             if (passiveCheck(this.chunk))
             {
                 Route route = new Route(new Point(this.x, this.y), this.chunk.size, this.chunk);
