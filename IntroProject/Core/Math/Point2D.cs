@@ -34,25 +34,13 @@
             return this;
         }
 
-        public static Point2D operator +(Point2D a, Point2D b)
-        {
-            a.X += b.X;
-            a.Y += b.Y;
-            return a;
-        }
+        public static Point2D operator +(Point2D a, Point2D b) =>
+            new Point2D().SetPosition(a.X + b.X, a.Y + b.Y);
 
-        public static Point2D operator -(Point2D a, Point2D b)
-        {
-            a.X -= b.X;
-            a.Y -= b.Y;
-            return a;
-        }
+        public static Point2D operator -(Point2D a, Point2D b) =>
+            new Point2D().SetPosition(a.X - b.X, a.Y - b.Y);
 
-        public static Point2D operator *(Point2D a, double scale)
-        {
-            a.X *= scale;
-            a.Y *= scale;
-            return a;
-        }
+        public static Point2D operator *(Point2D a, double scale) =>
+            new Point2D().SetPosition(a.X * scale, a.Y * scale);
     }
 }
