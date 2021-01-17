@@ -127,7 +127,6 @@ namespace IntroProject
             if (hex == 0)
             {
                 Point delta;
-                double scale = pos / distances[0];
 
                 if (distances.Count == 1)
                     delta = toPoint(end) - (Size)toPoint(start);
