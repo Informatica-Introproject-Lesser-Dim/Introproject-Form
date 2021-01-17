@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
+
+using IntroProject.Core.Math;
 
 namespace IntroProject
 {
@@ -18,12 +19,12 @@ namespace IntroProject
         private int maxLength = 200;
 
         //when you initialize an AStar object it starts calculating the best route and then you're able to ask for the Route
-        public AStar(Point loc, Hexagon chunck, Gene gene, int size, double energy) => 
+        public AStar(Point2D loc, Hexagon chunck, Gene gene, int size, double energy) =>
             this.InitializeEverything(loc, chunck, gene, size, energy);
 
         protected AStar() { }//just a default constructor that should not normally be used
 
-        protected void InitializeEverything(Point loc, Hexagon chunck, Gene gene, int size, double energy)
+        protected void InitializeEverything(Point2D loc, Hexagon chunck, Gene gene, int size, double energy)
         {
             Tag++;
             this.energy = energy;
@@ -57,12 +58,12 @@ namespace IntroProject
                 current = best;
             }
             this.current = current.Clone();
-            Point end = new Point(0, 0);
+            Point2D end = new Point2D();
 
             if (current.endHex.vegetation.FoodLocations().Count > 0)
             {
-                goal = current.endHex.bestFood(Hexagon.calcSide(size, (current.lastDir + 3) % 6));
-                end = goal.loc;
+                goal = current.endHex.bestFood(Hexagon.CalcSide(size, (current.lastDir + 3) % 6));
+                end = goal;
             }
             current.addEnd(end);
             result = current;
@@ -138,7 +139,7 @@ namespace IntroProject
     {
         private Entity theTarget;
 
-        public SingleTargetAStar(Point loc, Hexagon chunck, Gene gene, int size, double energy, Entity theTarget) : base()
+        public SingleTargetAStar(Point2D loc, Hexagon chunck, Gene gene, int size, double energy, Entity theTarget) : base()
         {
             this.theTarget = theTarget;
             InitializeEverything(loc, chunck, gene, size, energy*3);
@@ -175,7 +176,7 @@ namespace IntroProject
     {
         private Entity theTarget;
 
-        public CarnivoreAStar(Point loc, Hexagon chunck, Gene gene, int size, double energy) : base(loc,chunck,gene,size,energy)
+        public CarnivoreAStar(Point2D loc, Hexagon chunck, Gene gene, int size, double energy) : base(loc,chunck,gene,size,energy)
         {
 
         }

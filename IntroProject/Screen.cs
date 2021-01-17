@@ -52,7 +52,7 @@ namespace IntroProject
 
             Resize += (object o, EventArgs ea) => 
             {
-                int maxim = Math.Max((int)(Size.Width / 36), (int)(Size.Height / 36));
+                int maxim = Math.Max(Size.Width, Size.Height) / 36;
                 mapscr.Size = new Size(Size.Width, Size.Height);
                 dropMenu.Size = new Size(Size.Width / 10, Size.Height);
                 settingsMenu.Size = new Size(Size.Width, Size.Height);
@@ -215,8 +215,8 @@ namespace IntroProject
             pea.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(108, 116, 150)), 0, 0, Width, Height); // Is dit wel nodig, dat het elke keer wordt gedaan?
             if (camAutoMove)
             {
-                xCam = Width / 2 - selected.GlobalLoc.X;
-                yCam = Height / 2 - selected.GlobalLoc.Y;
+                xCam = Width / 2 - selected.GlobalLoc.x;
+                yCam = Height / 2 - selected.GlobalLoc.y;
             }
             map.draw(pea.Graphics, xCam, yCam, Width, Height);
             n++;

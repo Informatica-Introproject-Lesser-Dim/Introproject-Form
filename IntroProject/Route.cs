@@ -24,7 +24,7 @@ namespace IntroProject
 
         public float Length { get { if (distances.Count == 0) return 0; return distances[distances.Count - 1]; } }
 
-        public Route(Point start, int size, Hexagon startHex)
+        public Route(Point2D start, int size, Hexagon startHex)
         {
             this.start.SetPosition(start.X, start.Y);
             pos = 0;
@@ -44,8 +44,8 @@ namespace IntroProject
             if (points.Count == 0)
             { 
                 points.Add(n);
-                Point go = Hexagon.calcSide(size, n);
-                double dist = Trigonometry.Distance((go.X, go.Y), (start.X, start.Y));
+                Point2D go = Hexagon.CalcSide(size, n);
+                double dist = Trigonometry.Distance(go, start);
                 distances.Add((float)dist);
                 return;
             }
@@ -80,9 +80,8 @@ namespace IntroProject
             return result;
         }
 
-        public void addEnd(Point endP)
+        public void addEnd(Point2D end)
         {
-            Point2D end = new Point2D().SetPosition(endP.X, endP.Y);
             float dist;
             if (points.Count == 0) //if it's in the same hexagon as the start
                 dist = (float)Trigonometry.Distance(end, start);

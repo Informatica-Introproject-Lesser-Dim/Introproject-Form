@@ -28,8 +28,8 @@ namespace IntroProject
         public bool dead = false;
 
         public bool isAlive { get => energyVal > 0; }
-        public Point GlobalLoc { get => new Point(chunk.x + this.x, chunk.y + this.y); }
-        public Point ChunckRelLoc { get => new Point(this.x, this.y); }
+        public Point2D GlobalLoc { get => chunk + this; }
+        public Point2D ChunckRelLoc { get => this; }
 
         public void PerishToDeathPile()
         {

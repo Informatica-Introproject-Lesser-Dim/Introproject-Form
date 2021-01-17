@@ -2,6 +2,8 @@
 using System.Drawing;
 using System.Linq;
 
+using IntroProject.Core.Math;
+
 namespace IntroProject
 {
     public class Carnivore : Creature
@@ -35,7 +37,7 @@ namespace IntroProject
                 Entity deathPile = findClosest(deathPiles);
                 
                 //make a route to this
-                SingleTargetAStar aStar = new SingleTargetAStar(new Point(x, y), chunk, gene, chunk.size, energyVal, deathPile);
+                SingleTargetAStar aStar = new SingleTargetAStar(this, chunk, gene, chunk.size, energyVal, deathPile);
                 route = aStar.getResult();
 
                 if (route != null)
@@ -68,30 +70,26 @@ namespace IntroProject
             if (stamina <= 0)
                 return true;
 
-            Point targetLoc = target.GlobalLoc;
-            double dx =  targetLoc.X - GlobalLoc.X;
-            double dy =  targetLoc.Y - GlobalLoc.Y;
+            Point2D delta = target - GlobalLoc;
 
-            double dist = (dx * dx + dy * dy);
-            if (dist < 25) 
+            double dist = Trigonometry.Distance(target, GlobalLoc);
+            if (dist < 5)
             {
                 eat(target);
                 return true;
             }
 
-            dist = System.Math.Sqrt(dist);
-
-            dx *= 1 / dist;
-            dy *= 1 / dist;
-            dx *= dt * gene.SprintSpeed;
-            dy *= dt * gene.SprintSpeed;
-            X += dx;
-            Y += dy;
+            delta.X *= 1 / dist;
+            delta.Y *= 1 / dist;
+            delta.X *= dt * gene.SprintSpeed;
+            delta.Y *= dt * gene.SprintSpeed;
+            X += delta.X;
+            Y += delta.Y;
 
             energyVal -= Calculator.SprintEnergyPerTic(gene);
             stamina -= 2*dt;
 
-            int[] hexPos = chunk.parent.PosToHexPos(GlobalLoc.X, GlobalLoc.Y);
+            int[] hexPos = chunk.parent.PosToHexPos(GlobalLoc.x, GlobalLoc.y);
             Hexagon newHex = chunk.parent[hexPos[0], hexPos[1]];
             if (newHex != chunk) 
             {
@@ -104,7 +102,7 @@ namespace IntroProject
 
         protected override void getActiveRoute()
         {
-            CarnivoreAStar aStar = new CarnivoreAStar(new Point(x, y), chunk, gene, chunk.size, energyVal);
+            CarnivoreAStar aStar = new CarnivoreAStar(this, chunk, gene, chunk.size, energyVal);
             route = aStar.getResult();
 
             if (route != null)

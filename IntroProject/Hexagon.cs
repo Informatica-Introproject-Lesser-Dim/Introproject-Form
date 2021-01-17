@@ -196,7 +196,7 @@ namespace IntroProject
 
         public int FoodValue() => vegetation.FoodValue();
 
-        public Grass bestFood(Point point) //gives you the number of the piece of food you should aim for first
+        public Grass bestFood(Point2D point) //gives you the number of the piece of food you should aim for first
         {
             List<Grass> grass = vegetation.FoodLocations();
             if (grass.Count == 0)
@@ -218,11 +218,9 @@ namespace IntroProject
             return result;
         }
 
-        private double calcGrassVal(Point point, Grass grass, double time)
+        private double calcGrassVal(Point2D point, Grass grass, double time)
         {
-            int dx = point.X - grass.loc.X;
-            int dy = point.Y - grass.loc.Y;
-            double dist = Math.Sqrt(dx * dx + dy * dy);
+            double dist = Trigonometry.Distance(point, grass);
             return grass.getVal(time) / dist;
         }
 

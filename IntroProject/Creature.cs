@@ -87,7 +87,7 @@ namespace IntroProject
         public virtual Creature FromParentInfo(Gene gene, double energy) =>
             new Creature(gene, energy);
 
-        public static double calcDistancePow2(EntityType type, Hexagon place, Point point) //enter the world relative position for point
+        public static double calcDistancePow2(EntityType type, Hexagon place, Point2D point) //enter the world relative position for point
         { 
             List<Entity> targets = new List<Entity>();
             for (int i = 0; targets.Count == 0 && i < 10; i++)
@@ -96,16 +96,12 @@ namespace IntroProject
                 return 10000000; //just a big number so stuff doesnt break
             double dist = calcDist2(targets[0], point);
             foreach (Entity e in targets)
-                if (calcDist2(e, point) < dist)
-                    dist = calcDist2(e, point);
+                dist = Math.Min(calcDist2(e, point), dist);
             return dist;
         }
 
-        public static double calcDist2(Entity e, Point p)
-        {
-            Point2D p2 = e + e.chunk;
-            return Trigonometry.DistancePow2((p.X, p.Y), (p2.X, p2.Y));
-        }
+        public static double calcDist2(Entity e, Point2D p) =>
+            Trigonometry.DistancePow2(p, e + e.chunk);
 
         public Creature(Creature parentA, Creature parentB) : this(parentA.gene, parentB.gene) { }
 
@@ -218,11 +214,11 @@ namespace IntroProject
 
             if (passiveCheck(this.chunk))
             {
-                Route route = new Route(new Point(this.x, this.y), this.chunk.size, this.chunk);
-                myFood = chunk.bestFood(new Point(this.x, this.y));
+                Route route = new Route(this, this.chunk.size, this.chunk);
+                myFood = chunk.bestFood(this);
 
                 //set it as your target and make the route towards it your own
-                route.addEnd(new Point(myFood.loc.X, myFood.loc.Y));
+                route.addEnd(myFood);
                 this.route = route;
                 Color.FromArgb(50, 100, 50);
                 return;
@@ -251,12 +247,12 @@ namespace IntroProject
             if (dir != -1)
             {
                 //if so go there and eat in there
-                Route route = new Route(new Point(this.x, this.y), this.chunk.size, this.chunk);
+                Route route = new Route(this, this.chunk.size, this.chunk);
                 route.addDirection(dir);
 
-                myFood = chunk[dir].bestFood(Hexagon.calcSide(chunk.size, (dir + 3) % 6));
+                myFood = chunk[dir].bestFood(Hexagon.CalcSide(chunk.size, (dir + 3) % 6));
 
-                route.addEnd(new Point(myFood.loc.X, myFood.loc.Y));
+                route.addEnd(myFood);
                 this.route = route;
                 this.color = Color.FromArgb(50, 100, 50);
                 return;
@@ -321,17 +317,13 @@ namespace IntroProject
                 return false;
 
             //do you have enough energy yourself
-            Point a = creature.GlobalLoc;
-            Point b = this.GlobalLoc;
-            int dx = a.X - b.X;
-            int dy = a.Y - b.Y;
-            double dist = Math.Sqrt(dx * dx + dy * dy); //straight distance towards creature
+            double dist = Trigonometry.Distance(creature.GlobalLoc, this.GlobalLoc); //straight distance towards creature
             if (energyVal - dist * Calculator.EnergyPerMeter(this.gene) < this.gene.sexualPreference) 
                 return false; //stopping if it costs too much energy
 
             //Pathfinding...
             this.color = Color.Pink;
-            SingleTargetAStar aStar = new SingleTargetAStar(new Point(this.x, this.y), this.chunk, this.gene, this.chunk.size, this.energyVal, creature);
+            SingleTargetAStar aStar = new SingleTargetAStar(this, this.chunk, this.gene, this.chunk.size, this.energyVal, creature);
             route = aStar.getResult();
 
             if (route != null)
@@ -362,7 +354,7 @@ namespace IntroProject
 
         protected virtual void getActiveRoute() 
         {
-            AStar aStar = new AStar(new Point(this.x, this.y), this.chunk, this.gene, this.chunk.size, this.energyVal);
+            AStar aStar = new AStar(this, this.chunk, this.gene, this.chunk.size, this.energyVal);
             route = aStar.getResult();
 
             if (route != null)

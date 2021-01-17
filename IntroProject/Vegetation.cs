@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
+
+using IntroProject.Core.Math;
 
 namespace IntroProject
 {
@@ -145,14 +146,13 @@ namespace IntroProject
     //random creation of each piece of grass would probably take up a load of performance
     //therefore my idea was to create all the random locations at the beginning
     //and when the plants "grow" you change the visible variable to true
-    public class Grass {//I suppose that since it can also grow in water it should be called algea or smthn else
+    public class Grass : Point2D {//I suppose that since it can also grow in water it should be called algea or smthn else
         //constants
         private const int min = 50, max = 200;//these numbers are up for discussion, right now it's just temporary placeholders
         private const int growthTime = 3; //how much time to grow one bit
         private const int radius = 5; //temporary and used for drawing the grass (will later on probably be replaced by some actual pictures)
         //normal variables
 
-        public Point loc;
         private int foodStart;
         private int time;
         public bool visible = false;
@@ -166,17 +166,17 @@ namespace IntroProject
             Random random = new Random();
             double r = random.NextDouble() * size * Hexagon.sqrt3 * 0.5;
             double d = random.NextDouble() * 2 * Math.PI;
-            loc = new Point( (int) (r * Math.Cos(d)), (int) (r * Math.Sin(d)));
+            base.SetPosition((int) (r * Math.Cos(d)), (int) (r * Math.Sin(d)));
             foodStart = random.Next(min, max);
         }
-        public Grass(Point loc) {
-            this.loc = loc;
+        public Grass(Point2D loc) {
+            SetPosition(loc.X, loc.Y);
             Random random = new Random();
             foodStart = random.Next(min, max); 
         }
 
-        public Grass(Point loc, int foodValue) {
-            this.loc = loc;
+        public Grass(Point2D loc, int foodValue) {
+            SetPosition(loc.X, loc.Y);
             this.foodStart = foodValue;
         }
 
@@ -187,7 +187,7 @@ namespace IntroProject
         public void draw(Graphics g, int x, int y) {
             if (!visible)
                 return;
-            g.FillEllipse(new SolidBrush(Color.FromArgb(70, 60, 255, 0)), loc.X + x - radius, loc.Y + y - radius, radius * 2, radius * 2);
+            g.FillEllipse(new SolidBrush(Color.FromArgb(70, 60, 255, 0)), this.x + x - radius, this.y + y - radius, radius * 2, radius * 2);
         }
 
         public int getVal(double time) {
