@@ -8,22 +8,24 @@ namespace IntroProject
     public class Route
     {
         List<int> points; //all the different exits from the hexagons
-        Point2D start = new Point2D();
-        Point2D end = new Point2D();
+        Point2D start = new Point2D(), end = new Point2D();
         List<float> distances; //length of the path untill this point
-        public int amountWaterTiles = 0;
-        public float Length { get { if (distances.Count == 0) return 0; return distances[distances.Count - 1]; } }
-        int hex; //number of current hexagon in the list
-        float pos; //position within current hex
-        int size; //hex size
-        private Hexagon EndHex;
-        public Hexagon endHex { get { return EndHex; } set { if (value.heightOfTile < Hexagon.seaLevel) amountWaterTiles++; EndHex = value; } }
-        public int lastDir = -1;
+        Hexagon EndHex;
+
+        private int hex, size; //number and size of current hexagon in the list
+        private float pos; //position within current hex
+
+        public int amountWaterTiles = 0, lastDir = -1;
         public double quality = 0;
+
+        public Hexagon endHex { get { return EndHex; } set { if (value.heightOfTile < Hexagon.seaLevel) amountWaterTiles++; EndHex = value; } }
+        
         public float jumpCount { get { return distances.Count; } }
 
+        public float Length { get { if (distances.Count == 0) return 0; return distances[distances.Count - 1]; } }
 
-        public Route(Point start, int size, Hexagon startHex) {
+        public Route(Point start, int size, Hexagon startHex)
+        {
             this.start.SetPosition(start.X, start.Y);
             pos = 0;
             hex = 0;
@@ -33,17 +35,21 @@ namespace IntroProject
             distances = new List<float>();
         }
 
-        public void addDirection(int n) { //breaks if you enter in invalid direction or go off the map
-
+        public void addDirection(int n) //breaks if you enter an invalid direction or go off the map
+        { 
             endHex = endHex[n]; //neighbor of the last hexagon becomes the new last
             lastDir = n;
-            if (points.Count == 0) { //if it's the first direction you need to calculate how to move from your start point to the edge
+
+            //if it's the first direction you need to calculate how to move from your start point to the edge
+            if (points.Count == 0)
+            { 
                 points.Add(n);
                 Point go = Hexagon.calcSide(size, n);
                 double dist = Trigonometry.Distance((go.X, go.Y), (start.X, start.Y));
                 distances.Add((float)dist);
                 return;
             }
+
             //not the first direction so just using one of the preset curves
             int entrance = points[points.Count - 1];
             points.Add(n);
@@ -51,7 +57,8 @@ namespace IntroProject
             distances.Add((float) curve.Length);
         }
 
-        public Route(Route clonable) { //clones everything except the position on the route and the end position
+        public Route(Route clonable) //clones everything except the position on the route and the end position
+        { 
             start = clonable.start;
             endHex = clonable.endHex;
             size = clonable.size;
@@ -64,24 +71,21 @@ namespace IntroProject
                 distances.Add(f);
         }
 
-        public Route Clone()
-        {
-            return new Route(this);
-        }
+        public Route Clone() => new Route(this);
 
-        public Route addAndClone(int dir) { //to be used for when you need to add multiple different possible routes to one route
+        public Route addAndClone(int dir) //to be used for when you need to add multiple different possible routes to one route
+        { 
             Route result = new Route(this);
             result.addDirection(dir);
             return result;
         }
 
-        public void addEnd(Point endP) {
+        public void addEnd(Point endP)
+        {
             Point2D end = new Point2D().SetPosition(endP.X, endP.Y);
-
             float dist;
-            if (points.Count == 0) { //if it's in the same hexagon as the start
+            if (points.Count == 0) //if it's in the same hexagon as the start
                 dist = (float)Trigonometry.Distance(end, start);
-            }
             else
             {
                 //otherwise calculate the distance from one of the sides
@@ -94,20 +98,21 @@ namespace IntroProject
 
         //how to use a route class: call move every time you want to move, call getPos to get the position and if move returns true
         //then you call isDone, if it isnt done then you continue the loop
-        public bool move(float amount) { 
-            if (hex == distances.Count)
-                return true;
-            pos += amount;
-            if (pos < distances[hex])
-                return false;
-            pos -= distances[hex];
-            hex++;
+        public bool move(float amount)
+        { 
+            if (hex != distances.Count)
+            {
+                pos += amount;
+                if (pos < distances[hex])
+                    return false;
+                pos -= distances[hex];
+                hex++;
+            }
+
             return true;
         }
 
-        public int getDir() {
-            return points[hex - 1];
-        }
+        public int getDir() => points[hex - 1];
 
         public Point2D GetPos() {
             if (hex == distances.Count)
@@ -119,9 +124,12 @@ namespace IntroProject
                     delta = end - start;
                 else
                     delta = Hexagon.CalcSide(size, points[0]) - start;
+
                 double scale = pos / distances[0];
                 return start + delta * scale;
             }
+
+            //last part of the route
             if (hex == distances.Count - 1)
             {//last part of the route
                 Point2D temp = Hexagon.CalcSide(size, (points[hex - 1] + 3) % 6);
@@ -134,9 +142,6 @@ namespace IntroProject
             return curve.Go(pos);
         }
 
-        public bool isDone() {
-            return hex == distances.Count;
-        }
-
+        public bool isDone() => hex == distances.Count;
     }
 }
