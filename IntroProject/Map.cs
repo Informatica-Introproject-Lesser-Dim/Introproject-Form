@@ -299,8 +299,8 @@ namespace IntroProject
             if (x < 0)
                 column--;
             int relXPos = x - (int)((column + 0.5) * (size * 3 + margin * Hexagon.sqrt3)); // x center-relative
-            
             int row = (int)(y / (size * Hexagon.sqrt3 + margin));
+
             if (y < 0)
                 row--;
             
@@ -312,15 +312,17 @@ namespace IntroProject
             int mSize = (int)(size + (margin) / Hexagon.sqrt3);
             if (rXPos < mSize - (rYPos / Hexagon.sqrt3)) //if you are in the middle hexagon
                 return new int[2] {column * 2 + 1, row };
-            if (relXPos > 0) { //outside of the middle hex, two positives mean it's in the top right hex rest of the hexagons work the same as this
+            if (relXPos > 0)//outside of the middle hex, two positives mean it's in the top right hex rest of the hexagons work the same as this
                 if (relYPos > 0)
                     return new int[2] { column * 2 + 2 , row + 1};
-                return new int[2] { column * 2 + 2, row};
-            }
+                else
+                    return new int[2] { column * 2 + 2, row};
+
             if (relYPos > 0)
                 return new int[2] { column * 2, row + 1 };
             return new int[2] { column * 2, row};
         }
+
         public void Update()
         {
             Creature.Update();
