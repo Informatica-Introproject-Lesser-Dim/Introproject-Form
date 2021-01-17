@@ -134,6 +134,7 @@ namespace IntroProject
             MakeMap();
             play.Click -= NewMap;
             play.Click += Play_Click;
+            play.PerformClick();
         }
 
         public void MakeMap()
@@ -674,6 +675,21 @@ namespace IntroProject
             }
         }
 
+        private string ExportSettings()
+        {
+            string export;
+            export = Sp.ToString() + "\n";
+            export += HS + "\n";
+            export += MC + "\n";
+            export += GG + "\n";
+            export += GMF + "\n";
+            export += WE + "\n";
+            export += JE + "\n";
+            export += PE + "\n";
+            export += AddHeat.Checked + "\n";
+            export += languageIndex.SelectedIndex;
+            return export;
+        }
         private void StartSettings() //Gives all abstract between values their start value, preventing implementation problems
         {
             TE = Settings.TotalEntities;
