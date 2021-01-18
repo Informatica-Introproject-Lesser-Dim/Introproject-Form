@@ -143,11 +143,9 @@ namespace IntroProject
 
             for (int i = 0; i < Settings.StartEntities; i++)
             {
-                Herbivore herbivore = new Herbivore();
-                map.placeRandom(herbivore);
-            }
-            for (int i = 0; i < 0; i++)
+                map.placeRandom(new Herbivore());
                 map.placeRandom(new Carnivore());
+            }
         }
 
         public void MapClick(object o, MouseEventArgs mea)
