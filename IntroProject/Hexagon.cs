@@ -118,11 +118,7 @@ namespace IntroProject
         {
             if (entities.Contains(e))
             {
-                int dx = hex.x - this.x;
-                int dy = hex.y - this.y;
-
-                e.x -= dx;
-                e.y -= dy;
+                (e.X, e.Y) = e - (hex - this);
 
                 hex.addEntity(e);
                 entities.Remove(e);

@@ -76,12 +76,9 @@ namespace IntroProject
                 return true;
             }
 
-            delta.X *= 1 / dist;
-            delta.Y *= 1 / dist;
-            delta.X *= dt * gene.SprintSpeed;
-            delta.Y *= dt * gene.SprintSpeed;
-            X += delta.X;
-            Y += delta.Y;
+            delta *= 1 / dist;
+            delta *= dt * gene.SprintSpeed;
+            (X, Y) = delta + this;
 
             energyVal -= Calculator.SprintEnergyPerTic(gene);
             stamina -= 2*dt;

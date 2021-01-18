@@ -162,9 +162,7 @@ namespace IntroProject
         protected override float calcCost(Route r)
         {
             float current = r.Length * Calculator.EnergyPerMeter(gene) + r.jumpCount * Calculator.JumpCost(gene);
-            float dx = theTarget.x - r.endHex.x;
-            float dy = theTarget.y - r.endHex.y;
-            double expected = Calculator.EnergyPerMeter(gene) * Math.Sqrt(dx * dx + dy * dy);
+            double expected = Calculator.EnergyPerMeter(gene) * Trigonometry.Distance(theTarget, r.endHex);
             return (float)expected + current;
         }
 
