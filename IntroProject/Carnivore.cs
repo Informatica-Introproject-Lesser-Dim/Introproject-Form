@@ -9,7 +9,7 @@ namespace IntroProject
     public class Carnivore : Creature
     {
         public Entity targetFood;
-        public Carnivore() 
+        public Carnivore() : base()
         {
             energyVal = 600; //start with quite a lot so they dont die too quickly
             gene = new CarnivoreGene();

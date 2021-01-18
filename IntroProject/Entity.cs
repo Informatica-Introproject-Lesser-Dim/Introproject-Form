@@ -31,6 +31,8 @@ namespace IntroProject
         public Point2D GlobalLoc { get => chunk + this; }
         public Point2D ChunckRelLoc { get => this; }
 
+        public Entity() : base() {}
+
         public void PerishToDeathPile()
         {
             dead = true;

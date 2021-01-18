@@ -37,7 +37,7 @@ namespace IntroProject
         protected float maxEnergy;
         public double stamina;
 
-        public Creature()
+        public Creature() : base()
         {
             energyVal = 600; //start with quite a lot so they dont die too quickly
             gene = new HerbivoreGene();
