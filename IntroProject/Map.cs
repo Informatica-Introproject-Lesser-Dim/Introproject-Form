@@ -217,10 +217,8 @@ namespace IntroProject
                 x = w - x;
             if (h - y < y)
                 y = h - y;
-            float val = x;
 
-            if (y < x)
-                val = y;
+            float val = Math.Min(x, y);
             if (val < biasRange * size)
                 return Math.Max(-1, f - (1.0f * (biasRange * size - val)) / (biasRange * size));
             return f;
@@ -298,13 +296,13 @@ namespace IntroProject
             int column = (int) (x / (size * 3 + margin * Hexagon.sqrt3)); // 2-wide column which includes this point
             if (x < 0)
                 column--;
-            int relXPos = x - (int)((column + 0.5) * (size * 3 + margin * Hexagon.sqrt3)); // x center-relative
             int row = (int)(y / (size * Hexagon.sqrt3 + margin));
 
             if (y < 0)
                 row--;
             
-            int relYPos = y - (int)((row + 0.5) * (size * Hexagon.sqrt3 + margin)); // y relative to the middle hexagon
+            int relXPos = x - (int)((column + 0.5) * (size * 3 + margin * Hexagon.sqrt3)); // x center-relative
+            int relYPos = y - (int)((row    + 0.5) * (size * Hexagon.sqrt3 + margin)); // y relative to the middle hexagon
             int rXPos = Math.Abs(relXPos);//generalizing the positive and negative versions into one
             int rYPos = Math.Abs(relYPos);
             
