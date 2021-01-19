@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using IntroProject.Core.Utils;
+using System.Drawing.Drawing2D;
 
 namespace IntroProject
 {
@@ -61,7 +62,6 @@ namespace IntroProject
                 mapscr.plus.Location = new Point(Size.Width - maxim - 16, 5);
                 mapscr.plus.Size = new Size(maxim, maxim);
             };
-
             mapscr.plus.Click += (object o, EventArgs ea) => { dropMenu.Show(); mapscr.plus.Hide(); };
         }
     }
@@ -330,6 +330,124 @@ namespace IntroProject
             };
         }
     }
+    class HomeMenu : UserControl
+    {
+        public int screenSizeX, screenSizeY, hexagonSize;
+        Button startHexagonBt = new Button(), exitHexagonBt = new Button(), abcHexagonBt = new Button(), bcdHexagonBt = new Button(), efgHexagonBt = new Button(), iopHexagonBt = new Button(), jklHexagonBt = new Button();
+        public Point startButtonLocation, exitButtonLocation, abcButtonLocation, bcdButtonLocation, efgButtonLocation, iopButtonLocation, jklButtonLocation;
+
+        public HomeMenu(int w, int h, EventHandler exitMenu)
+        {
+            screenSizeX = w;
+            screenSizeY = h;
+            hexagonSize = (int) (h / 8);
+            int[] menuButtonLocations = createMenuButtonLocations();
+            startButtonLocation = new Point(menuButtonLocations[0], menuButtonLocations[1]);
+            exitButtonLocation = new Point(menuButtonLocations[2], menuButtonLocations[3]);
+            abcButtonLocation = new Point(menuButtonLocations[4], menuButtonLocations[5]);
+            bcdButtonLocation = new Point(menuButtonLocations[6], menuButtonLocations[7]);
+            efgButtonLocation = new Point(menuButtonLocations[8], menuButtonLocations[9]);
+            iopButtonLocation = new Point(menuButtonLocations[10], menuButtonLocations[11]);
+            jklButtonLocation = new Point(menuButtonLocations[12], menuButtonLocations[13]);
+            createAllButtons();
+        }
+        public void createAllButtons()
+        {
+            startHexagonBt.Text = "start";
+            exitHexagonBt.Text = "exit";
+            abcHexagonBt.Text = "abc";
+            bcdHexagonBt.Text = "bcd";
+            efgHexagonBt.Text = "efg";
+            iopHexagonBt.Text = "iop";
+            jklHexagonBt.Text = "jkl";
+
+            LoadButton(startButtonLocation, hexagonSize, startHexagonBt);
+            LoadButton(exitButtonLocation, hexagonSize, exitHexagonBt);
+            LoadButton(abcButtonLocation, hexagonSize, abcHexagonBt);
+            LoadButton(bcdButtonLocation, hexagonSize, bcdHexagonBt);
+            LoadButton(efgButtonLocation, hexagonSize, efgHexagonBt);
+            LoadButton(iopButtonLocation, hexagonSize, iopHexagonBt);
+            LoadButton(jklButtonLocation, hexagonSize, jklHexagonBt);
+
+            startHexagonBt.Click += startBTPressed;
+            exitHexagonBt.Click += exitBTPressed;
+            abcHexagonBt.Click += abcBTPressed;
+            bcdHexagonBt.Click += bcdBTPressed;
+            efgHexagonBt.Click += efgBTPressed;
+            iopHexagonBt.Click += iopBTPressed;
+            jklHexagonBt.Click += jklBTPressed;
+
+            Controls.Add(startHexagonBt);
+            Controls.Add(exitHexagonBt);
+            Controls.Add(abcHexagonBt);
+            Controls.Add(bcdHexagonBt);
+            Controls.Add(efgHexagonBt);
+            Controls.Add(iopHexagonBt);
+            Controls.Add(jklHexagonBt);
+        }
+        void LoadButton(Point hexagonLocation, int currentHexagonSize, Button hexagonButton)
+        {
+            Point[] usedHexagonPoints = HexagonPoints(hexagonLocation.X, hexagonLocation.Y, currentHexagonSize);
+            hexagonButton.SetBounds(usedHexagonPoints[0].X - 5, usedHexagonPoints[0].Y - 5, usedHexagonPoints[2].X + 5, usedHexagonPoints[3].Y + 5);
+            GraphicsPath hexagonPath = new GraphicsPath(FillMode.Winding);
+            hexagonPath.AddPolygon(usedHexagonPoints);
+            Region hexagonRegion = new Region(hexagonPath);
+            hexagonButton.Region = hexagonRegion;
+        }
+        public Point[] HexagonPoints(int centreX, int centreY, int size)
+        {
+            Point[] hexagonPoints = new Point[6];
+            Rectangle boundBy = new Rectangle((int)(centreX - size * 2.6 / 3), (int)(centreY - size), (int)((size * 2.6 / 3) * 2), (int)(size * 2));
+            int quartWidth = boundBy.Width / 4;
+            int halfHeight = boundBy.Height / 2;
+            hexagonPoints[0] = new Point(boundBy.Left + quartWidth, boundBy.Top);
+            hexagonPoints[1] = new Point(boundBy.Right - quartWidth, boundBy.Top);
+            hexagonPoints[2] = new Point(boundBy.Right, boundBy.Top + halfHeight);
+            hexagonPoints[3] = new Point(boundBy.Right - quartWidth, boundBy.Bottom);
+            hexagonPoints[4] = new Point(boundBy.Left + quartWidth, boundBy.Bottom);
+            hexagonPoints[5] = new Point(boundBy.Left, boundBy.Top + halfHeight);
+            return hexagonPoints;
+        }
+        protected int[] createMenuButtonLocations()
+        {
+            int[] res =                 {
+                                            screenSizeX / 4                                     , screenSizeY / 4 + hexagonSize / 2,
+                                            screenSizeX / 4                                     , screenSizeY / 4 + hexagonSize + hexagonSize / 2,
+                                            (int)(screenSizeX / 4 + 3 * hexagonSize * 2.6 / 12) , (int)(screenSizeY / 4-hexagonSize / 2 + hexagonSize / 2) ,
+                                            (int)(screenSizeX / 4 + 3 * hexagonSize * 2.6 / 12) , (int)(screenSizeY / 4+hexagonSize / 2 + hexagonSize / 2) ,
+                                            screenSizeX / 4                                     , screenSizeY/4 - hexagonSize + hexagonSize / 2,
+                                            (int)(screenSizeX / 4 - 3 * hexagonSize*2.6 / 12)   , (int)(screenSizeY / 4 - hexagonSize / 2+hexagonSize / 2) ,
+                                            (int)(screenSizeX / 4 - 3 * hexagonSize*2.6 / 12)   , (int)(screenSizeY / 4 + hexagonSize / 2+hexagonSize / 2) ,};
+            return res;
+        }
+        private void startBTPressed(object sender, EventArgs e) 
+        {
+            //save changes
+            //exit menu
+        }
+        private void exitBTPressed(object sender, EventArgs e) => Application.Exit();
+        private void abcBTPressed(object sender, EventArgs e)
+        {
+            //Debug.WriteLine("ABC button pressed");
+        }
+        private void bcdBTPressed(object sender, EventArgs e)
+        {
+            //Debug.WriteLine("BCD button pressed");
+        }
+        private void efgBTPressed(object sender, EventArgs e)
+        {
+            //Debug.WriteLine("EFG button pressed");
+        }
+        private void iopBTPressed(object sender, EventArgs e)
+        {
+            //Debug.WriteLine("IOP button pressed");
+        }
+        private void jklBTPressed(object sender, EventArgs e)
+        {
+            //Debug.WriteLine("jkl button pressed");
+        }
+    }
+    
 
     class SettingsMenu : UserControl
     {
