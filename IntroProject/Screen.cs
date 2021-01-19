@@ -333,9 +333,11 @@ namespace IntroProject
     class HomeMenu : UserControl
     {
         public int screenSizeX, screenSizeY, hexagonSize;
+        Label startHexagonLbl = new Label(), exitHexagonLbl = new Label(), abcHexagonLbl = new Label(), bcdHexagonLbl = new Label(), efgHexagonLbl = new Label(), iopHexagonLbl = new Label(), jklHexagonLbl = new Label();
         Button startHexagonBt = new Button(), exitHexagonBt = new Button(), abcHexagonBt = new Button(), bcdHexagonBt = new Button(), efgHexagonBt = new Button(), iopHexagonBt = new Button(), jklHexagonBt = new Button();
         public Point startButtonLocation, exitButtonLocation, abcButtonLocation, bcdButtonLocation, efgButtonLocation, iopButtonLocation, jklButtonLocation;
-
+        public int labelWidth = 150;
+        public int labelHeight = 40;
         public HomeMenu(int w, int h, EventHandler exitMenu)
         {
             screenSizeX = w;
@@ -351,16 +353,9 @@ namespace IntroProject
             jklButtonLocation = new Point(menuButtonLocations[12], menuButtonLocations[13]);
             createAllButtons();
         }
+
         public void createAllButtons()
         {
-            startHexagonBt.Text = "start";
-            exitHexagonBt.Text = "exit";
-            abcHexagonBt.Text = "abc";
-            bcdHexagonBt.Text = "bcd";
-            efgHexagonBt.Text = "efg";
-            iopHexagonBt.Text = "iop";
-            jklHexagonBt.Text = "jkl";
-
             LoadButton(startButtonLocation, hexagonSize, startHexagonBt);
             LoadButton(exitButtonLocation, hexagonSize, exitHexagonBt);
             LoadButton(abcButtonLocation, hexagonSize, abcHexagonBt);
@@ -384,6 +379,75 @@ namespace IntroProject
             Controls.Add(efgHexagonBt);
             Controls.Add(iopHexagonBt);
             Controls.Add(jklHexagonBt);
+        }
+        public void createAllLabels()
+        {
+            int[] menuLabelLocations = {
+                (int)(screenSizeX / 2 - labelWidth / 3), (int)(screenSizeY / 2 -labelHeight/3),
+                (int)(screenSizeX / 2 - labelWidth / 3), (int)(screenSizeY / 2 + hexagonSize*2-labelHeight/3),
+                (int)(screenSizeX / 2 + 3 * hexagonSize * 2.6 / 12 * 2 - labelWidth / 3), (int)(screenSizeY / 2 - hexagonSize -labelHeight/3),
+                (int)(screenSizeX / 2 + 3 * hexagonSize * 2.6 / 12 * 2 - labelWidth / 3), (int)(screenSizeY / 2 + hexagonSize -labelHeight/3),
+                (int)(screenSizeX / 2 - labelWidth / 3), (int)(screenSizeY / 2 - hexagonSize*2-labelHeight/3),
+                (int)(screenSizeX / 2 - 3 * hexagonSize * 2.6 / 12 * 2 - labelWidth / 3), (int)(screenSizeY / 2 - hexagonSize -labelHeight/3),
+                (int)(screenSizeX / 2 - 3 * hexagonSize * 2.6 / 12 * 2 - labelWidth / 3), (int)(screenSizeY / 2 + hexagonSize -labelHeight/3)
+            };
+
+            startHexagonLbl.Location = new Point(menuLabelLocations[0], menuLabelLocations[1]);
+            exitHexagonLbl.Location = new Point(menuLabelLocations[2], menuLabelLocations[3]);
+            abcHexagonLbl.Location = new Point(menuLabelLocations[4], menuLabelLocations[5]);
+            efgHexagonLbl.Location = new Point(menuLabelLocations[6], menuLabelLocations[7]);
+            jklHexagonLbl.Location = new Point(menuLabelLocations[8], menuLabelLocations[9]);
+            bcdHexagonLbl.Location = new Point(menuLabelLocations[10], menuLabelLocations[11]);
+            iopHexagonLbl.Location = new Point(menuLabelLocations[12], menuLabelLocations[13]);
+            startHexagonLbl.Width = labelWidth;
+            exitHexagonLbl.Width = labelWidth;
+            abcHexagonLbl.Width = labelWidth;
+            bcdHexagonLbl.Width = labelWidth;
+            efgHexagonLbl.Width = labelWidth;
+            iopHexagonLbl.Width = labelWidth;
+            jklHexagonLbl.Width = labelWidth;
+            startHexagonLbl.Height = labelHeight;
+            exitHexagonLbl.Height = labelHeight;
+            abcHexagonLbl.Height = labelHeight;
+            bcdHexagonLbl.Height = labelHeight;
+            efgHexagonLbl.Height = labelHeight;
+            iopHexagonLbl.Height = labelHeight;
+            jklHexagonLbl.Height = labelHeight;
+            startHexagonLbl.Text = "start";
+            exitHexagonLbl.Text = "exit";
+            abcHexagonLbl.Text = "abc";
+            bcdHexagonLbl.Text = "bcd";
+            efgHexagonLbl.Text = "efg";
+            iopHexagonLbl.Text = "iop";
+            jklHexagonLbl.Text = "jkl";
+            startHexagonLbl.Dock = DockStyle.None;
+            exitHexagonLbl.Dock = DockStyle.None;
+            abcHexagonLbl.Dock = DockStyle.None;
+            bcdHexagonLbl.Dock = DockStyle.None;
+            efgHexagonLbl.Dock = DockStyle.None;
+            iopHexagonLbl.Dock = DockStyle.None;
+            jklHexagonLbl.Dock = DockStyle.None;
+            startHexagonLbl.AutoSize = false;
+            exitHexagonLbl.AutoSize = false;
+            abcHexagonLbl.AutoSize = false;
+            bcdHexagonLbl.AutoSize = false;
+            efgHexagonLbl.AutoSize = false;
+            iopHexagonLbl.AutoSize = false;
+            jklHexagonLbl.AutoSize = false;
+            startHexagonLbl.TextAlign = ContentAlignment.MiddleCenter;
+            exitHexagonLbl.TextAlign = ContentAlignment.MiddleCenter;
+            abcHexagonLbl.TextAlign = ContentAlignment.MiddleCenter;
+            bcdHexagonLbl.TextAlign = ContentAlignment.MiddleCenter;
+            efgHexagonLbl.TextAlign = ContentAlignment.MiddleCenter;
+            iopHexagonLbl.TextAlign = ContentAlignment.MiddleCenter;
+            jklHexagonLbl.TextAlign = ContentAlignment.MiddleCenter;
+            Controls.Add(startHexagonLbl);
+            Controls.Add(exitHexagonLbl);
+            Controls.Add(abcHexagonLbl);
+            Controls.Add(bcdHexagonLbl);
+            Controls.Add(efgHexagonLbl);
+            Controls.Add(iopHexagonLbl);
+            Controls.Add(jklHexagonLbl);
         }
         void LoadButton(Point hexagonLocation, int currentHexagonSize, Button hexagonButton)
         {
@@ -411,14 +475,13 @@ namespace IntroProject
         protected int[] createMenuButtonLocations()
         {
             int[] res =                 {
-                                            screenSizeX / 4                                     , screenSizeY / 4 + hexagonSize / 2,
-                                            screenSizeX / 4                                     , screenSizeY / 4 + hexagonSize + hexagonSize / 2,
-                                            (int)(screenSizeX / 4 + 3 * hexagonSize * 2.6 / 12) , (int)(screenSizeY / 4-hexagonSize / 2 + hexagonSize / 2) ,
-                                            (int)(screenSizeX / 4 + 3 * hexagonSize * 2.6 / 12) , (int)(screenSizeY / 4+hexagonSize / 2 + hexagonSize / 2) ,
-                                            screenSizeX / 4                                     , screenSizeY/4 - hexagonSize + hexagonSize / 2,
-                                            (int)(screenSizeX / 4 - 3 * hexagonSize*2.6 / 12)   , (int)(screenSizeY / 4 - hexagonSize / 2+hexagonSize / 2) ,
-                                            (int)(screenSizeX / 4 - 3 * hexagonSize*2.6 / 12)   , (int)(screenSizeY / 4 + hexagonSize / 2+hexagonSize / 2) ,};
-            return res;
+                                            (int)(screenSizeX / 4 + 3 * hexagonSize * 2.6 / 24), screenSizeY / 4 + hexagonSize / 2,
+                                            (int)(screenSizeX / 4 + 3 * hexagonSize * 2.6 / 24), screenSizeY / 4 + hexagonSize + hexagonSize / 2,
+                                            (int)(screenSizeX / 4 + 3 * hexagonSize * 2.6 / 12 + 3 * hexagonSize * 2.6 / 24) , (int)(screenSizeY / 4) ,
+                                            (int)(screenSizeX / 4 + 3 * hexagonSize * 2.6 / 12 + 3 * hexagonSize * 2.6 / 24) , (int)(screenSizeY / 4 + hexagonSize ) ,
+                                            (int)(screenSizeX / 4 + 3 * hexagonSize * 2.6 / 24) , screenSizeY/4 - hexagonSize / 2,
+                                            (int)(screenSizeX / 4 - 3 * hexagonSize * 2.6 / 12 + 3 * hexagonSize * 2.6 / 24)   , (int)(screenSizeY / 4) ,
+                                            (int)(screenSizeX / 4 - 3 * hexagonSize * 2.6 / 12 + 3 * hexagonSize * 2.6 / 24)   , (int)(screenSizeY / 4 + hexagonSize) }; return res;
         }
         private void startBTPressed(object sender, EventArgs e) 
         {
