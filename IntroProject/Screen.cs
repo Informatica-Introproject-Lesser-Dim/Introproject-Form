@@ -330,55 +330,64 @@ namespace IntroProject
             };
         }
     }
+    //
+    //
+    //Begin mainmenu code, het lijkt me handig als Wilfried en iemand die de omliggende code heeft gemaakt er verder naar kijken.
+    //
+    //
+    //
     class HomeMenu : UserControl
     {
         public int screenSizeX, screenSizeY, hexagonSize;
-        Label startHexagonLbl = new Label(), exitHexagonLbl = new Label(), abcHexagonLbl = new Label(), bcdHexagonLbl = new Label(), efgHexagonLbl = new Label(), iopHexagonLbl = new Label(), jklHexagonLbl = new Label();
-        Button startHexagonBt = new Button(), exitHexagonBt = new Button(), abcHexagonBt = new Button(), bcdHexagonBt = new Button(), efgHexagonBt = new Button(), iopHexagonBt = new Button(), jklHexagonBt = new Button();
-        public Point startButtonLocation, exitButtonLocation, abcButtonLocation, bcdButtonLocation, efgButtonLocation, iopButtonLocation, jklButtonLocation;
+        Label startHexagonLbl = new Label(), exitHexagonLbl = new Label(), settingsHexagonLbl = new Label(), runPresetHexagonLbl = new Label(), languageHexagonLbl = new Label(), fullScreenHexagonLbl = new Label(), helpHexagonLbl = new Label();
+        Button startHexagonBt = new Button(), exitHexagonBt = new Button(), settingsHexagonBt = new Button(), runPresetHexagonBt = new Button(), languageHexagonBt = new Button(), fullScreenHexagonBt = new Button(), helpHexagonBt = new Button();
+        public Point startButtonLocation, exitButtonLocation, settingsButtonLocation, runPresetButtonLocation, languageButtonLocation, fullScreenButtonLocation, helpButtonLocation;
         public int labelWidth = 150;
         public int labelHeight = 40;
+        EventHandler _exitMenu;
         public HomeMenu(int w, int h, EventHandler exitMenu)
         {
+            _exitMenu = exitMenu;
             screenSizeX = w;
             screenSizeY = h;
-            hexagonSize = (int) (h / 8);
+            hexagonSize = (int)(h / 8);
             int[] menuButtonLocations = createMenuButtonLocations();
             startButtonLocation = new Point(menuButtonLocations[0], menuButtonLocations[1]);
             exitButtonLocation = new Point(menuButtonLocations[2], menuButtonLocations[3]);
-            abcButtonLocation = new Point(menuButtonLocations[4], menuButtonLocations[5]);
-            bcdButtonLocation = new Point(menuButtonLocations[6], menuButtonLocations[7]);
-            efgButtonLocation = new Point(menuButtonLocations[8], menuButtonLocations[9]);
-            iopButtonLocation = new Point(menuButtonLocations[10], menuButtonLocations[11]);
-            jklButtonLocation = new Point(menuButtonLocations[12], menuButtonLocations[13]);
+            settingsButtonLocation = new Point(menuButtonLocations[4], menuButtonLocations[5]);
+            runPresetButtonLocation = new Point(menuButtonLocations[6], menuButtonLocations[7]);
+            languageButtonLocation = new Point(menuButtonLocations[8], menuButtonLocations[9]);
+            fullScreenButtonLocation = new Point(menuButtonLocations[10], menuButtonLocations[11]);
+            helpButtonLocation = new Point(menuButtonLocations[12], menuButtonLocations[13]);
             createAllButtons();
+            createAllLabels();
         }
 
         public void createAllButtons()
         {
             LoadButton(startButtonLocation, hexagonSize, startHexagonBt);
             LoadButton(exitButtonLocation, hexagonSize, exitHexagonBt);
-            LoadButton(abcButtonLocation, hexagonSize, abcHexagonBt);
-            LoadButton(bcdButtonLocation, hexagonSize, bcdHexagonBt);
-            LoadButton(efgButtonLocation, hexagonSize, efgHexagonBt);
-            LoadButton(iopButtonLocation, hexagonSize, iopHexagonBt);
-            LoadButton(jklButtonLocation, hexagonSize, jklHexagonBt);
+            LoadButton(settingsButtonLocation, hexagonSize, settingsHexagonBt);
+            LoadButton(runPresetButtonLocation, hexagonSize, runPresetHexagonBt);
+            LoadButton(languageButtonLocation, hexagonSize, languageHexagonBt);
+            LoadButton(fullScreenButtonLocation, hexagonSize, fullScreenHexagonBt);
+            LoadButton(helpButtonLocation, hexagonSize, helpHexagonBt);
 
             startHexagonBt.Click += startBTPressed;
             exitHexagonBt.Click += exitBTPressed;
-            abcHexagonBt.Click += abcBTPressed;
-            bcdHexagonBt.Click += bcdBTPressed;
-            efgHexagonBt.Click += efgBTPressed;
-            iopHexagonBt.Click += iopBTPressed;
-            jklHexagonBt.Click += jklBTPressed;
+            settingsHexagonBt.Click += settingsBTPressed;
+            runPresetHexagonBt.Click += runPresetBTPressed;
+            languageHexagonBt.Click += languageBTPressed;
+            fullScreenHexagonBt.Click += fullScreenBTPressed;
+            helpHexagonBt.Click += helpBTPressed;
 
             Controls.Add(startHexagonBt);
             Controls.Add(exitHexagonBt);
-            Controls.Add(abcHexagonBt);
-            Controls.Add(bcdHexagonBt);
-            Controls.Add(efgHexagonBt);
-            Controls.Add(iopHexagonBt);
-            Controls.Add(jklHexagonBt);
+            Controls.Add(settingsHexagonBt);
+            Controls.Add(runPresetHexagonBt);
+            Controls.Add(languageHexagonBt);
+            Controls.Add(fullScreenHexagonBt);
+            Controls.Add(helpHexagonBt);
         }
         public void createAllLabels()
         {
@@ -394,60 +403,60 @@ namespace IntroProject
 
             startHexagonLbl.Location = new Point(menuLabelLocations[0], menuLabelLocations[1]);
             exitHexagonLbl.Location = new Point(menuLabelLocations[2], menuLabelLocations[3]);
-            abcHexagonLbl.Location = new Point(menuLabelLocations[4], menuLabelLocations[5]);
-            efgHexagonLbl.Location = new Point(menuLabelLocations[6], menuLabelLocations[7]);
-            jklHexagonLbl.Location = new Point(menuLabelLocations[8], menuLabelLocations[9]);
-            bcdHexagonLbl.Location = new Point(menuLabelLocations[10], menuLabelLocations[11]);
-            iopHexagonLbl.Location = new Point(menuLabelLocations[12], menuLabelLocations[13]);
+            settingsHexagonLbl.Location = new Point(menuLabelLocations[4], menuLabelLocations[5]);
+            languageHexagonLbl.Location = new Point(menuLabelLocations[6], menuLabelLocations[7]);
+            helpHexagonLbl.Location = new Point(menuLabelLocations[8], menuLabelLocations[9]);
+            runPresetHexagonLbl.Location = new Point(menuLabelLocations[10], menuLabelLocations[11]);
+            fullScreenHexagonLbl.Location = new Point(menuLabelLocations[12], menuLabelLocations[13]);
             startHexagonLbl.Width = labelWidth;
             exitHexagonLbl.Width = labelWidth;
-            abcHexagonLbl.Width = labelWidth;
-            bcdHexagonLbl.Width = labelWidth;
-            efgHexagonLbl.Width = labelWidth;
-            iopHexagonLbl.Width = labelWidth;
-            jklHexagonLbl.Width = labelWidth;
+            settingsHexagonLbl.Width = labelWidth;
+            runPresetHexagonLbl.Width = labelWidth;
+            languageHexagonLbl.Width = labelWidth;
+            fullScreenHexagonLbl.Width = labelWidth;
+            helpHexagonLbl.Width = labelWidth;
             startHexagonLbl.Height = labelHeight;
             exitHexagonLbl.Height = labelHeight;
-            abcHexagonLbl.Height = labelHeight;
-            bcdHexagonLbl.Height = labelHeight;
-            efgHexagonLbl.Height = labelHeight;
-            iopHexagonLbl.Height = labelHeight;
-            jklHexagonLbl.Height = labelHeight;
+            settingsHexagonLbl.Height = labelHeight;
+            runPresetHexagonLbl.Height = labelHeight;
+            languageHexagonLbl.Height = labelHeight;
+            fullScreenHexagonLbl.Height = labelHeight;
+            helpHexagonLbl.Height = labelHeight;
             startHexagonLbl.Text = "start";
             exitHexagonLbl.Text = "exit";
-            abcHexagonLbl.Text = "abc";
-            bcdHexagonLbl.Text = "bcd";
-            efgHexagonLbl.Text = "efg";
-            iopHexagonLbl.Text = "iop";
-            jklHexagonLbl.Text = "jkl";
+            settingsHexagonLbl.Text = "settings";
+            runPresetHexagonLbl.Text = "runPreset";
+            languageHexagonLbl.Text = "language";
+            fullScreenHexagonLbl.Text = "fullScreen";
+            helpHexagonLbl.Text = "help";
             startHexagonLbl.Dock = DockStyle.None;
             exitHexagonLbl.Dock = DockStyle.None;
-            abcHexagonLbl.Dock = DockStyle.None;
-            bcdHexagonLbl.Dock = DockStyle.None;
-            efgHexagonLbl.Dock = DockStyle.None;
-            iopHexagonLbl.Dock = DockStyle.None;
-            jklHexagonLbl.Dock = DockStyle.None;
+            settingsHexagonLbl.Dock = DockStyle.None;
+            runPresetHexagonLbl.Dock = DockStyle.None;
+            languageHexagonLbl.Dock = DockStyle.None;
+            fullScreenHexagonLbl.Dock = DockStyle.None;
+            helpHexagonLbl.Dock = DockStyle.None;
             startHexagonLbl.AutoSize = false;
             exitHexagonLbl.AutoSize = false;
-            abcHexagonLbl.AutoSize = false;
-            bcdHexagonLbl.AutoSize = false;
-            efgHexagonLbl.AutoSize = false;
-            iopHexagonLbl.AutoSize = false;
-            jklHexagonLbl.AutoSize = false;
+            settingsHexagonLbl.AutoSize = false;
+            runPresetHexagonLbl.AutoSize = false;
+            languageHexagonLbl.AutoSize = false;
+            fullScreenHexagonLbl.AutoSize = false;
+            helpHexagonLbl.AutoSize = false;
             startHexagonLbl.TextAlign = ContentAlignment.MiddleCenter;
             exitHexagonLbl.TextAlign = ContentAlignment.MiddleCenter;
-            abcHexagonLbl.TextAlign = ContentAlignment.MiddleCenter;
-            bcdHexagonLbl.TextAlign = ContentAlignment.MiddleCenter;
-            efgHexagonLbl.TextAlign = ContentAlignment.MiddleCenter;
-            iopHexagonLbl.TextAlign = ContentAlignment.MiddleCenter;
-            jklHexagonLbl.TextAlign = ContentAlignment.MiddleCenter;
+            settingsHexagonLbl.TextAlign = ContentAlignment.MiddleCenter;
+            runPresetHexagonLbl.TextAlign = ContentAlignment.MiddleCenter;
+            languageHexagonLbl.TextAlign = ContentAlignment.MiddleCenter;
+            fullScreenHexagonLbl.TextAlign = ContentAlignment.MiddleCenter;
+            helpHexagonLbl.TextAlign = ContentAlignment.MiddleCenter;
             Controls.Add(startHexagonLbl);
             Controls.Add(exitHexagonLbl);
-            Controls.Add(abcHexagonLbl);
-            Controls.Add(bcdHexagonLbl);
-            Controls.Add(efgHexagonLbl);
-            Controls.Add(iopHexagonLbl);
-            Controls.Add(jklHexagonLbl);
+            Controls.Add(settingsHexagonLbl);
+            Controls.Add(runPresetHexagonLbl);
+            Controls.Add(languageHexagonLbl);
+            Controls.Add(fullScreenHexagonLbl);
+            Controls.Add(helpHexagonLbl);
         }
         void LoadButton(Point hexagonLocation, int currentHexagonSize, Button hexagonButton)
         {
@@ -483,34 +492,41 @@ namespace IntroProject
                                             (int)(screenSizeX / 4 - 3 * hexagonSize * 2.6 / 12 + 3 * hexagonSize * 2.6 / 24)   , (int)(screenSizeY / 4) ,
                                             (int)(screenSizeX / 4 - 3 * hexagonSize * 2.6 / 12 + 3 * hexagonSize * 2.6 / 24)   , (int)(screenSizeY / 4 + hexagonSize) }; return res;
         }
-        private void startBTPressed(object sender, EventArgs e) 
+        private void startBTPressed(object sender, EventArgs e)
         {
             //save changes
             //exit menu
         }
         private void exitBTPressed(object sender, EventArgs e) => Application.Exit();
-        private void abcBTPressed(object sender, EventArgs e)
+        public void settingsBTPressed(object sender, EventArgs e)
         {
-            //Debug.WriteLine("ABC button pressed");
+            SettingsMenu settingsMenu = new SettingsMenu(screenSizeX,screenSizeY,_exitMenu);
+
         }
-        private void bcdBTPressed(object sender, EventArgs e)
+
+        private void runPresetBTPressed(object sender, EventArgs e)
         {
-            //Debug.WriteLine("BCD button pressed");
+            //Debug.WriteLine("runPreset button pressed");
         }
-        private void efgBTPressed(object sender, EventArgs e)
+        private void languageBTPressed(object sender, EventArgs e)
         {
-            //Debug.WriteLine("EFG button pressed");
+            //Debug.WriteLine("language button pressed");
         }
-        private void iopBTPressed(object sender, EventArgs e)
+        private void fullScreenBTPressed(object sender, EventArgs e)
         {
-            //Debug.WriteLine("IOP button pressed");
+            //Debug.WriteLine("fullScreen button pressed");
         }
-        private void jklBTPressed(object sender, EventArgs e)
+        private void helpBTPressed(object sender, EventArgs e)
         {
-            //Debug.WriteLine("jkl button pressed");
+            //Debug.WriteLine("help button pressed");
         }
     }
-    
+    //
+    //
+    //Begin mainmenu code, het lijkt me handig als Wilfried en iemand die de omliggende code heeft gemaakt er verder naar kijken.
+    //
+    //
+    //
 
     class SettingsMenu : UserControl
     {
