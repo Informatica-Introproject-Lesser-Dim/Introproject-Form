@@ -533,7 +533,8 @@ namespace IntroProject
         MultipleLanguages multipleLanguages = new MultipleLanguages();
         public bool changed, newMap = false, warned = true;
 
-        private OpenFileDialog openFileDialog = new OpenFileDialog();
+        internal OpenFileDialog openFileDialog = new OpenFileDialog();
+        internal SaveFileDialog SaveFileDialog = new SaveFileDialog();
         private CheckBox AddHeat;
         private ComboBox languageIndex;
         private List<TrackBar> trackBars = new List<TrackBar>();
@@ -565,6 +566,17 @@ namespace IntroProject
 
 
             //Makes the Save Settings Button
+            int k = (2 * (Size.Width / 3)) + 40, l = (1 * (Size.Height / 10)) + 60;
+
+            Button ExportSetts = new Button();
+            ExportSetts.Location = new Point(k, l);
+            ExportSetts.Size = new Size(edge * 2, edge * 2);
+            ExportSetts.FlatAppearance.BorderColor = Color.FromArgb(123, 156, 148);
+            ExportSetts.BackColor = Color.White;
+            ExportSetts.Text = "Export Settings";
+            ExportSetts.Click += ExportSettings;
+
+            //Makes the Save Settings Button
             int n = (2 * (Size.Width / 3)) + 40, m = (6 * (Size.Height / 10)) + 60;
 
             Button SaveSetts = new Button();
@@ -578,6 +590,7 @@ namespace IntroProject
             this.Controls.Add(exit);
             this.Controls.Add(importSet);
             this.Controls.Add(SaveSetts);
+            this.Controls.Add(ExportSetts);
 
             //Resize Method for the buttons
             Resize += (object o, EventArgs ea) =>
@@ -795,7 +808,7 @@ namespace IntroProject
                 {
                     StreamReader sr = new StreamReader(openFileDialog.FileName);
 
-                    string[] settings = new string[14];
+                    string[] settings = new string[15];
                     string lineInfo;
                     int i = 0;
 
@@ -806,7 +819,7 @@ namespace IntroProject
                     }
 
                     sr.Close();
-                    import(settings);
+                    Import(settings);
                 }
                 catch (SecurityException ex)
                 {
@@ -815,21 +828,21 @@ namespace IntroProject
                 }
         }
 
-        private void import(string[] settings) //imports all the values to the sliders
+        private void Import(string[] settings) //imports all the values to the sliders
         { 
             trackBars[0].Value = (int) float.Parse(settings[0]) * 100;
             trackBars[1].Value = int.Parse(settings[1]);
             trackBars[2].Value = int.Parse(settings[2]);
             trackBars[3].Value = int.Parse(settings[3]);
             trackBars[4].Value = (int)float.Parse(settings[4]) * 100;
-            trackBars[5].Value = (int)float.Parse(settings[5]) * 100;
+            trackBars[5].Value = (int) (float.Parse(settings[5]) * 100);
             trackBars[6].Value = int.Parse(settings[6]);
             trackBars[7].Value = int.Parse(settings[7]);
             trackBars[8].Value = int.Parse(settings[8]);
             trackBars[9].Value = int.Parse(settings[9]);
-            trackBars[10].Value = (int)float.Parse(settings[10]) * 10;
-            trackBars[11].Value = (int)float.Parse(settings[11]) * 10;
-            trackBars[12].Value = (int)float.Parse(settings[12]) * 10;
+            trackBars[10].Value = (int)(float.Parse(settings[10]) * 100);
+            trackBars[11].Value = (int)(float.Parse(settings[11]) * 10000);
+            trackBars[12].Value = (int)(float.Parse(settings[12]) * 1000000);
             AddHeat.Checked = bool.Parse(settings[13]);
             languageIndex.SelectedIndex = int.Parse(settings[14]);
         }
@@ -870,14 +883,40 @@ namespace IntroProject
             }
         }
 
-        private string ExportSettings()
+        public void ExportSettings(object o, EventArgs e)
+        {
+            StreamWriter stream;
+
+            SaveFileDialog.CreatePrompt = true;
+            SaveFileDialog.OverwritePrompt = true;
+            SaveFileDialog.FileName = "HoL Settings";
+            SaveFileDialog.DefaultExt = "txt";
+            SaveFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+            SaveFileDialog.FilterIndex = 2;
+            SaveFileDialog.InitialDirectory =
+                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+            if (SaveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                stream =new StreamWriter(SaveFileDialog.OpenFile());
+                stream.Write(Export());
+                stream.Close();
+            }
+        }
+
+    private string Export()
         {
             string export;
             export = Sp.ToString() + "\n";
+            export += TE + "\n";
+            export += SE + "\n";
             export += HS + "\n";
+            export += MH + "\n";
             export += MC + "\n";
             export += GG + "\n";
             export += GMF + "\n";
+            export += MiT + "\n";
+            export += MaT + "\n";
             export += WE + "\n";
             export += JE + "\n";
             export += PE + "\n";
@@ -914,6 +953,7 @@ namespace IntroProject
             Settings.PassiveEnergy = PE;
             Settings.AddHeatMap = AddHeat.Checked;
             Settings.LanguageIndex = languageIndex.SelectedIndex;
+            changed = false;
         }
 
         public void RevertSettings()
