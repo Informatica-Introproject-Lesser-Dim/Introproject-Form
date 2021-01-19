@@ -24,20 +24,20 @@ namespace IntroProject
             Size = new Size(1800, 1200);
             mapscr = new MapScreen(Size);
             settingsMenu = new SettingsMenu(Size.Width, Size.Height, (object o, EventArgs ea) =>
-            { 
-                settingsMenu.RevertSettings(); 
-                mapscr.UpdateVars(settingsMenu.newMap); 
-                settingsMenu.newMap = false; 
-                settingsMenu.Hide(); 
+            {
+                settingsMenu.RevertSettings();
+                mapscr.UpdateVars(settingsMenu.newMap);
+                settingsMenu.newMap = false;
+                settingsMenu.Hide();
                 if (!mapscr.buttonPaused)
-                    mapscr.paused = false; 
+                    mapscr.paused = false;
             });
             helpMenu = new HelpMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { helpMenu.Hide(); if (!mapscr.buttonPaused) mapscr.paused = false; });
             statisticsMenu = new StatisticsMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { statisticsMenu.Hide(); if (!mapscr.buttonPaused) mapscr.paused = false; });
-            dropMenu = new DropMenu(Size.Width/10, Size.Height, 
-                                   (object o, EventArgs ea) => { settingsMenu.Show(); settingsMenu.BringToFront(); mapscr.paused = true; }, 
-                                   (object o, EventArgs ea) => { helpMenu.Show(); helpMenu.BringToFront(); mapscr.paused = true; }, 
-                                   (object o, EventArgs ea) => { statisticsMenu.Show(); statisticsMenu.BringToFront(); mapscr.paused = true; },          
+            dropMenu = new DropMenu(Size.Width / 10, Size.Height,
+                                   (object o, EventArgs ea) => { settingsMenu.Show(); settingsMenu.BringToFront(); mapscr.paused = true; },
+                                   (object o, EventArgs ea) => { helpMenu.Show(); helpMenu.BringToFront(); mapscr.paused = true; },
+                                   (object o, EventArgs ea) => { statisticsMenu.Show(); statisticsMenu.BringToFront(); mapscr.paused = true; },
                                     mapscr.plus);
             dropMenu.Dock = DockStyle.Right;
 
@@ -51,7 +51,7 @@ namespace IntroProject
             statisticsMenu.Hide();
             helpMenu.Hide();
 
-            Resize += (object o, EventArgs ea) => 
+            Resize += (object o, EventArgs ea) =>
             {
                 int maxim = Math.Max(Size.Width, Size.Height) / 36;
                 mapscr.Size = new Size(Size.Width, Size.Height);
@@ -74,8 +74,8 @@ namespace IntroProject
         public Button plus = new ButtonImaged(Properties.Resources.Plus_icon);
         private Button play = new ButtonImaged(Properties.Resources.Play_icon);
         private Entity selected;
-        private Map map;
         private Font font = new Font("Arial", 12);
+        private Map map;
         public bool paused = true, buttonPaused = true;
         bool camAutoMove = false;
         int[] pos = new int[2] { 0, 0 };
@@ -96,7 +96,7 @@ namespace IntroProject
             this.Controls.Add(plus);
 
             Size method = new Size(60, 60);
-            
+
             pause.Size = method;
             play.Size = method;
             stop.Size = method;
@@ -107,9 +107,9 @@ namespace IntroProject
 
             play.Click += Play_Click;
             pause.Click += (object o, EventArgs ea) => { play.Show(); paused = true; buttonPaused = true; };
-            stop.Click += (object o, EventArgs ea) => { play.Show(); paused = true; buttonPaused = true; play.Click += NewMap; play.Click -= Play_Click;  };
+            stop.Click += (object o, EventArgs ea) => { play.Show(); paused = true; buttonPaused = true; play.Click += NewMap; play.Click -= Play_Click; };
 
-            Controls.Add(play); 
+            Controls.Add(play);
             Controls.Add(pause);
             Controls.Add(stop);
 
@@ -151,7 +151,7 @@ namespace IntroProject
         public void MapClick(object o, MouseEventArgs mea)
         {
             if (selected != null)
-            { 
+            {
                 selected.selected = false;
                 camAutoMove = false;
             }
@@ -160,7 +160,7 @@ namespace IntroProject
             Entity newE = map.GetCreature(mea.X - xCam, mea.Y - yCam, 40);
             if (newE == null)
                 return;
-            
+
             newE.selected = true;
             selected = newE;
             camAutoMove = true;
@@ -171,28 +171,16 @@ namespace IntroProject
             switch (keyData)
             {
                 case Keys.Up:
-                    if (yCam + (size * (0.5 * Hexagon.sqrt3)) >= 0.5 * Size.Height)
-                        yCam = (int)(0.5 * Size.Height);
-                    else
-                        yCam += (int)(size * (0.5 * Hexagon.sqrt3));
+                    yCam = (int)Math.Min(0.5 * Size.Height, yCam + size * 0.5 * Hexagon.sqrt3);
                     break;
                 case Keys.Down:
-                    if (yCam - (size * 0.5 * Hexagon.sqrt3) <= -(map.tiles[map.width - 1, map.height - 1].y - 0.5 * Size.Height))
-                        yCam = (int)-(map.tiles[map.width - 1, map.height - 1].y - 0.5 * Size.Height);
-                    else
-                        yCam -= (int)(size * (0.5 * Hexagon.sqrt3));
+                    yCam = (int)Math.Min(0.5 * Size.Height - map.tiles[map.width - 1, map.height - 1].y, yCam - size * 0.5 * Hexagon.sqrt3);
                     break;
                 case Keys.Left:
-                    if (xCam + (size * (3.0 / 2)) >= 0.5 * Size.Width)
-                        xCam = (int)(0.5 * Size.Width);
-                    else
-                        xCam += (int)(size * (3.0 / 2));
+                    xCam = (int)Math.Min(0.5 * Size.Width, xCam + size * 1.5);
                     break;
                 case Keys.Right:
-                    if (xCam - (size * (3.0 / 2)) <= -(map.tiles[map.width - 1, map.height - 1].x - 0.5 * Size.Width))
-                        xCam = (int)-(map.tiles[map.width - 1, map.height - 1].x - 0.5 * Size.Width);
-                    else
-                        xCam -= (int)(size * (3.0 / 2));
+                    xCam = (int)Math.Min(0.5 * Size.Width - map.tiles[map.width - 1, map.height - 1].x, xCam - size * 1.5);
                     break;
             }
             camAutoMove = false;
@@ -200,7 +188,7 @@ namespace IntroProject
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        public void drawScreen(object o, PaintEventArgs pea) 
+        public void drawScreen(object o, PaintEventArgs pea)
         {
             if (!paused)
             {
@@ -218,16 +206,16 @@ namespace IntroProject
             }
             map.draw(pea.Graphics, xCam, yCam, Width, Height);
             n++;
-            
+
             if (selected != null)
             {
                 pea.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(50, 0, 0, 0)), Width - 500, 100, 200, 100);
-                pea.Graphics.DrawString(selected.GetType().ToString().Substring(13, selected.GetType().ToString().Length - 13) + "\n" + 
-                                        "Energy: " + Math.Round(selected.energyVal, 2) + "\nGender: " + selected.gender, 
+                pea.Graphics.DrawString(selected.GetType().ToString().Substring(13, selected.GetType().ToString().Length - 13) + "\n" +
+                                        "Energy: " + Math.Round(selected.energyVal, 2) + "\nGender: " + selected.gender,
                                         font, new SolidBrush(Color.Black),
                                         Width - 490, 110);
             }
-            
+
             int[] genders = map.countMalesAndFemales();
 
             pea.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(50, 0, 0, 0)), 50, 200, 200, 100);
@@ -292,9 +280,9 @@ namespace IntroProject
             int marge = (int)(edge * .2);
             Size big = new Size(edge, edge);
 
-            statistics.Location = new Point(Size.Width/10, locY);
+            statistics.Location = new Point(Size.Width / 10, locY);
             settings.Location = new Point(Size.Width / 10, locY + big.Width + marge);
-            help.Location = new Point(Size.Width / 10, locY + 2*big.Width + 2 *marge);
+            help.Location = new Point(Size.Width / 10, locY + 2 * big.Width + 2 * marge);
             min.Location = new Point(5, 5);
             min.BringToFront();
 
@@ -320,7 +308,7 @@ namespace IntroProject
                 settings.Size = big;
                 help.Size = big;
                 min.Size = big / 3;
-                
+
                 locY = (int)(Size.Height * .4);
                 marge = (int)(edge * .2);
 
@@ -492,31 +480,30 @@ namespace IntroProject
                                             (int)(screenSizeX / 4 - 3 * hexagonSize * 2.6 / 12 + 3 * hexagonSize * 2.6 / 24)   , (int)(screenSizeY / 4) ,
                                             (int)(screenSizeX / 4 - 3 * hexagonSize * 2.6 / 12 + 3 * hexagonSize * 2.6 / 24)   , (int)(screenSizeY / 4 + hexagonSize) }; return res;
         }
-        private void startBTPressed(object sender, EventArgs e)
+        private void startBTPressed(object sender, EventArgs ea)
         {
             //save changes
             //exit menu
         }
-        private void exitBTPressed(object sender, EventArgs e) => Application.Exit();
-        public void settingsBTPressed(object sender, EventArgs e)
+        private void exitBTPressed(object sender, EventArgs ea) => Application.Exit();
+        public void settingsBTPressed(object sender, EventArgs ea)
         {
-            SettingsMenu settingsMenu = new SettingsMenu(screenSizeX,screenSizeY,_exitMenu);
-
+            SettingsMenu settingsMenu = new SettingsMenu(screenSizeX, screenSizeY, _exitMenu);
         }
 
-        private void runPresetBTPressed(object sender, EventArgs e)
+        private void runPresetBTPressed(object sender, EventArgs ea)
         {
             //Debug.WriteLine("runPreset button pressed");
         }
-        private void languageBTPressed(object sender, EventArgs e)
+        private void languageBTPressed(object sender, EventArgs ea)
         {
             //Debug.WriteLine("language button pressed");
         }
-        private void fullScreenBTPressed(object sender, EventArgs e)
+        private void fullScreenBTPressed(object sender, EventArgs ea)
         {
             //Debug.WriteLine("fullScreen button pressed");
         }
-        private void helpBTPressed(object sender, EventArgs e)
+        private void helpBTPressed(object sender, EventArgs ea)
         {
             //Debug.WriteLine("help button pressed");
         }
@@ -620,7 +607,7 @@ namespace IntroProject
 
             fvalue = (Settings.MiddleHeight + 1f) / 2f;
             (TrackBar TrackBarMiddleHeight, TextBox TextBoxMiddleHeight, ToolTip ToolTipMiddleHeight) = MakeSlider(0, 4, multipleLanguages.DisplayText("SDseaLevel"), fvalue, 0, 99, 100, "bijbehorende uitleg");
-            TrackBarMiddleHeight.ValueChanged += (object o, EventArgs ea) => { MH = (TrackBarMiddleHeight.Value/50f) - 0.99f; };
+            TrackBarMiddleHeight.ValueChanged += (object o, EventArgs ea) => { MH = (TrackBarMiddleHeight.Value / 50f) - 0.99f; };
             TextBoxMiddleHeight.Leave += (object o, EventArgs ea) => { MH = float.Parse(TextBoxMiddleHeight.Text) - 0.99f; };
             trackBars.Add(TrackBarMiddleHeight); //4
 
@@ -646,7 +633,7 @@ namespace IntroProject
 
             (TrackBar TrackBarTemperatureMax, TextBox TextBoxTemperatureMax, ToolTip ToolTipTemperatureMax) = MakeSlider(1, 1, multipleLanguages.DisplayText("SDmaxTemp"), Settings.MaxTemp, 20, 30, 1, "bijbehorende uitleg");
             TrackBarTemperatureMax.ValueChanged += (object o, EventArgs ea) => { MaT = TrackBarTemperatureMax.Value; };
-            TextBoxTemperatureMax.Leave += (object o, EventArgs ea) => {  MaT = int.Parse(TextBoxTemperatureMax.Text); };
+            TextBoxTemperatureMax.Leave += (object o, EventArgs ea) => { MaT = int.Parse(TextBoxTemperatureMax.Text); };
             trackBars.Add(TrackBarTemperatureMax); //9
 
             value = (int)(Settings.WalkEnergy * (float)r);
@@ -676,9 +663,9 @@ namespace IntroProject
 
         //Makes a TrackBar with connected Textbox, which are returned for specialzation
         private (TrackBar, TextBox, ToolTip) MakeSlider(int x, int y, string name, float basevalue, int minvalue, int maxvalue, int scale, string uitleg)
-        { 
+        {
             Size sliderTextBoxSize = new Size(30, 20);
-            int w = (x * (Size.Width/3))+ 40, h = (y * (Size.Height / 10)) + 60;
+            int w = (x * (Size.Width / 3)) + 40, h = (y * (Size.Height / 10)) + 60;
 
             Label label = new Label();
             label.Size = new Size(200, 20);
@@ -687,17 +674,17 @@ namespace IntroProject
             label.Location = new Point(w, h);
             label.AutoSize = false;
 
-            TrackBar trackBar = new CustomTrackbar(w, (h+20), minvalue, maxvalue);
+            TrackBar trackBar = new CustomTrackbar(w, (h + 20), minvalue, maxvalue);
             TextBox textBox = new TextBox();
             textBox.BackColor = Color.FromArgb(123, 156, 148);
             textBox.BorderStyle = BorderStyle.FixedSingle;
             textBox.ForeColor = Color.White;
-            trackBar.Value = (int) (basevalue * scale);
+            trackBar.Value = (int)(basevalue * scale);
             trackBar.Size = new Size((Size.Width / 4), 40);
             textBox.Text = basevalue.ToString();
-            trackBar.ValueChanged += (object o, EventArgs ea) => { textBox.Text = (Math.Round(trackBar.Value * (1.0/scale), 2)).ToString(); changed = true; };
+            trackBar.ValueChanged += (object o, EventArgs ea) => { textBox.Text = (Math.Round(trackBar.Value * (1.0 / scale), 2)).ToString(); changed = true; };
             textBox.Leave += (object o, EventArgs ea) => { trackBar.Value = Convert.ToInt32(double.Parse(textBox.Text) * scale); changed = true; };
-            textBox.Location = new Point((w + (Size.Width / 4)), (h+30));
+            textBox.Location = new Point((w + (Size.Width / 4)), (h + 30));
             textBox.Size = sliderTextBoxSize;
             trackBar.AutoSize = false;
 
@@ -719,7 +706,7 @@ namespace IntroProject
             Controls.Add(trackBar);
             Controls.Add(textBox);
             Controls.Add(label);
-            
+
             return (trackBar, textBox, toolTip);
         }
 
@@ -734,7 +721,7 @@ namespace IntroProject
             label.AutoSize = false;
             label.Text = name;
 
-            AddHeat.Location = new Point((w+10), (h+20));
+            AddHeat.Location = new Point((w + 10), (h + 20));
             AddHeat.AutoSize = false;
             AddHeat.Checked = false;
 
@@ -750,7 +737,7 @@ namespace IntroProject
                 label.Location = new Point(w, h);
                 AddHeat.Location = new Point((w + 10), (h + 20));
             };
-            
+
             Controls.Add(AddHeat);
             Controls.Add(label);
         }
@@ -789,7 +776,7 @@ namespace IntroProject
             Controls.Add(label);
         }
         public void ImportSettings(object o, EventArgs ea) //Imports settings from a given txt file
-        { 
+        {
             if (openFileDialog.ShowDialog() == DialogResult.OK)
                 try
                 {
@@ -816,8 +803,8 @@ namespace IntroProject
         }
 
         private void import(string[] settings) //imports all the values to the sliders
-        { 
-            trackBars[0].Value = (int) float.Parse(settings[0]) * 100;
+        {
+            trackBars[0].Value = (int)float.Parse(settings[0]) * 100;
             trackBars[1].Value = int.Parse(settings[1]);
             trackBars[2].Value = int.Parse(settings[2]);
             trackBars[3].Value = int.Parse(settings[3]);
@@ -839,15 +826,15 @@ namespace IntroProject
             if (changed || languageIndex.SelectedIndex != Settings.LanguageIndex || AddHeat.Checked != Settings.AddHeatMap)
             {
                 DialogResult implement = MessageBox.Show(multipleLanguages.DisplayText("DRchangedSettings0"), multipleLanguages.DisplayText("DRchangedSettings1"), MessageBoxButtons.YesNo);
-                
+
                 if (implement == DialogResult.Yes)
                 {
                     ImplementSettings();
 
-                    if (TE != Settings.TotalEntities || SE != Settings.StartEntities || MH != Settings.MiddleHeight ||  MiT != Settings.MinTemp || MaT != Settings.MaxTemp)
+                    if (TE != Settings.TotalEntities || SE != Settings.StartEntities || MH != Settings.MiddleHeight || MiT != Settings.MinTemp || MaT != Settings.MaxTemp)
                     {
                         DialogResult restart = MessageBox.Show(multipleLanguages.DisplayText("DRdoYouWantToRestart0"), multipleLanguages.DisplayText("DRdoYouWantToRestart1"), MessageBoxButtons.YesNo);
-                        
+
                         if (restart == DialogResult.Yes)
                         {
                             Settings.TotalEntities = TE;
@@ -861,7 +848,7 @@ namespace IntroProject
                         {
                             trackBars[1].Value = Settings.TotalEntities;
                             trackBars[2].Value = Settings.StartEntities;
-                            trackBars[4].Value = (int) Settings.MiddleHeight * 100;
+                            trackBars[4].Value = (int)Settings.MiddleHeight * 100;
                             trackBars[8].Value = Settings.MinTemp;
                             trackBars[9].Value = Settings.MaxTemp;
                         }
@@ -918,19 +905,19 @@ namespace IntroProject
 
         public void RevertSettings()
         {
-            trackBars[0].Value = (int) (Settings.StepSize * 100f);
+            trackBars[0].Value = (int)(Settings.StepSize * 100f);
             trackBars[1].Value = Settings.TotalEntities;
             trackBars[2].Value = Settings.StartEntities;
             trackBars[3].Value = Settings.HatchSpeed;
-            trackBars[4].Value = (int) ((Settings.MiddleHeight + 1f) * 50f);
-            trackBars[5].Value = (int) (Settings.MatingCost * 100f);
+            trackBars[4].Value = (int)((Settings.MiddleHeight + 1f) * 50f);
+            trackBars[5].Value = (int)(Settings.MatingCost * 100f);
             trackBars[6].Value = Settings.GrassGrowth;
             trackBars[7].Value = Settings.GrassMaxFeed;
             trackBars[8].Value = Settings.MinTemp;
             trackBars[9].Value = Settings.MaxTemp;
-            trackBars[10].Value = (int) (Settings.WalkEnergy * 100f);
-            trackBars[11].Value = (int) (Settings.JumpEnergy * 10000f);
-            trackBars[12].Value = (int) (Settings.PassiveEnergy * 1000000f);
+            trackBars[10].Value = (int)(Settings.WalkEnergy * 100f);
+            trackBars[11].Value = (int)(Settings.JumpEnergy * 10000f);
+            trackBars[12].Value = (int)(Settings.PassiveEnergy * 1000000f);
             AddHeat.Checked = Settings.AddHeatMap;
             languageIndex.SelectedIndex = Settings.LanguageIndex;
         }
@@ -941,7 +928,7 @@ namespace IntroProject
         MultipleLanguages translator = MultipleLanguages.Instance;
 
         private Label textLabel = new Label();
-        
+
         public HelpMenu(int w, int h, EventHandler exitMenu)
         {
             this.translator = new MultipleLanguages();
@@ -967,6 +954,7 @@ namespace IntroProject
     class StatisticsMenu : UserControl
     {
         int r = 0;
+
         public StatisticsMenu(int w, int h, EventHandler exitMenu)
         {
             BackColor = Color.FromArgb(123, 156, 148);
@@ -986,10 +974,10 @@ namespace IntroProject
                 exit.Size = new Size(edge, edge);
             };
 
-            Button statname1 = ButtonList("statistics");
-            Button statname2 = ButtonList("statistics");
-            Button statname3 = ButtonList("statistics");
-            Button statname4 = ButtonList("statistics");
+            Button statname1 = ButtonList("PopulationSize");
+            Button statname2 = ButtonList("Male/Female Ratio");
+            Button statname3 = ButtonList("Average Velocity");
+            Button statname4 = ButtonList("Average Size");
             Button statname5 = ButtonList("statistics");
             Button statname6 = ButtonList("statistics");
         }

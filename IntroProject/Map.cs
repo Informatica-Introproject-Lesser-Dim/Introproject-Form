@@ -35,7 +35,8 @@ namespace IntroProject
 
         Bitmap mapBase;
 
-        public Map(int width, int height, int size, int margin) {
+        public Map(int width, int height, int size, int margin)
+        {
             this.width = width;
             this.height = height;
             this.size = size;
@@ -71,7 +72,8 @@ namespace IntroProject
             drawBase();
         }
 
-        public void EntityForceAdd(Entity e) {
+        public void EntityForceAdd(Entity e)
+        {
             children.Add(e);
             if (e.gender == 1)
                 malesAdded++;
@@ -79,15 +81,16 @@ namespace IntroProject
                 femalesAdded++;
         }
 
-        public void placeEntity(Entity e, int x, int y) { //no randomness, just normally placing it here
+        public void placeEntity(Entity e, int x, int y) //no randomness, just normally placing it here
+        { 
             if (x < 0 || x >= width || y < 0 || y >= height)
                 return;
             tiles[x, y].addEntity(e);
             entities.Add(e);
         }
 
-        private void activateEntities(double dt) {
-            
+        private void activateEntities(double dt)
+        {
             if (deaths.Count > 0)
             {
                 foreach (Entity deadEntity in deaths)
@@ -115,7 +118,8 @@ namespace IntroProject
                 }
         }
 
-        public void TimeStep(double dt) {
+        public void TimeStep(double dt)
+        {
             time += dt; //the map keeps the time so that not each hexagon has to keep the time for itself
             this.activateEntities(dt); //activating all the entities
             foreach (Hexagon hexagon in tiles)
@@ -123,7 +127,8 @@ namespace IntroProject
         }
 
 
-        private Hexagon[] calcNeighbors(int x, int y) {
+        private Hexagon[] calcNeighbors(int x, int y)
+        {
             Hexagon[] result = new Hexagon[6];
             int a = x % 2; //bias for when you're in one of the lower colums
             result[0] = getHex(x, y - 1); //specifying the specific hex adress for the neighbor in each direction
