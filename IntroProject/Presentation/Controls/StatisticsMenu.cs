@@ -26,12 +26,17 @@ namespace IntroProject.Presentation.Controls
                 exit.Size = new Size(edge, edge);
             };
 
-            Button statname1 = ButtonList("statistics");
-            Button statname2 = ButtonList("statistics");
-            Button statname3 = ButtonList("statistics");
-            Button statname4 = ButtonList("statistics");
-            Button statname5 = ButtonList("statistics");
-            Button statname6 = ButtonList("statistics");
+            Button statname1 = ButtonList("CarnivorePopulation");
+            Button statname2 = ButtonList("CarnivoreVelocity");
+            Button statname3 = ButtonList("CarnivoreSize");
+            Button statname4 = ButtonList("HerbivorePopulation");
+            Button statname5 = ButtonList("HerbivoreVelocity");
+            Button statname6 = ButtonList("HerbivoreSize");
+        }
+
+        public void MakeGraph(int i)
+        {
+            //Getstats and make a graph depending on the type i given by the press of the buttons
         }
 
         private Button ButtonList(String name) //makes a button and next call makes a button under the previus.
@@ -48,7 +53,7 @@ namespace IntroProject.Presentation.Controls
             {
                 y = Math.Min(Size.Width / 30, Size.Height / 20) + 10;
 
-                button.Location = new Point(0, i*y);
+                button.Location = new Point(0, i * y);
                 button.Size = new Size(Width / 12, Height / 20);
             };
 

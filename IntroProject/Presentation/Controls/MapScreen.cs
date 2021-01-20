@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -59,6 +60,8 @@ namespace IntroProject.Presentation.Controls
             MouseClick += MapClick;
         }
 
+        public List<Statistics> GetStats() => map.statistics;
+
         private void Play_Click(object sender, EventArgs ea)
         {
             play.Hide();
@@ -111,28 +114,16 @@ namespace IntroProject.Presentation.Controls
             switch (keyData)
             {
                 case Keys.Up:
-                    if (yCam + (size * (0.5 * Hexagon.sqrt3)) >= 0.5 * Size.Height)
-                        yCam = (int)(0.5 * Size.Height);
-                    else
-                        yCam += (int)(size * (0.5 * Hexagon.sqrt3));
+                    yCam = (int)Math.Min(0.5 * Size.Height, yCam + size * 0.5 * Hexagon.sqrt3);
                     break;
                 case Keys.Down:
-                    if (yCam - (size * 0.5 * Hexagon.sqrt3) <= -(map.tiles[map.width - 1, map.height - 1].y - 0.5 * Size.Height))
-                        yCam = (int)-(map.tiles[map.width - 1, map.height - 1].y - 0.5 * Size.Height);
-                    else
-                        yCam -= (int)(size * (0.5 * Hexagon.sqrt3));
+                    yCam = (int)Math.Max(0.5 * Size.Height - map.tiles[map.width - 1, map.height - 1].y, yCam - size * 0.5 * Hexagon.sqrt3);
                     break;
                 case Keys.Left:
-                    if (xCam + (size * (3.0 / 2)) >= 0.5 * Size.Width)
-                        xCam = (int)(0.5 * Size.Width);
-                    else
-                        xCam += (int)(size * (3.0 / 2));
+                    xCam = (int)Math.Min(0.5 * Size.Width, xCam + 1.5 * size);
                     break;
                 case Keys.Right:
-                    if (xCam - (size * (3.0 / 2)) <= -(map.tiles[map.width - 1, map.height - 1].x - 0.5 * Size.Width))
-                        xCam = (int)-(map.tiles[map.width - 1, map.height - 1].x - 0.5 * Size.Width);
-                    else
-                        xCam -= (int)(size * (3.0 / 2));
+                    xCam = (int)Math.Max(0.5 * Size.Width - map.tiles[map.width - 1, map.height - 1].x, xCam - size * 1.5);
                     break;
             }
             camAutoMove = false;
