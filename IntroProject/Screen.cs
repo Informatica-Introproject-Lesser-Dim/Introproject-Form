@@ -341,11 +341,8 @@ namespace IntroProject
     class HomeMenu : UserControl
     {
         public int screenSizeX, screenSizeY, hexagonSize;
-        Label startHexagonLbl = new Label(), exitHexagonLbl = new Label(), settingsHexagonLbl = new Label(), runPresetHexagonLbl = new Label(), languageHexagonLbl = new Label(), fullScreenHexagonLbl = new Label(), helpHexagonLbl = new Label();
         Button startHexagonBt = new Button(), exitHexagonBt = new Button(), settingsHexagonBt = new Button(), runPresetHexagonBt = new Button(), languageHexagonBt = new Button(), fullScreenHexagonBt = new Button(), helpHexagonBt = new Button();
         public Point startButtonLocation, exitButtonLocation, settingsButtonLocation, runPresetButtonLocation, languageButtonLocation, fullScreenButtonLocation, helpButtonLocation;
-        public int labelWidth = 150;
-        public int labelHeight = 40;
         EventHandler _exitMenu;
         public HomeMenu(int w, int h, EventHandler exitMenu)
         {
@@ -362,6 +359,7 @@ namespace IntroProject
             fullScreenButtonLocation = new Point(menuButtonLocations[10], menuButtonLocations[11]);
             helpButtonLocation = new Point(menuButtonLocations[12], menuButtonLocations[13]);
             createAllButtons();
+
             createAllLabels();
         }
 
@@ -393,72 +391,15 @@ namespace IntroProject
         }
         public void createAllLabels()
         {
-            int[] menuLabelLocations = {
-                (int)(screenSizeX / 2 - labelWidth / 3), (int)(screenSizeY / 2 -labelHeight/3),
-                (int)(screenSizeX / 2 - labelWidth / 3), (int)(screenSizeY / 2 + hexagonSize*2-labelHeight/3),
-                (int)(screenSizeX / 2 + 3 * hexagonSize * 2.6 / 12 * 2 - labelWidth / 3), (int)(screenSizeY / 2 - hexagonSize -labelHeight/3),
-                (int)(screenSizeX / 2 + 3 * hexagonSize * 2.6 / 12 * 2 - labelWidth / 3), (int)(screenSizeY / 2 + hexagonSize -labelHeight/3),
-                (int)(screenSizeX / 2 - labelWidth / 3), (int)(screenSizeY / 2 - hexagonSize*2-labelHeight/3),
-                (int)(screenSizeX / 2 - 3 * hexagonSize * 2.6 / 12 * 2 - labelWidth / 3), (int)(screenSizeY / 2 - hexagonSize -labelHeight/3),
-                (int)(screenSizeX / 2 - 3 * hexagonSize * 2.6 / 12 * 2 - labelWidth / 3), (int)(screenSizeY / 2 + hexagonSize -labelHeight/3)
-            };
-
-            startHexagonLbl.Location = new Point(menuLabelLocations[0], menuLabelLocations[1]);
-            exitHexagonLbl.Location = new Point(menuLabelLocations[2], menuLabelLocations[3]);
-            settingsHexagonLbl.Location = new Point(menuLabelLocations[4], menuLabelLocations[5]);
-            languageHexagonLbl.Location = new Point(menuLabelLocations[6], menuLabelLocations[7]);
-            helpHexagonLbl.Location = new Point(menuLabelLocations[8], menuLabelLocations[9]);
-            runPresetHexagonLbl.Location = new Point(menuLabelLocations[10], menuLabelLocations[11]);
-            fullScreenHexagonLbl.Location = new Point(menuLabelLocations[12], menuLabelLocations[13]);
-            startHexagonLbl.Width = labelWidth;
-            exitHexagonLbl.Width = labelWidth;
-            settingsHexagonLbl.Width = labelWidth;
-            runPresetHexagonLbl.Width = labelWidth;
-            languageHexagonLbl.Width = labelWidth;
-            fullScreenHexagonLbl.Width = labelWidth;
-            helpHexagonLbl.Width = labelWidth;
-            startHexagonLbl.Height = labelHeight;
-            exitHexagonLbl.Height = labelHeight;
-            settingsHexagonLbl.Height = labelHeight;
-            runPresetHexagonLbl.Height = labelHeight;
-            languageHexagonLbl.Height = labelHeight;
-            fullScreenHexagonLbl.Height = labelHeight;
-            helpHexagonLbl.Height = labelHeight;
-            startHexagonLbl.Text = "start";
-            exitHexagonLbl.Text = "exit";
-            settingsHexagonLbl.Text = "settings";
-            runPresetHexagonLbl.Text = "runPreset";
-            languageHexagonLbl.Text = "language";
-            fullScreenHexagonLbl.Text = "fullScreen";
-            helpHexagonLbl.Text = "help";
-            startHexagonLbl.Dock = DockStyle.None;
-            exitHexagonLbl.Dock = DockStyle.None;
-            settingsHexagonLbl.Dock = DockStyle.None;
-            runPresetHexagonLbl.Dock = DockStyle.None;
-            languageHexagonLbl.Dock = DockStyle.None;
-            fullScreenHexagonLbl.Dock = DockStyle.None;
-            helpHexagonLbl.Dock = DockStyle.None;
-            startHexagonLbl.AutoSize = false;
-            exitHexagonLbl.AutoSize = false;
-            settingsHexagonLbl.AutoSize = false;
-            runPresetHexagonLbl.AutoSize = false;
-            languageHexagonLbl.AutoSize = false;
-            fullScreenHexagonLbl.AutoSize = false;
-            helpHexagonLbl.AutoSize = false;
-            startHexagonLbl.TextAlign = ContentAlignment.MiddleCenter;
-            exitHexagonLbl.TextAlign = ContentAlignment.MiddleCenter;
-            settingsHexagonLbl.TextAlign = ContentAlignment.MiddleCenter;
-            runPresetHexagonLbl.TextAlign = ContentAlignment.MiddleCenter;
-            languageHexagonLbl.TextAlign = ContentAlignment.MiddleCenter;
-            fullScreenHexagonLbl.TextAlign = ContentAlignment.MiddleCenter;
-            helpHexagonLbl.TextAlign = ContentAlignment.MiddleCenter;
-            Controls.Add(startHexagonLbl);
-            Controls.Add(exitHexagonLbl);
-            Controls.Add(settingsHexagonLbl);
-            Controls.Add(runPresetHexagonLbl);
-            Controls.Add(languageHexagonLbl);
-            Controls.Add(fullScreenHexagonLbl);
-            Controls.Add(helpHexagonLbl);
+            int[] labelLoc = MenuLabelLocations(150, 40);
+            Label startHexagonLbl = CreateLabel(labelLoc[0], labelLoc[1], "start");
+            Label exitHexagonLbl = CreateLabel(labelLoc[2], labelLoc[3], "exit");
+            Label settingsHexagonLbl = CreateLabel(labelLoc[4], labelLoc[5], "settings");
+            Label languageHexagonLbl = CreateLabel(labelLoc[6], labelLoc[7], "runPreset");
+            Label helpHexagonLbl = CreateLabel(labelLoc[8], labelLoc[9], "language");
+            Label runPresetHexagonLbl = CreateLabel(labelLoc[10], labelLoc[11], "fullScreen");
+            Label fullScreenHexagonLbl = CreateLabel(labelLoc[12], labelLoc[13], "help");
+            
         }
         void LoadButton(Point hexagonLocation, int currentHexagonSize, Button hexagonButton)
         {
@@ -521,6 +462,33 @@ namespace IntroProject
         private void helpBTPressed(object sender, EventArgs e)
         {
             //Debug.WriteLine("help button pressed");
+        }
+        private Label CreateLabel(int x, int y, string name)
+        {
+            Label label = new Label();
+
+            label.Location = new Point(x, y);
+            label.Width = 150;
+            label.Height = 40;
+            label.Dock = DockStyle.None;
+            label.AutoSize = false;
+            label.TextAlign = ContentAlignment.MiddleCenter;
+            Controls.Add(label);
+
+            return label;
+        }
+        private int[] MenuLabelLocations(int w, int h)
+        {
+            int[] menuLabelLocations = {
+                (int)(screenSizeX / 2 - w / 3), (int)(screenSizeY / 2 -w/3),
+                (int)(screenSizeX / 2 - w / 3), (int)(screenSizeY / 2 + hexagonSize*2-h/3),
+                (int)(screenSizeX / 2 + 3 * hexagonSize * 2.6 / 12 * 2 - w / 3), (int)(screenSizeY / 2 - hexagonSize -h/3),
+                (int)(screenSizeX / 2 + 3 * hexagonSize * 2.6 / 12 * 2 - w / 3), (int)(screenSizeY / 2 + hexagonSize -h/3),
+                (int)(screenSizeX / 2 - w / 3), (int)(screenSizeY / 2 - hexagonSize*2-h/3),
+                (int)(screenSizeX / 2 - 3 * hexagonSize * 2.6 / 12 * 2 - w / 3), (int)(screenSizeY / 2 - hexagonSize -h/3),
+                (int)(screenSizeX / 2 - 3 * hexagonSize * 2.6 / 12 * 2 - w / 3), (int)(screenSizeY / 2 + hexagonSize -h/3)
+            };
+            return menuLabelLocations;
         }
     }
     //
