@@ -1,4 +1,4 @@
-﻿namespace IntroProject
+﻿namespace IntroProject.Presentation
 {
     partial class HexagonOfLife
     {

@@ -4,10 +4,11 @@ using System.Security;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
-using IntroProject.Core.Utils;
 using System.Drawing.Drawing2D;
 
-namespace IntroProject
+using IntroProject.Core.Utils;
+
+namespace IntroProject.Presentation
 {
     public partial class HexagonOfLife : Form
     {
