@@ -122,6 +122,7 @@ namespace IntroProject
 
         public override void draw(Graphics g, int hexX, int hexY, Entity e)
         {
+            base.draw(g, hexX, hexY, e);
             Image img;
             switch(goal)
             {
@@ -137,8 +138,6 @@ namespace IntroProject
                   break;
             }
             g.DrawImageUnscaled(img, hexX + x - r, hexY + y - r);
-            if (selected)
-                g.DrawEllipse(Pens.LightGreen, hexX + x - r, hexY + y - r, r * 2, r * 2);
         }
 
         public Carnivore(Gene gene, double energy) : base(gene, energy) { }

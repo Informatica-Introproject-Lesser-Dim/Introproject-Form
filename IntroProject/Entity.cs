@@ -55,9 +55,8 @@ namespace IntroProject
 
         public virtual void draw(Graphics g, int hexX, int hexY, Entity e)
         {
-            g.FillEllipse(new SolidBrush(color), hexX + x - r, hexY + y - r, r * 2, r * 2);
             if (selected)
-                g.DrawEllipse(Pens.Purple, hexX + x - r, hexY + y - r, r * 2, r * 2);
+                g.FillEllipse(Brushes.Navy, hexX + x - r, hexY + y - r, r * 2, r * 2);
         }
     }
 }
