@@ -122,7 +122,8 @@ namespace IntroProject
 
         public override void draw(Graphics g, int hexX, int hexY, Entity e)
         {
-            g.FillEllipse(new SolidBrush(Color.LimeGreen), hexX + x - r, hexY + y - r, r * 2, r * 2);
+            Image img = Properties.Resources.Lion_Normal;
+            g.DrawImageUnscaled(img, hexX + x - r, hexY + y - r);
             if (selected)
                 g.DrawEllipse(Pens.LightGreen, hexX + x - r, hexY + y - r, r * 2, r * 2);
         }
