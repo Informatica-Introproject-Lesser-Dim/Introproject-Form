@@ -117,13 +117,13 @@ namespace IntroProject.Presentation.Controls
                     yCam = (int)Math.Min(0.5 * Size.Height, yCam + size * 0.5 * Hexagon.sqrt3);
                     break;
                 case Keys.Down:
-                    yCam = (int)Math.Min(0.5 * Size.Height - map.tiles[map.width - 1, map.height - 1].y, yCam - size * 0.5 * Hexagon.sqrt3);
+                    yCam = (int)Math.Max(0.5 * Size.Height - map.tiles[map.width - 1, map.height - 1].y, yCam - size * 0.5 * Hexagon.sqrt3);
                     break;
                 case Keys.Left:
                     xCam = (int)Math.Min(0.5 * Size.Width, xCam + 1.5 * size);
                     break;
                 case Keys.Right:
-                    xCam = (int)Math.Min(0.5 * Size.Width - map.tiles[map.width - 1, map.height - 1].x, xCam - size * 1.5);
+                    xCam = (int)Math.Max(0.5 * Size.Width - map.tiles[map.width - 1, map.height - 1].x, xCam - size * 1.5);
                     break;
             }
             camAutoMove = false;

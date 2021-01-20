@@ -41,7 +41,8 @@ namespace IntroProject
 
         Bitmap mapBase;
 
-        public Map(int width, int height, int size, int margin) {
+        public Map(int width, int height, int size, int margin)
+        {
             this.width = width;
             this.height = height;
             this.size = size;
@@ -78,7 +79,8 @@ namespace IntroProject
             drawBase();
         }
 
-        public void EntityForceAdd(Entity e) {
+        public void EntityForceAdd(Entity e)
+        {
             children.Add(e);
             if (e.gender == 1)
                 malesAdded++;
@@ -128,13 +130,15 @@ namespace IntroProject
                     }
                     if (!deadEntity.eaten)
                         deadEntity.PerishToDeathPile();
-                    else deadEntity.chunk.removeEntity(deadEntity);
+                    else 
+                        deadEntity.chunk.removeEntity(deadEntity);
                     entities.Remove(deadEntity);
                 }
                 deaths.Clear();
             }
 
-            if (children.Count > 0) {
+            if (children.Count > 0)
+            {
                 foreach (Entity Child in children)
                 {
                     if (Child is Herbivore)
@@ -161,11 +165,8 @@ namespace IntroProject
                     if (creature.dead)
                         deaths.Add(creature);
                 }
-                else if (e is DeathPile deathPile)
-                {
-                    if (deathPile.dead)
-                        deaths.Add(deathPile);
-                }
+                else if (e is DeathPile deathPile && e.dead)
+                    deaths.Add(deathPile);
             }  
         }
         public void TimeStep(double dt)
