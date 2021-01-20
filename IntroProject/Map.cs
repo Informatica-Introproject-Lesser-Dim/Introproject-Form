@@ -86,6 +86,8 @@ namespace IntroProject
             entities.Add(e);
         }
 
+
+
         private void activateEntities(double dt) {
             
             if (deaths.Count > 0)
@@ -106,13 +108,20 @@ namespace IntroProject
                 children.Clear();
             }
 
-            foreach (Entity e in entities)
+            foreach (Entity e in entities) {
                 if (e is Creature creature)
                 {
-                    creature.activate(dt/msPerTick);
+                    creature.activate(dt / msPerTick);
                     if (creature.dead)
                         deaths.Add(creature);
                 }
+                else if (e is DeathPile deathPile)
+                {
+                    if (deathPile.dead)
+                        deaths.Add(deathPile);
+                }
+            }
+                
         }
 
         public void TimeStep(double dt) {

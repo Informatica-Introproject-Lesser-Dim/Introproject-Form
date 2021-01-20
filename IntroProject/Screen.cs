@@ -144,7 +144,9 @@ namespace IntroProject
             for (int i = 0; i < Settings.StartEntities; i++)
             {
                 map.placeRandom(new Herbivore());
-                map.placeRandom(new Carnivore());
+                map.placeRandom(new DeathPile(0,0,100));
+                if (i % 3 == 0)
+                    map.placeRandom(new Carnivore());
             }
         }
 

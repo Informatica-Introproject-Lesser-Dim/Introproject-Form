@@ -408,8 +408,8 @@ namespace IntroProject
                     if (route.isDone()) {
                         route = null; //put any functions wich are to activate when the route is done here
                         if (goal == Goal.Food)
-                            if (this is Carnivore carnivore)
-                                eat(carnivore.targetFood);
+                            if (this is Carnivore)
+                                eat(((Carnivore)this).targetFood);
                             else
                                 eat(myFood);
                 

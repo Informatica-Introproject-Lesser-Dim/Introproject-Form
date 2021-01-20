@@ -47,6 +47,9 @@ namespace IntroProject
         {
             eaten = true;
             dead = true;
+            
+            chunk.removeEntity(this);
+
             return energyVal;
         }
 
@@ -54,11 +57,11 @@ namespace IntroProject
         {
             if (e is DeathPile)
             {
-                g.FillEllipse(new SolidBrush(color), hexX + x - r, hexY + y - r, r, r);
-                g.FillEllipse(new SolidBrush(color), hexX + x - r + disp, hexY + y - r + disp, r, r);
-                g.FillEllipse(new SolidBrush(color), hexX + x - r + disp, hexY + y - r - disp, r, r);
-                g.FillEllipse(new SolidBrush(color), hexX + x - r - disp, hexY + y - r + disp, r, r);
-                g.FillEllipse(new SolidBrush(color), hexX + x - r - disp, hexY + y - r - disp, r, r);
+                g.FillEllipse(new SolidBrush(color), hexX + x - r/2, hexY + y - r/2, r, r);
+                g.FillEllipse(new SolidBrush(color), hexX + x - r/2 + disp, hexY + y - r/2 + disp, r, r);
+                g.FillEllipse(new SolidBrush(color), hexX + x - r/2 + disp, hexY + y - r/2 - disp, r, r);
+                g.FillEllipse(new SolidBrush(color), hexX + x - r/2 - disp, hexY + y - r/2 + disp, r, r);
+                g.FillEllipse(new SolidBrush(color), hexX + x - r/2 - disp, hexY + y - r/2 - disp, r, r);
             }
             else
             {
