@@ -389,18 +389,6 @@ namespace IntroProject
             Controls.Add(fullScreenHexagonBt);
             Controls.Add(helpHexagonBt);
         }
-        public void createAllLabels()
-        {
-            int[] labelLoc = MenuLabelLocations(150, 40);
-            Label startHexagonLbl = CreateLabel(labelLoc[0], labelLoc[1], () => "start");
-            Label exitHexagonLbl = CreateLabel(labelLoc[2], labelLoc[3], () => "exit");
-            Label settingsHexagonLbl = CreateLabel(labelLoc[4], labelLoc[5], () => "settings");
-            Label languageHexagonLbl = CreateLabel(labelLoc[6], labelLoc[7], () => "runPreset");
-            Label helpHexagonLbl = CreateLabel(labelLoc[8], labelLoc[9], () => "language");
-            Label runPresetHexagonLbl = CreateLabel(labelLoc[10], labelLoc[11], () => "fullScreen");
-            Label fullScreenHexagonLbl = CreateLabel(labelLoc[12], labelLoc[13], () => "help");
-            
-        }
         void LoadButton(Point hexagonLocation, int currentHexagonSize, Button hexagonButton)
         {
             Point[] usedHexagonPoints = HexagonPoints(hexagonLocation.X, hexagonLocation.Y, currentHexagonSize);
@@ -423,17 +411,6 @@ namespace IntroProject
             hexagonPoints[4] = new Point(boundBy.Left + quartWidth, boundBy.Bottom);
             hexagonPoints[5] = new Point(boundBy.Left, boundBy.Top + halfHeight);
             return hexagonPoints;
-        }
-        protected int[] createMenuButtonLocations()
-        {
-            int[] res =                 {
-                                            (int)(screenSizeX / 4 + 3 * hexagonSize * 2.6 / 24), screenSizeY / 4 + hexagonSize / 2,
-                                            (int)(screenSizeX / 4 + 3 * hexagonSize * 2.6 / 24), screenSizeY / 4 + hexagonSize + hexagonSize / 2,
-                                            (int)(screenSizeX / 4 + 3 * hexagonSize * 2.6 / 12 + 3 * hexagonSize * 2.6 / 24) , (int)(screenSizeY / 4) ,
-                                            (int)(screenSizeX / 4 + 3 * hexagonSize * 2.6 / 12 + 3 * hexagonSize * 2.6 / 24) , (int)(screenSizeY / 4 + hexagonSize ) ,
-                                            (int)(screenSizeX / 4 + 3 * hexagonSize * 2.6 / 24) , screenSizeY/4 - hexagonSize / 2,
-                                            (int)(screenSizeX / 4 - 3 * hexagonSize * 2.6 / 12 + 3 * hexagonSize * 2.6 / 24)   , (int)(screenSizeY / 4) ,
-                                            (int)(screenSizeX / 4 - 3 * hexagonSize * 2.6 / 12 + 3 * hexagonSize * 2.6 / 24)   , (int)(screenSizeY / 4 + hexagonSize) }; return res;
         }
         private void startBTPressed(object sender, EventArgs e)
         {
@@ -462,6 +439,30 @@ namespace IntroProject
         private void helpBTPressed(object sender, EventArgs e)
         {
             //Debug.WriteLine("help button pressed");
+        }
+        private int[] createMenuButtonLocations()
+        {
+            int[] res = {
+                          (int)(screenSizeX / 4 + 3 * hexagonSize * 2.6 / 24), screenSizeY / 4 + hexagonSize / 2,
+                          (int)(screenSizeX / 4 + 3 * hexagonSize * 2.6 / 24), screenSizeY / 4 + hexagonSize + hexagonSize / 2,
+                          (int)(screenSizeX / 4 + 3 * hexagonSize * 2.6 / 12 + 3 * hexagonSize * 2.6 / 24) , (int)(screenSizeY / 4) ,
+                          (int)(screenSizeX / 4 + 3 * hexagonSize * 2.6 / 12 + 3 * hexagonSize * 2.6 / 24) , (int)(screenSizeY / 4 + hexagonSize ) ,
+                          (int)(screenSizeX / 4 + 3 * hexagonSize * 2.6 / 24) , screenSizeY/4 - hexagonSize / 2,
+                          (int)(screenSizeX / 4 - 3 * hexagonSize * 2.6 / 12 + 3 * hexagonSize * 2.6 / 24)   , (int)(screenSizeY / 4) ,
+                          (int)(screenSizeX / 4 - 3 * hexagonSize * 2.6 / 12 + 3 * hexagonSize * 2.6 / 24)   , (int)(screenSizeY / 4 + hexagonSize) };
+            return res;
+        }
+        private void createAllLabels()
+        {
+            int[] labelLoc = MenuLabelLocations(150, 40);
+            CreateLabel(labelLoc[0], labelLoc[1], () => "start");
+            CreateLabel(labelLoc[2], labelLoc[3], () => "exit");
+            CreateLabel(labelLoc[4], labelLoc[5], () => "settings");
+            CreateLabel(labelLoc[6], labelLoc[7], () => "runPreset");
+            CreateLabel(labelLoc[8], labelLoc[9], () => "language");
+            CreateLabel(labelLoc[10], labelLoc[11], () => "fullScreen");
+            CreateLabel(labelLoc[12], labelLoc[13], () => "help");
+
         }
         private LazyLabel CreateLabel(int x, int y, Func<string> name)
         {
