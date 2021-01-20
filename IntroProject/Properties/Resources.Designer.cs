@@ -83,6 +83,46 @@ namespace IntroProject.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Lion_Food {
+            get {
+                object obj = ResourceManager.GetObject("Lion_Food", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Lion_Mate {
+            get {
+                object obj = ResourceManager.GetObject("Lion_Mate", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Lion_Normal {
+            get {
+                object obj = ResourceManager.GetObject("Lion_Normal", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Lion_Sleep {
+            get {
+                object obj = ResourceManager.GetObject("Lion_Sleep", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Minus_icon {
             get {
                 object obj = ResourceManager.GetObject("Minus_icon", resourceCulture);
@@ -133,6 +173,16 @@ namespace IntroProject.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Skull {
+            get {
+                object obj = ResourceManager.GetObject("Skull", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Stop_icon {
             get {
                 object obj = ResourceManager.GetObject("Stop_icon", resourceCulture);
@@ -146,6 +196,46 @@ namespace IntroProject.Properties {
         internal static System.Drawing.Bitmap X_icon {
             get {
                 object obj = ResourceManager.GetObject("X_icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Zebra_Food {
+            get {
+                object obj = ResourceManager.GetObject("Zebra_Food", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Zebra_Mate {
+            get {
+                object obj = ResourceManager.GetObject("Zebra_Mate", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Zebra_Normal {
+            get {
+                object obj = ResourceManager.GetObject("Zebra_Normal", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Zebra_Sleep {
+            get {
+                object obj = ResourceManager.GetObject("Zebra_Sleep", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

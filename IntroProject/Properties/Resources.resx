@@ -124,6 +124,18 @@
   <data name="Help_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\images\help-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Lion_Food" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\images\lion_food.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Lion_Mate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\images\lion_mate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Lion_Normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\images\lion_normal.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Lion_Sleep" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\images\lion_sleep.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Minus_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\images\minus-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -139,10 +151,25 @@
   <data name="Settings_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\images\settings-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Skull" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\images\skull.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Stop_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\images\stop-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="X_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\images\x-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Zebra_Food" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\images\zebra_food.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Zebra_Mate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\images\zebra_mate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Zebra_Normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\images\zebra_normal.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Zebra_Sleep" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\images\zebra_sleep.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
