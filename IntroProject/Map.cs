@@ -122,9 +122,9 @@ namespace IntroProject
                     }
                     else if (deadEntity is Carnivore)
                     {
-                        CarnivoreCount++;
-                        CarnivoreVelocity += ((Creature)deadEntity).gene.Velocity;
-                        CarnivoreSize += ((Creature)deadEntity).gene.Size;
+                        CarnivoreCount--;
+                        CarnivoreVelocity -= ((Creature)deadEntity).gene.Velocity;
+                        CarnivoreSize -= ((Creature)deadEntity).gene.Size;
                     }
                     if (!deadEntity.eaten)
                         deadEntity.PerishToDeathPile();
