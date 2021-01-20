@@ -20,7 +20,7 @@ namespace IntroProject
         public Hexagon chunk;
         protected Color color;
         public double energyVal = 100;
-        protected const int r = 10;
+        protected const int r = 25;
         public int gender = -1;
         private int disp = 4;
         public bool selected = false;
