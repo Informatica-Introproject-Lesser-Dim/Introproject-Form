@@ -68,25 +68,6 @@ namespace IntroProject.Presentation
         }
     }
 
-
-
-    internal class ButtonImaged : Button
-    {
-        public ButtonImaged(Image bgI)
-        {
-            BackgroundImage = bgI;
-            BackgroundImageLayout = ImageLayout.Stretch;
-            Padding = Padding.Empty;
-            FlatStyle = FlatStyle.Flat;
-
-            FlatAppearance.MouseDownBackColor = Color.Transparent;
-            FlatAppearance.MouseOverBackColor = Color.Transparent;
-            FlatAppearance.BorderSize = 0;
-            BackColor = Color.Transparent;
-            Cursor = Cursors.Hand;
-        }
-    }
-
     class DropMenu : UserControl
     {
         public DropMenu(int w, int h, EventHandler settingsMenuOnClick, EventHandler helpMenuOnClick, EventHandler statisticsMenuOnClick, Button plus)
