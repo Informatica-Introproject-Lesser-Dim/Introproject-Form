@@ -64,12 +64,8 @@ namespace IntroProject
             return result;
         }
 
-        private double calcDistancePow2(Entity e)
-        {
-            double dx = e.GlobalLoc.X - this.GlobalLoc.X;
-            double dy = e.GlobalLoc.Y - this.GlobalLoc.Y;
-            return dx * dx + dy * dy;
-        }
+        private double calcDistancePow2(Entity e) =>
+            Trigonometry.DistancePow2(e.GlobalLoc, this.GlobalLoc);
 
         private void TransferParentInfo(Gene gene, double energy)
         {
