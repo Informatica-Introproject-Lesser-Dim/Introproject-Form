@@ -55,20 +55,9 @@ namespace IntroProject
 
         public virtual void draw(Graphics g, int hexX, int hexY, Entity e)
         {
-            if (e is DeathPile)
-            {
-                g.FillEllipse(new SolidBrush(color), hexX + x - r/2, hexY + y - r/2, r, r);
-                g.FillEllipse(new SolidBrush(color), hexX + x - r/2 + disp, hexY + y - r/2 + disp, r, r);
-                g.FillEllipse(new SolidBrush(color), hexX + x - r/2 + disp, hexY + y - r/2 - disp, r, r);
-                g.FillEllipse(new SolidBrush(color), hexX + x - r/2 - disp, hexY + y - r/2 + disp, r, r);
-                g.FillEllipse(new SolidBrush(color), hexX + x - r/2 - disp, hexY + y - r/2 - disp, r, r);
-            }
-            else
-            {
-                g.FillEllipse(new SolidBrush(color), hexX + x - r, hexY + y - r, r * 2, r * 2);
-                if (selected)
-                    g.DrawEllipse(Pens.LightGreen, hexX + x - r, hexY + y - r, r * 2, r * 2);
-            } 
+            g.FillEllipse(new SolidBrush(color), hexX + x - r, hexY + y - r, r * 2, r * 2);
+            if (selected)
+                g.DrawEllipse(Pens.Purple, hexX + x - r, hexY + y - r, r * 2, r * 2);
         }
     }
 }
