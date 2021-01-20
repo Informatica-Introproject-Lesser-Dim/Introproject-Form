@@ -27,7 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Presentation\Controls\" />
     <Folder Include="Resources\Images\" />
   </ItemGroup>
 
