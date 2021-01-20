@@ -10,30 +10,27 @@ namespace IntroProject
 {
     public class Map
     {
-        public int width;
-        public int height;
-        private int size;
-        private int margin;
+
         private List<Entity> entities;
         private List<Entity> children;
         private List<Entity> deaths;
         private List<Entity> eaten;
         private double time = 0;
-
         public int malesAdded = 0;
         public int femalesAdded = 0;
-
+        public int width;
+        public int height;
+        private int n = 4;
+        private int size;
+        private int margin;
 
         private double msPerTick { get { return 30 / Settings.StepSize; } }
 
         public Hexagon[,] tiles;
-        public Hexagon this[int x, int y] {
-            get { return getHex(x, y); }
-        }
+        public Hexagon this[int x, int y] { get { return getHex(x, y); } }
 
         Random random = new Random();
         SimplexPerlin[] perlin;
-        int n = 4;
         private float biasRange = 20;
 
         Bitmap mapBase;
@@ -49,6 +46,7 @@ namespace IntroProject
             tiles = new Hexagon[width, height];
             perlin = new SimplexPerlin[4];
             Hexagon.calcHeight(Settings.MiddleHeight);
+
             for (int i = 0; i < n; i++)
                 perlin[i] = new SimplexPerlin(random.Next(), LibNoise.NoiseQuality.Best);
 
@@ -64,14 +62,13 @@ namespace IntroProject
 
                     tiles[x, y] = new Hexagon(size, calcNoise((xPos * 1.0f) / (size + margin), (yPos * 1.0f) / (size + margin)), xPos, yPos, (double)y / height, this);
                 }
-                
             }
 
             for (int x = 0; x < width; x++)
                 for (int y = 0; y < height; y++)
                     tiles[x, y].setNeighbors(calcNeighbors(x,y));
 
-            this.drawBase();
+            drawBase();
         }
 
         public void EntityForceAdd(Entity e) {
@@ -110,11 +107,11 @@ namespace IntroProject
             }
 
             foreach (Entity e in entities)
-                if (e is Creature)
+                if (e is Creature creature)
                 {
-                    ((Creature)e).activate(dt/msPerTick);
-                    if (((Creature)e).dead)
-                        deaths.Add(((Creature)e));
+                    creature.activate(dt/msPerTick);
+                    if (creature.dead)
+                        deaths.Add(creature);
                 }
         }
 
@@ -138,32 +135,34 @@ namespace IntroProject
             return result;
         }
 
-        private Hexagon getHex(int x, int y) {//return hex based on hex adress
+        private Hexagon getHex(int x, int y) //return hex based on hex adress
+        {
             if (x >= 0 && x < width && y >= 0 && y < height)
                 return tiles[x, y];
             return null;
         }
 
-        public int[] countMalesAndFemales() {
+        public int[] countMalesAndFemales() 
+        {
             int males = 0;
             int females = 0;
-            foreach (Entity e in entities) {
+
+            foreach (Entity e in entities)
                 if (e.gender == 1)
                     males++;
-                else if (e.gender == 0)
+                else
                     females++;
-            }
             return new int[2]{males,females };
         }
 
-        private float calcNoise(float x, float y) { //adding multiple perlin noise functions on top of eachother to make it look more natural
+        private float calcNoise(float x, float y) //adding multiple perlin noise functions on top of eachother to make it look more natural
+        {
             //each layer has a smaller size and a contributes less to the overall perlin noise
             float factor = 0.3f;
-
             Func<int, float> scaled = index => (float)Math.Pow(factor, index);
             float[] factors = Enumerable.Range(0, n + 1).Select(scaled).ToArray();
+            float result = 0f;
 
-            float result = 0;
             for (int i = 0; i < n; i++)
             {
                 float scaledPerlinNoise = factors[i] * perlin[i].GetValue(x * factors[n - i - 1], y * factors[n - i - 1]);
@@ -172,11 +171,11 @@ namespace IntroProject
                 result += (1 - factor) * scaledPerlinNoise;
             }
             
-
             return Bias(result,x,y);
         }
 
-        public Entity GetCreature(int x, int y, float range) {
+        public Entity GetCreature(int x, int y, float range)
+        {
             int[] hexPos = PosToHexPos(x, y);
 
             if (hexPos[0] < 0 || hexPos[0] >= width || hexPos[1] < 0 || hexPos[1] >= height)
@@ -190,9 +189,11 @@ namespace IntroProject
 
             double val = Calculator.distanceSquared(x, y, entities[0].x, entities[0].y);
             Entity best = entities[0];
-            foreach (Entity entity in entities) {
+            foreach (Entity entity in entities)
+            {
                 double temp = Calculator.distanceSquared(x, y, entity.GlobalLoc.X, entity.GlobalLoc.Y);
-                if (temp < val) {
+                if (temp < val)
+                {
                     val = temp;
                     best = entity;
                 }
@@ -203,7 +204,8 @@ namespace IntroProject
             return best;
         }
 
-        private float Bias(float f, float x, float y) { //a bias is needed so that the edges of the map are always water
+        private float Bias(float f, float x, float y) //a bias is needed so that the edges of the map are always water
+        { 
             //not much strange happens here, just deciding wich edge you're closest to and then deciding a bias
             //based on how far you are from this edge
             x *= size + margin;
@@ -215,37 +217,42 @@ namespace IntroProject
                 x = w - x;
             if (h - y < y)
                 y = h - y;
-            float val = x;
-            if (y < x)
-                val = y;
+
+            float val = Math.Min(x, y);
             if (val < biasRange * size)
                 return Math.Max(-1, f - (1.0f * (biasRange * size - val)) / (biasRange * size));
             return f;
         }
 
 
-        public void drawBase() { //just basic going through all the pixels and deciding in wich hexagon they reside
+        public void drawBase() //just basic going through all the pixels and deciding in wich hexagon they reside
+        { 
             mapBase = new Bitmap(tiles[width - 1, height - 1].x + 2 * size, tiles[width - 1, height - 1].y + (int)(size * Hexagon.sqrt3));
-            if (margin == 0) {
+
+            if (margin == 0)
+            {
                 for (int x = 0; x < mapBase.Width; x++)
                     for (int y = 0; y < mapBase.Height; y++)
                         mapBase.SetPixel(x, y, drawPixel(x - size, (int)(y - size * 0.5 * Hexagon.sqrt3)));
                 return;
             }
+
             Graphics g = Graphics.FromImage(mapBase);
             for (int x = 0; x < width; x++)
                 for (int y = 0; y < height; y++)
                     tiles[x, y].draw(g, size + tiles[x, y].x, (int)(size * Hexagon.sqrt3 / 2) + tiles[x, y].y);
         }
 
-        private Color drawPixel(int x, int y) { //returns the color of the hexagon at this position
+        private Color drawPixel(int x, int y) //returns the color of the hexagon at this position
+        { 
             int[] pos = PosToHexPos(x, y);
             if (pos[0] < 0 || pos[0] >= width || pos[1] < 0 || pos[1] >= height)
                 return Color.FromArgb(0, 0, 0, 0);
             return tiles[pos[0], pos[1]].color;
         }
 
-        public void draw(Graphics g, int xPos, int yPos, int scrWidth, int scrHeight) {
+        public void draw(Graphics g, int xPos, int yPos, int scrWidth, int scrHeight)
+        {
             g.DrawImage(mapBase, xPos - size, yPos - (int) (size*Hexagon.sqrt3/2)); //sticks a copy of the base on the graphics
             int[] start = PosToHexPos(-xPos, -yPos);
             start[0]--;
@@ -260,7 +267,8 @@ namespace IntroProject
                     
         }
 
-        public void placeRandom(Entity e) { //place an entity on a random chunck above sea level
+        public void placeRandom(Entity e) //place an entity on a random chunck above sea level
+        { 
             int x, y;
             do
             {
@@ -271,7 +279,8 @@ namespace IntroProject
             this.placeEntity(e, x, y);
         }
 
-        public int[] HexAdressToXY(int x, int y) {
+        public int[] HexAdressToXY(int x, int y)
+        {
             int xPos = (int)(x * (size * 3 + margin * Hexagon.sqrt3) / 2);//just the amount of times you go a hexWidth to the right times hexWidth
             int yOff = 0;
             if (x % 2 == 1)
@@ -284,45 +293,41 @@ namespace IntroProject
         public int[] PosToHexPos(int x, int y) 
         {
             //first finds the general area and then specifies more and more
-
-
             int column = (int) (x / (size * 3 + margin * Hexagon.sqrt3)); // 2-wide column which includes this point
             if (x < 0)
                 column--;
-            int relXPos = x - (int)((column + 0.5) * (size * 3 + margin * Hexagon.sqrt3)); // x center-relative
-            
             int row = (int)(y / (size * Hexagon.sqrt3 + margin));
+
             if (y < 0)
                 row--;
             
-            int relYPos = y - (int)((row + 0.5) * (size * Hexagon.sqrt3 + margin)); // y relative to the middle hexagon
+            int relXPos = x - (int)((column + 0.5) * (size * 3 + margin * Hexagon.sqrt3)); // x center-relative
+            int relYPos = y - (int)((row    + 0.5) * (size * Hexagon.sqrt3 + margin)); // y relative to the middle hexagon
             int rXPos = Math.Abs(relXPos);//generalizing the positive and negative versions into one
             int rYPos = Math.Abs(relYPos);
             
 
             int mSize = (int)(size + (margin) / Hexagon.sqrt3);
             if (rXPos < mSize - (rYPos / Hexagon.sqrt3)) //if you are in the middle hexagon
-            {
                 return new int[2] {column * 2 + 1, row };
-            }
-            if (relXPos > 0) { //outside of the middle hex, two positives mean it's in the top right hex rest of the hexagons work the same as this
+            if (relXPos > 0)//outside of the middle hex, two positives mean it's in the top right hex rest of the hexagons work the same as this
                 if (relYPos > 0)
                     return new int[2] { column * 2 + 2 , row + 1};
-                return new int[2] { column * 2 + 2, row};
-            }
+                else
+                    return new int[2] { column * 2 + 2, row};
+
             if (relYPos > 0)
                 return new int[2] { column * 2, row + 1 };
             return new int[2] { column * 2, row};
         }
+
         public void Update()
         {
             Creature.Update();
             Hexagon.Update();
 
             foreach (Hexagon tile in tiles)
-            {
                 tile.UpdateColor();
-            }
         }
     }
 }

@@ -21,8 +21,6 @@ namespace IntroProjectTest
             {
                 base.MateWithFemale(other);
             }
-
-            public CreatureTestable(Creature parentFirst, Creature parentSecond) : base(parentFirst, parentSecond) { }
         }
 
         [TestFixture]

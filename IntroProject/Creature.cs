@@ -8,7 +8,8 @@ using IntroProject.Core.Math;
 
 namespace IntroProject
 {
-    public enum Goal {
+    public enum Goal
+    {
         Food,
         Mate,
         Water, //might be implemented later
@@ -24,9 +25,9 @@ namespace IntroProject
         public bool isReadyToMate { get => coolDown == 0; }
         protected Route route;
         private Creature mateTarget;
-
         protected Entity target;
-
+        
+        protected static float MateCost = Settings.MatingCost;
         protected static float MateWeight = Settings.MatingCost;
         private Grass myFood;
         protected double sleep = 0;
@@ -36,7 +37,7 @@ namespace IntroProject
         protected float maxEnergy;
         public double stamina;
 
-        public Creature()
+        public Creature() : base()
         {
             energyVal = 600; //start with quite a lot so they dont die too quickly
             gene = new HerbivoreGene();
@@ -47,25 +48,24 @@ namespace IntroProject
             gender = gene.Gender;
         }
 
-        protected Entity findClosest(List<Entity> targets) {
-
+        protected Entity findClosest(List<Entity> targets)
+        {
             Entity result = targets[0];
             double dist = calcDistancePow2(result);
 
-            foreach (Entity e in targets) {
-
+            foreach (Entity e in targets) 
+            {
                 double newDist = calcDistancePow2(e);
                 if (dist > newDist) {
                     result = e;
                     dist = newDist;
                 }
-                    
-
             }
             return result;
         }
 
-        private double calcDistancePow2(Entity e) {
+        private double calcDistancePow2(Entity e)
+        {
             double dx = e.GlobalLoc.X - this.GlobalLoc.X;
             double dy = e.GlobalLoc.Y - this.GlobalLoc.Y;
             return dx * dx + dy * dy;
@@ -87,30 +87,24 @@ namespace IntroProject
         public virtual Creature FromParentInfo(Gene gene, double energy) =>
             new Creature(gene, energy);
 
-        public static double calcDistancePow2(EntityType type, Hexagon place, Point point) { //enter the world relative position for point
+        public static double calcDistancePow2(EntityType type, Hexagon place, Point2D point) //enter the world relative position for point
+        { 
             List<Entity> targets = new List<Entity>();
-            for (int l = 0; targets.Count == 0 && l < 10; l++)
-                targets = place.searchPoint(l, type);
+            for (int i = 0; targets.Count == 0 && i < 10; i++)
+                targets = place.searchPoint(i, type);
             if (targets.Count == 0)
                 return 10000000; //just a big number so stuff doesnt break
             double dist = calcDist2(targets[0], point);
             foreach (Entity e in targets)
-                if (calcDist2(e, point) < dist)
-                    dist = calcDist2(e, point);
+                dist = Math.Min(calcDist2(e, point), dist);
             return dist;
         }
 
-        public static double calcDist2(Entity e, Point p)
+        public static double calcDist2(Entity e, Point2D p) =>
+            Trigonometry.DistancePow2(p, e + e.chunk);
+
+        public void eat(Entity entity)
         {
-            Point2D p2 = e + e.chunk;
-            return Trigonometry.DistancePow2((p.X, p.Y), (p2.X, p2.Y));
-        }
-
-        public Creature(Creature parentA, Creature parentB) : this(parentA.gene, parentB.gene) { }
-
-        public Creature(Gene parentA, Gene parentB) { }
-
-        public void eat(Entity entity) {
             if (entity == null)
                 return;
             this.energyVal += entity.BeingEaten();
@@ -127,6 +121,7 @@ namespace IntroProject
             other.coolDown = 300;
             other.MateWithMale(this);
             this.energyVal -= MateWeight * 100; //the males barely lose any energy
+
             this.goalReset();
         }
 
@@ -134,7 +129,7 @@ namespace IntroProject
         {
             double transferredEnergy =  this.energyVal * this.gene.energyDistribution ;
             energyVal -= transferredEnergy + MateWeight * 100;
-            Creature child = null;
+            Creature child;
             if (this is Herbivore)
                 child = other.FromParentInfo((HerbivoreGene)this.gene * (HerbivoreGene)other.gene, transferredEnergy);
             else if (this is Carnivore)
@@ -151,10 +146,12 @@ namespace IntroProject
             this.goalReset();
         }
 
-        public void activate(double dt) {
+        public void activate(double dt)
+        {
             if (stamina < gene.SprintDuration)
                 stamina += dt;
-            this.energyVal -= Calculator.StandardEnergyCost(gene)*dt;
+            this.energyVal -= Calculator.StandardEnergyCost(gene) * dt;
+
             if (this.coolDown > 0)
                 coolDown -= dt;
 
@@ -169,33 +166,28 @@ namespace IntroProject
                 return;
             }
 
-            if (this.goal == Goal.Creature) {
+            if (this.goal == Goal.Creature)
+            {
                 if (SprintToCreature(dt))
                     goal = Goal.Nothing;
                 return;
             }
                 
-
             if (this.goal == Goal.Mate) 
                 this.mateActive();
 
             if (route != null) //just move along the road if you have one, otherwise search for a new route
                 this.move(dt);
-            else {
+            else
                 passiveSearch();
-            }
         }
 
-        protected virtual bool SprintToCreature(double dt) {
-            return true;
-        }
-
-        private void mateActive() {
-            if (this.gene.Gender != 1) { //if a female reaches this point then that means her "sleep" hasnt continuously been resetted, aka no one's interested anymore
-                this.goalReset();
-                return;
-            }
-            if (mateTarget == null) {
+        protected virtual bool SprintToCreature(double dt) => true;
+         
+        private void mateActive()
+        {
+            if (this.gene.Gender != 1 || mateTarget == null)//if a female reaches this point then that means her "sleep" hasnt continuously been resetted, aka no one's interested anymore
+            { 
                 this.goalReset();
                 return;
             }
@@ -203,28 +195,28 @@ namespace IntroProject
                 this.goalReset();
 
             this.mateTarget.sleep = 10; //ensures the female keeps patiently waiting for their mate
-
             return;
         }
 
-        private void goalReset() {
+        private void goalReset()
+        {
             this.route = null;
             this.goal = Goal.Nothing;
         }
 
-        public virtual void passiveSearch() {
-            //check wether the place you are is ok
+        public virtual void passiveSearch() //check wether the place you are is ok
+        {
             goal = Goal.Food;
+
             if (passiveCheck(this.chunk))
             {
-                Route route = new Route(new Point(this.x, this.y), this.chunk.size, this.chunk);
-                myFood = chunk.bestFood(new Point(this.x, this.y));
+                Route route = new Route(this, this.chunk.size, this.chunk);
+                myFood = chunk.bestFood(this);
 
-                route.addEnd(new Point(myFood.loc.X, myFood.loc.Y));
-                this.route = route;
-                this.goal = Goal.Food;
-                Color.FromArgb(50, 100, 50);
                 //set it as your target and make the route towards it your own
+                route.addEnd(myFood);
+                this.route = route;
+                Color.FromArgb(50, 100, 50);
                 return;
             }
 
@@ -246,20 +238,18 @@ namespace IntroProject
                             val = temp;
                             continue;
                         }
-
-
                     }
                 }
-            if (dir != -1) {
+            if (dir != -1)
+            {
                 //if so go there and eat in there
-                Route route = new Route(new Point(this.x, this.y), this.chunk.size, this.chunk);
+                Route route = new Route(this, this.chunk.size, this.chunk);
                 route.addDirection(dir);
 
-                myFood = chunk[dir].bestFood(Hexagon.calcSide(chunk.size, (dir + 3) % 6));
+                myFood = chunk[dir].bestFood(Hexagon.CalcSide(chunk.size, (dir + 3) % 6));
 
-                route.addEnd(new Point(myFood.loc.X, myFood.loc.Y));
+                route.addEnd(myFood);
                 this.route = route;
-                this.goal = Goal.Food;
                 this.color = Color.FromArgb(50, 100, 50);
                 return;
             }
@@ -267,13 +257,15 @@ namespace IntroProject
             activeSearch();
         }
 
-        private bool passiveCheck(Hexagon hex) {
+        private bool passiveCheck(Hexagon hex)
+        {
             if (hex.vegetation.FoodLocations().Count < 1)
                 return false;
             return gene.PassiveBias < passiveVal(hex);
         }
 
-        protected virtual bool matingSearch() { //returns true if it's succesfull
+        protected virtual bool matingSearch() //returns true if it's succesfull
+        { 
             if (this.coolDown > 0)
                 return false;
             if (this.gene.Gender == 1)
@@ -287,13 +279,9 @@ namespace IntroProject
 
             List<Entity> creatures = new List<Entity>();//find all creatures
             for (int i = 0; i < 8; i++)
-                creatures =  creatures.Concat(chunk.searchPoint(i, targetType)).ToList();
-
+                creatures = creatures.Concat(chunk.searchPoint(i, targetType)).ToList();
 
             List<Creature> accepted = new List<Creature>();
-
-
-            
 
             foreach (Entity e in creatures) //select the few that exceed your preference 
                 if (((Creature)e).gene.Gender == 1 && ((Creature)e).energyVal > this.gene.sexualPreference)
@@ -304,7 +292,7 @@ namespace IntroProject
 
             bool temp = false;
             foreach (Entity e in accepted)
-                temp = temp || ((Creature) e).available(this); //turns into true if at least one says yes
+                temp = temp || ((Creature) e).available(this); //turns into true if at least one says yes 
             if (!temp)
                 return false;
 
@@ -314,12 +302,10 @@ namespace IntroProject
             return true;
         }
 
-        public bool available(Creature creature) { // call this method to "spread your feromones"
+        public bool available(Creature creature)// call this method to "spread your feromones"
+        { 
             //both tells you wether the entity is interested and makes the entity go towards you
-            if (this.coolDown > 0 || this.goal == Goal.Mate)
-                return false;
-
-            if (this.gene.Gender != 1) //females arent interested
+            if (this.coolDown > 0 || this.goal == Goal.Mate || this.gene.Gender != 1)
                 return false;
 
             //does need to be someone of your preference
@@ -327,20 +313,17 @@ namespace IntroProject
                 return false;
 
             //do you have enough energy yourself
-            Point a = creature.GlobalLoc;
-            Point b = this.GlobalLoc;
-            int dx = a.X - b.X;
-            int dy = a.Y - b.Y;
-            double dist = Math.Sqrt(dx * dx + dy * dy); //straight distance towards creature
+            double dist = Trigonometry.Distance(creature.GlobalLoc, this.GlobalLoc); //straight distance towards creature
             if (energyVal - dist * Calculator.EnergyPerMeter(this.gene) < this.gene.sexualPreference) 
                 return false; //stopping if it costs too much energy
 
             //Pathfinding...
             this.color = Color.Pink;
-            SingleTargetAStar aStar = new SingleTargetAStar(new Point(this.x, this.y), this.chunk, this.gene, this.chunk.size, this.energyVal, creature);
+            SingleTargetAStar aStar = new SingleTargetAStar(this, this.chunk, this.gene, this.chunk.size, this.energyVal, creature);
             route = aStar.getResult();
 
-            if (route != null) {
+            if (route != null)
+            {
                 goal = Goal.Mate;
                 this.color = Color.Pink;
                 this.mateTarget = creature;
@@ -349,99 +332,91 @@ namespace IntroProject
             return false;
         }
 
-        private double passiveVal(Hexagon hex) {
+        private double passiveVal(Hexagon hex)
+        {
             double hunger = (gene.Size - energyVal) * gene.HungerBias;
 
             return hex.Passive(hunger, gene.DistanceBias);
         }
 
-        public void activeSearch() { 
+        public void activeSearch() 
+        {
+            //check if it's possible to mate first
             if (matingSearch())
                 return;
-            //check if it's possible to mate first
-
+            
             this.getActiveRoute();
         }
 
-        protected virtual void getActiveRoute() {
-            AStar aStar = new AStar(new Point(this.x, this.y), this.chunk, this.gene, this.chunk.size, this.energyVal);
+        protected virtual void getActiveRoute() 
+        {
+            AStar aStar = new AStar(this, this.chunk, this.gene, this.chunk.size, this.energyVal);
             route = aStar.getResult();
 
             if (route != null)
             {
                 myFood = aStar.getTarget();
-                if (myFood != null)
+                goal = Goal.Nothing;
+                
+                if (route.quality < gene.ActivePreference)
+                {
+                    this.color = Color.FromArgb(50, 50, 50);
+                }
+                else if (myFood != null)
                 {
                     goal = Goal.Food;
                     this.color = Color.FromArgb(150, 50, 50);
                 }
-                else
-                {
-                    goal = Goal.Nothing;
-                }
-
-
-                if (route.quality < gene.ActivePreference)
-                {
-                    this.color = Color.FromArgb(50, 50, 50);
-                    goal = Goal.Nothing;
-                }
-
             }
             else
             {
                 sleep = 20;
-                this.color = Color.Purple;
+                color = Color.Purple;
             }
-        
         }
 
-        public void checkSurroundings() {
+        public void checkSurroundings()
+        {
             //check if target plant has been eaten
-
             //check if predators are near
-
             //check if there's a new possible route (if it doesnt have one yet)
         }
 
 
-        public void move(double dt) { //needs a rework cus the target wont be an entity
-
+        public void move(double dt)//needs a rework 'cause the target won't be an entity
+        { 
             if (this.chunk.heightOfTile < Hexagon.seaLevel)
                 this.energyVal -= Calculator.EnergyPerTic(gene) * gene.SwimCost * dt;
             
             else this.energyVal -= Calculator.EnergyPerTic(gene) * gene.WalkCost * dt;
             
-            if (route != null) {
-                if (goal == Goal.Mate) {
-                    if (mateTarget.goal != Goal.Mate) {
-                        this.route = null;
-                        this.goal = Goal.Nothing;
+            if (route != null) 
+            {
+                if (goal == Goal.Mate)//ik weet niet of het hier wel intentioneel is of dat je wat er binnenin staat kunt samenvoegen
+                {
+                    if (mateTarget.goal != Goal.Mate)
+                    {
+                        route = null;
+                        goal = Goal.Nothing;
                         return;
                     }
                 }
-                else if (myFood != null)
+                else if (myFood != null && !myFood.visible)
                 {
-                    if (!myFood.visible) {
-                        route = null;
-                        return;
-                    }
+                    route = null;
+                    return;
                 }
 
-                Point currentLoc;
                 if (route.move((float)dt * gene.Velocity)) {
-                    currentLoc = route.getPos();
-                    x = currentLoc.X;
-                    y = currentLoc.Y;
+                    (x, y) = route.GetPos();
                     if (route.isDone()) {
                         route = null; //put any functions wich are to activate when the route is done here
                         if (goal == Goal.Food)
-                        {
-                            if (this is Carnivore)
-                                eat(((Carnivore)this).targetFood);
-                            if (this is Herbivore)
+                            if (this is Carnivore carnivore)
+                                eat(carnivore.targetFood);
+                            else
                                 eat(myFood);
-                        }
+                
                         if (goal == Goal.Mate)
                             MateWithFemale(mateTarget);
                         myFood = null;
@@ -452,9 +427,7 @@ namespace IntroProject
                     energyVal -= Calculator.JumpCost(this.gene);
                     return;
                 }
-                currentLoc = route.getPos();
-                x = currentLoc.X;
-                y = currentLoc.Y;
+                (x, y) = route.GetPos();
                 return;
             }
             //do whatever and entity should do when it doesnt have a route
@@ -464,24 +437,15 @@ namespace IntroProject
             if (grass == null)
                 return;
             grass.visible = false;
-            int value = grass.getVal(this.chunk.vegetation.currentTime);
-            int MaxValue = Settings.GrassMaxFeed;
-            if (MaxValue < value)
-            {
-                if (energyVal + MaxValue > maxEnergy)
-                    this.energyVal = maxEnergy;
-                else this.energyVal += MaxValue;
-            }
-            else
-            {
-                if (energyVal + grass.getVal(this.chunk.vegetation.currentTime) > maxEnergy)
-                    this.energyVal = maxEnergy;
-                else this.energyVal += grass.getVal(this.chunk.vegetation.currentTime);
-            }
+            int value = Math.Min(Settings.GrassMaxFeed, grass.getVal(chunk.vegetation.currentTime));
+            
+            if (energyVal + value >= maxEnergy)
+                energyVal = maxEnergy;
+            else energyVal += value;
         }
         public static void Update()
         {
-            MateWeight = Settings.MatingCost;
+            MateCost = Settings.MatingCost;
         }
     }
 }

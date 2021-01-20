@@ -2,12 +2,14 @@
 using System.Drawing;
 using System.Linq;
 
+using IntroProject.Core.Math;
+
 namespace IntroProject
 {
     public class Carnivore : Creature
     {
         public Entity targetFood;
-        public Carnivore() 
+        public Carnivore() : base()
         {
             energyVal = 600; //start with quite a lot so they dont die too quickly
             gene = new CarnivoreGene();
@@ -16,9 +18,6 @@ namespace IntroProject
             gene.@class = this.GetType().Name;
             stamina = gene.SprintDuration;
         }
-
-        public Carnivore(Creature parentA, Creature parentB) : base(parentA, parentB) { }
-
 
         public override void passiveSearch()
         {
@@ -30,22 +29,24 @@ namespace IntroProject
                 deathPiles = deathPiles.Concat(chunk.searchPoint(i, EntityType.Plant)).ToList();
 
             //preference to deathPiles
-            if (deathPiles.Count > 0) {
+            if (deathPiles.Count > 0)
+            {
                 Entity deathPile = findClosest(deathPiles);
+                
                 //make a route to this
-
-                SingleTargetAStar aStar = new SingleTargetAStar(new Point(this.x, this.y), this.chunk, this.gene, this.chunk.size, this.energyVal, deathPile);
+                SingleTargetAStar aStar = new SingleTargetAStar(this, chunk, gene, chunk.size, energyVal, deathPile);
                 route = aStar.getResult();
 
                 if (route != null)
                 {
                     goal = Goal.Food;
-                    this.color = Color.Pink;
-                    this.target = deathPile;
+                    color = Color.Pink;
+                    target = deathPile;
                     return;
                 }
             }
-            if (herbivores.Count > 0) {
+            if (herbivores.Count > 0)
+            {
                 Entity herbivore = findClosest(herbivores);
                 //make a straight line to this
                 target = herbivore;
@@ -66,46 +67,36 @@ namespace IntroProject
             if (stamina <= 0)
                 return true;
 
-            Point targetLoc = target.GlobalLoc;
-            double dx =  targetLoc.X - this.GlobalLoc.X;
-            double dy =  targetLoc.Y - this.GlobalLoc.Y;
+            Point2D delta = target - GlobalLoc;
 
-            double dist = (dx * dx + dy * dy);
-            if (dist < 25) 
+            double dist = Trigonometry.Distance(target, GlobalLoc);
+            if (dist < 5)
             {
                 eat(target);
                 return true;
             }
 
-            dist = System.Math.Sqrt(dist);
-
-            dx *= 1 / dist;
-            dy *= 1 / dist;
-
-            dx *= dt * this.gene.SprintSpeed;
-            dy *= dt * this.gene.SprintSpeed;
-
-            X += dx;
-            Y += dy;
+            delta *= 1 / dist;
+            delta *= dt * gene.SprintSpeed;
+            (X, Y) = delta + this;
 
             energyVal -= Calculator.SprintEnergyPerTic(gene);
             stamina -= 2*dt;
 
-            
-
-            int[] hexPos = this.chunk.parent.PosToHexPos(GlobalLoc.X, GlobalLoc.Y);
-            Hexagon newHex = this.chunk.parent[hexPos[0], hexPos[1]];
-            if (newHex != this.chunk) 
+            int[] hexPos = chunk.parent.PosToHexPos(GlobalLoc.x, GlobalLoc.y);
+            Hexagon newHex = chunk.parent[hexPos[0], hexPos[1]];
+            if (newHex != chunk) 
             {
                 energyVal -= Calculator.JumpCost(gene);
-                this.chunk.moveEntity(this, newHex);
+                chunk.moveEntity(this, newHex);
             }
             
             return false;
         }
+
         protected override void getActiveRoute()
         {
-            CarnivoreAStar aStar = new CarnivoreAStar(new Point(this.x, this.y), this.chunk, this.gene, this.chunk.size, this.energyVal);
+            CarnivoreAStar aStar = new CarnivoreAStar(this, chunk, gene, chunk.size, energyVal);
             route = aStar.getResult();
 
             if (route != null)
@@ -114,14 +105,13 @@ namespace IntroProject
                 if (targetFood != null)
                 {
                     goal = Goal.Food;
-                    this.color = Color.FromArgb(150, 50, 50);
+                    color = Color.FromArgb(150, 50, 50);
                 }
                 else
                 {
                     goal = Goal.Nothing;
-                    this.color = Color.FromArgb(50, 50, 50);
+                    color = Color.FromArgb(50, 50, 50);
                 }
-
             }
             else
             {
@@ -130,18 +120,15 @@ namespace IntroProject
             }
         }
 
-        
-
         public override void draw(Graphics g, int hexX, int hexY, Entity e)
         {
             g.FillEllipse(new SolidBrush(Color.LimeGreen), hexX + x - r, hexY + y - r, r * 2, r * 2);
             if (selected)
                 g.DrawEllipse(Pens.LightGreen, hexX + x - r, hexY + y - r, r * 2, r * 2);
         }
-        
-
 
         public Carnivore(Gene gene, double energy) : base(gene, energy) { }
+
         public override Creature FromParentInfo(Gene gene, double energy) =>
             new Carnivore(gene, energy);
     }

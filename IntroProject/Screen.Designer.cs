@@ -28,13 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HexagonOfLife));
             this.SuspendLayout();
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            // 
+            // HexagonOfLife
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1264, 681);
             this.BackColor = System.Drawing.Color.DarkGray;
-            this.Name = "Debug";
-            this.Text = "Test";
+            this.ClientSize = new System.Drawing.Size(1445, 908);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.Name = "TheHexagonOfLife";
+            this.Text = "TheHexagonOfLife";
             this.ResumeLayout(false);
 
         }
