@@ -41,7 +41,7 @@ namespace IntroProject
                 {
                     goal = Goal.Food;
                     color = Color.Pink;
-                    target = deathPile;
+                    targetFood = deathPile;
                     return;
                 }
             }

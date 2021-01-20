@@ -58,15 +58,20 @@ namespace IntroProject
                 current = best;
             }
             this.current = current.Clone();
-            Point2D end = new Point2D();
+            
 
-            if (current.endHex.vegetation.FoodLocations().Count > 0)
+            result = addEnd(current, size);
+        }
+
+        public virtual Route addEnd(Route r, int size) 
+        {
+            if (r.endHex.FoodValue() > 0)
             {
-                goal = current.endHex.bestFood(Hexagon.CalcSide(size, (current.lastDir + 3) % 6));
-                end = goal;
+                goal = r.endHex.bestFood(Hexagon.CalcSide(size, (r.lastDir + 3) % 6));
+                Point2D end = goal;
+                current.addEnd(end);
             }
-            current.addEnd(end);
-            result = current;
+            return current;
         }
 
         public virtual Route getResult() => result;
@@ -145,6 +150,10 @@ namespace IntroProject
             InitializeEverything(loc, chunck, gene, size, energy*3);
         }
 
+        public override Route addEnd(Route r, int size) {
+            return r;
+        }
+
         public Entity GetCreature() => theTarget;
 
         public override Route getResult()
@@ -172,7 +181,21 @@ namespace IntroProject
 
     class CarnivoreAStar : AStar
     {
-        private Entity theTarget;
+        private DeathPile theTarget = null;
+
+
+        public override Route addEnd(Route r, int size)
+        {
+            List<Entity> entities = current.endHex.getByType(EntityType.Plant);
+
+            if (entities.Count > 0)
+            {
+                theTarget = (DeathPile)entities[0];
+                Point2D end = theTarget;
+                current.addEnd(end);
+            }
+            return current;
+        }
 
         public CarnivoreAStar(Point2D loc, Hexagon chunck, Gene gene, int size, double energy) : base(loc,chunck,gene,size,energy)
         {
@@ -201,21 +224,14 @@ namespace IntroProject
             //test of het result wel naar het einde gaat
             if (current == null)
                 return null;
-                
-            //if there is something you can eat in the last hexagon then add this end point to the route
-            List<Entity> targets = current.endHex.getByType(EntityType.Plant);
-            if (targets.Count > 0)
-                current.addEnd(targets[0].ChunckRelLoc);
+
 
             return current;
         }
 
         public DeathPile getFood() 
         {
-            List<Entity> targets = current.endHex.getByType(EntityType.Plant);
-            if (targets.Count == 0)
-                return null;
-            return (DeathPile)targets[0]; 
+            return (DeathPile) theTarget;
             //it is extremely rare for there to be multiple deathpiles in one chunck, therefore the first one is chosen
         }
     }
