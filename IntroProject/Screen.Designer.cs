@@ -37,7 +37,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DarkGray;
             this.ClientSize = new System.Drawing.Size(1445, 908);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            //this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "TheHexagonOfLife";
             this.Text = "TheHexagonOfLife";

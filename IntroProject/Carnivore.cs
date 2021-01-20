@@ -67,9 +67,9 @@ namespace IntroProject
             if (stamina <= 0)
                 return true;
 
-            Point2D delta = target - GlobalLoc;
+            Point2D delta = target.GlobalLoc - GlobalLoc;
 
-            double dist = Trigonometry.Distance(target, GlobalLoc);
+            double dist = Trigonometry.Distance(target.GlobalLoc, GlobalLoc);
             if (dist < 5)
             {
                 eat(target);
