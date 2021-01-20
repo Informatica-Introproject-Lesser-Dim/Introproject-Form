@@ -116,10 +116,10 @@ namespace IntroProject
         }
 
         public void TimeStep(double dt) {
-            time += dt; //the map keeps the time so that not each hexagon has to keep the time for itself
+            time += dt/msPerTick; //the map keeps the time so that not each hexagon has to keep the time for itself
             this.activateEntities(dt); //activating all the entities
             foreach (Hexagon hexagon in tiles)
-                hexagon.activate(time/msPerTick); //letting each hexagon grow it's plants
+                hexagon.activate(time); //letting each hexagon grow it's plants
         }
 
 
