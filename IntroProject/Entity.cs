@@ -20,7 +20,7 @@ namespace IntroProject
         public Hexagon chunk;
         protected Color color;
         public double energyVal = 100;
-        protected const int r = 10;
+        protected const int r = 25;
         public int gender = -1;
         private int disp = 4;
         public bool selected = false;
@@ -55,20 +55,8 @@ namespace IntroProject
 
         public virtual void draw(Graphics g, int hexX, int hexY, Entity e)
         {
-            if (e is DeathPile)
-            {
-                g.FillEllipse(new SolidBrush(color), hexX + x - r/2, hexY + y - r/2, r, r);
-                g.FillEllipse(new SolidBrush(color), hexX + x - r/2 + disp, hexY + y - r/2 + disp, r, r);
-                g.FillEllipse(new SolidBrush(color), hexX + x - r/2 + disp, hexY + y - r/2 - disp, r, r);
-                g.FillEllipse(new SolidBrush(color), hexX + x - r/2 - disp, hexY + y - r/2 + disp, r, r);
-                g.FillEllipse(new SolidBrush(color), hexX + x - r/2 - disp, hexY + y - r/2 - disp, r, r);
-            }
-            else
-            {
-                g.FillEllipse(new SolidBrush(color), hexX + x - r, hexY + y - r, r * 2, r * 2);
-                if (selected)
-                    g.DrawEllipse(Pens.LightGreen, hexX + x - r, hexY + y - r, r * 2, r * 2);
-            } 
+            if (selected)
+                g.FillEllipse(Brushes.Navy, hexX + x - r, hexY + y - r, r * 2, r * 2);
         }
     }
 }
