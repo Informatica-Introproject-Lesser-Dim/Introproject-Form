@@ -125,6 +125,7 @@ namespace IntroProject
             Image img;
             switch(goal)
             {
+                case Goal.Creature:
                 case Goal.Food:
                   img = Properties.Resources.Lion_Food;
                   break;
