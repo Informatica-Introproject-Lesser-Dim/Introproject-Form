@@ -122,7 +122,19 @@ namespace IntroProject
 
         public override void draw(Graphics g, int hexX, int hexY, Entity e)
         {
-            Image img = Properties.Resources.Lion_Normal;
+            Image img;
+            switch(goal)
+            {
+                case Goal.Food:
+                  img = Properties.Resources.Lion_Food;
+                  break;
+                case Goal.Mate:
+                  img = Properties.Resources.Lion_Mate;
+                  break;
+                default:
+                  img = Properties.Resources.Lion_Normal;
+                  break;
+            }
             g.DrawImageUnscaled(img, hexX + x - r, hexY + y - r);
             if (selected)
                 g.DrawEllipse(Pens.LightGreen, hexX + x - r, hexY + y - r, r * 2, r * 2);
