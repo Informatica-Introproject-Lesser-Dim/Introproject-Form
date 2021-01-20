@@ -784,7 +784,9 @@ namespace IntroProject
             languageIndex.Location = new Point((w + 10), (h + 20));
             languageIndex.AutoSize = false;
             languageIndex.DropDownStyle = ComboBoxStyle.DropDownList;
-            languageIndex.Items.AddRange(new string[] { "Nederlands", "English" });
+            string[] languages = new string[multipleLanguages.translations.Keys.Count];
+            multipleLanguages.translations.Keys.CopyTo(languages, index: 0);
+            languageIndex.Items.AddRange(languages);
             languageIndex.SelectedIndex = Settings.LanguageIndex;
 
             ToolTip toolTip = new ToolTip();
