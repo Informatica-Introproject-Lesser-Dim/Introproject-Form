@@ -392,13 +392,13 @@ namespace IntroProject
         public void createAllLabels()
         {
             int[] labelLoc = MenuLabelLocations(150, 40);
-            Label startHexagonLbl = CreateLabel(labelLoc[0], labelLoc[1], "start");
-            Label exitHexagonLbl = CreateLabel(labelLoc[2], labelLoc[3], "exit");
-            Label settingsHexagonLbl = CreateLabel(labelLoc[4], labelLoc[5], "settings");
-            Label languageHexagonLbl = CreateLabel(labelLoc[6], labelLoc[7], "runPreset");
-            Label helpHexagonLbl = CreateLabel(labelLoc[8], labelLoc[9], "language");
-            Label runPresetHexagonLbl = CreateLabel(labelLoc[10], labelLoc[11], "fullScreen");
-            Label fullScreenHexagonLbl = CreateLabel(labelLoc[12], labelLoc[13], "help");
+            Label startHexagonLbl = CreateLabel(labelLoc[0], labelLoc[1], () => "start");
+            Label exitHexagonLbl = CreateLabel(labelLoc[2], labelLoc[3], () => "exit");
+            Label settingsHexagonLbl = CreateLabel(labelLoc[4], labelLoc[5], () => "settings");
+            Label languageHexagonLbl = CreateLabel(labelLoc[6], labelLoc[7], () => "runPreset");
+            Label helpHexagonLbl = CreateLabel(labelLoc[8], labelLoc[9], () => "language");
+            Label runPresetHexagonLbl = CreateLabel(labelLoc[10], labelLoc[11], () => "fullScreen");
+            Label fullScreenHexagonLbl = CreateLabel(labelLoc[12], labelLoc[13], () => "help");
             
         }
         void LoadButton(Point hexagonLocation, int currentHexagonSize, Button hexagonButton)
@@ -463,13 +463,14 @@ namespace IntroProject
         {
             //Debug.WriteLine("help button pressed");
         }
-        private Label CreateLabel(int x, int y, string name)
+        private LazyLabel CreateLabel(int x, int y, Func<string> name)
         {
-            Label label = new Label();
+            LazyLabel label = new LazyLabel();
 
             label.Location = new Point(x, y);
             label.Width = 150;
             label.Height = 40;
+            label.LazyText = name;
             label.Dock = DockStyle.None;
             label.AutoSize = false;
             label.TextAlign = ContentAlignment.MiddleCenter;
@@ -489,6 +490,11 @@ namespace IntroProject
                 (int)(screenSizeX / 2 - 3 * hexagonSize * 2.6 / 12 * 2 - w / 3), (int)(screenSizeY / 2 + hexagonSize -h/3)
             };
             return menuLabelLocations;
+        }
+        internal class LazyLabel : Label
+        {
+            public Func<string> LazyText { get; set; } = () => "";
+            public override string Text { get => LazyText(); }
         }
     }
     //
