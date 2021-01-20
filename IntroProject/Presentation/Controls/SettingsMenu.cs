@@ -26,7 +26,7 @@ namespace IntroProject.Presentation.Controls
         {
             BackColor = Color.FromArgb(123, 156, 148);
             Size = new Size(w, h);
-            int edge = Math.Max((int)(Size.Width / 36), (int)(Size.Height / 36));
+            int edge = Math.Max(Size.Width, Size.Height) / 36;
 
             StartSettings();
 
@@ -37,7 +37,7 @@ namespace IntroProject.Presentation.Controls
             exit.Click += exitMenu;
 
             Button importSet = new Button();
-            importSet.Location = new Point(Size.Width - (edge * 2) - 16, 5);
+            importSet.Location = new Point(Size.Width - (edge * 2 + 16), 5);
             importSet.Size = new Size(edge * 2, edge * 2);
             importSet.FlatAppearance.BorderColor = Color.FromArgb(123, 156, 148);
             importSet.BackColor = Color.White;
@@ -47,7 +47,7 @@ namespace IntroProject.Presentation.Controls
 
 
             //Makes the Save Settings Button
-            int k = (2 * (Size.Width / 3)) + 40, l = (1 * (Size.Height / 10)) + 60;
+            int k = 2 * Size.Width / 3 + 40, l = Size.Height / 10 + 60;
 
             Button ExportSetts = new Button();
             ExportSetts.Location = new Point(k, l);
@@ -58,7 +58,7 @@ namespace IntroProject.Presentation.Controls
             ExportSetts.Click += ExportSettings;
 
             //Makes the Save Settings Button
-            int n = (2 * (Size.Width / 3)) + 40, m = (6 * (Size.Height / 10)) + 60;
+            int n = 2 * Size.Width / 3 + 40, m = 6 * Size.Height / 10 + 60;
 
             Button SaveSetts = new Button();
             SaveSetts.Location = new Point(n, m);
@@ -76,8 +76,8 @@ namespace IntroProject.Presentation.Controls
             //Resize Method for the buttons
             Resize += (object o, EventArgs ea) =>
             {
-                int n = (2 * (Size.Width / 3)) + 40, m = (6 * (Size.Height / 10)) + 60;
-                edge = Math.Max((int)(Size.Width / 36), (int)(Size.Height / 36));
+                int n = 2 * Size.Width / 3 + 40, m = 6 * Size.Height / 10 + 60;
+                edge = Math.Max(Size.Width, Size.Height) / 36;
                 exit.Size = new Size(edge, edge);
                 importSet.Size = new Size(edge * 2, edge * 2);
                 importSet.Location = new Point(Size.Width - (edge * 2) - 16, 5);

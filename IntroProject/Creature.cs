@@ -22,6 +22,7 @@ namespace IntroProject
     {
         public Gene gene { get; protected set; }
         public int Alive;
+
         public bool isReadyToMate { get => coolDown == 0; }
         protected Route route;
         private Creature mateTarget;
@@ -77,6 +78,7 @@ namespace IntroProject
             stamina = gene.SprintDuration;
             gender = gene.Gender;
         }
+
         public Creature(Gene gene, double energy) =>
             TransferParentInfo(gene, energy);
 

@@ -10,12 +10,18 @@ namespace IntroProject
 {
     public class Map
     {
-
         private List<Entity> entities;
         private List<Entity> children;
         private List<Entity> deaths;
         private List<Entity> eaten;
+        public List<Statistics> statistics;
         private double time = 0;
+        public double HerbivoreVelocity;
+        public double CarnivoreVelocity;
+        public double HerbivoreSize;
+        public double CarnivoreSize;
+        public int HerbivoreCount = 0;
+        public int CarnivoreCount = 0;
         public int malesAdded = 0;
         public int femalesAdded = 0;
         public int width;
@@ -45,6 +51,7 @@ namespace IntroProject
             deaths = new List<Entity>();
             tiles = new Hexagon[width, height];
             perlin = new SimplexPerlin[4];
+            statistics = new List<Statistics>();
             Hexagon.calcHeight(Settings.MiddleHeight);
 
             for (int i = 0; i < n; i++)
@@ -52,13 +59,13 @@ namespace IntroProject
 
             for (int x = 0; x < width; x++) //creating all the tiles and calculating the correct perlin noise for it
             {
-                int xPos = (int) (x*(size * 3 + margin * Hexagon.sqrt3)/2);
+                int xPos = (int)(x * (size * 3 + margin * Hexagon.sqrt3) / 2);
                 int yOff = 0;
                 if (x % 2 == 1)
                     yOff = (int)((size * Hexagon.sqrt3 + margin) / 2);
                 for (int y = 0; y < height; y++)
                 {
-                    int yPos = (int)((margin + Hexagon.sqrt3 * size)*y) + yOff;
+                    int yPos = (int)((margin + Hexagon.sqrt3 * size) * y) + yOff;
 
                     tiles[x, y] = new Hexagon(size, calcNoise((xPos * 1.0f) / (size + margin), (yPos * 1.0f) / (size + margin)), xPos, yPos, (double)y / height, this);
                 }
@@ -66,7 +73,7 @@ namespace IntroProject
 
             for (int x = 0; x < width; x++)
                 for (int y = 0; y < height; y++)
-                    tiles[x, y].setNeighbors(calcNeighbors(x,y));
+                    tiles[x, y].setNeighbors(calcNeighbors(x, y));
 
             drawBase();
         }
@@ -79,11 +86,24 @@ namespace IntroProject
                 femalesAdded++;
         }
 
-        public void placeEntity(Entity e, int x, int y) { //no randomness, just normally placing it here
+        public void placeEntity(Entity e, int x, int y) //no randomness, just normally placing it here
+        {
             if (x < 0 || x >= width || y < 0 || y >= height)
                 return;
             tiles[x, y].addEntity(e);
             entities.Add(e);
+            if (e is Herbivore)
+            {
+                HerbivoreCount++;
+                HerbivoreVelocity += ((Creature)e).gene.Velocity;
+                HerbivoreSize += ((Creature)e).gene.Size;
+            }
+            if (e is Carnivore)
+            {
+                CarnivoreCount++;
+                CarnivoreVelocity += ((Creature)e).gene.Velocity;
+                CarnivoreSize += ((Creature)e).gene.Size;
+            }
         }
 
 
@@ -94,6 +114,18 @@ namespace IntroProject
             {
                 foreach (Entity deadEntity in deaths)
                 {
+                    if (deadEntity is Herbivore)
+                    {
+                        HerbivoreCount--;
+                        HerbivoreVelocity -= ((Creature)deadEntity).gene.Velocity;
+                        HerbivoreSize -= ((Creature)deadEntity).gene.Size;
+                    }
+                    else if (deadEntity is Carnivore)
+                    {
+                        CarnivoreCount++;
+                        CarnivoreVelocity += ((Creature)deadEntity).gene.Velocity;
+                        CarnivoreSize += ((Creature)deadEntity).gene.Size;
+                    }
                     if (!deadEntity.eaten)
                         deadEntity.PerishToDeathPile();
                     else deadEntity.chunk.removeEntity(deadEntity);
@@ -104,7 +136,21 @@ namespace IntroProject
 
             if (children.Count > 0) {
                 foreach (Entity Child in children)
+                {
+                    if (Child is Herbivore)
+                    {
+                        HerbivoreCount++;
+                        HerbivoreVelocity += ((Creature)Child).gene.Velocity;
+                        HerbivoreSize += ((Creature)Child).gene.Size;
+                    }
+                    else
+                    {
+                        CarnivoreCount++;
+                        CarnivoreVelocity += ((Creature)Child).gene.Velocity;
+                        CarnivoreSize += ((Creature)Child).gene.Size;
+                    }
                     entities.Add(Child);
+                }
                 children.Clear();
             }
 
@@ -120,15 +166,16 @@ namespace IntroProject
                     if (deathPile.dead)
                         deaths.Add(deathPile);
                 }
-            }
-                
+            }  
         }
-
-        public void TimeStep(double dt) {
-            time += dt/msPerTick; //the map keeps the time so that not each hexagon has to keep the time for itself
+        public void TimeStep(double dt)
+        {
+            Statistics CurrentStats = new Statistics(time, HerbivoreCount, CarnivoreCount, HerbivoreVelocity, CarnivoreVelocity, HerbivoreSize, CarnivoreSize);
+            statistics.Add(CurrentStats);
+            time += dt; //the map keeps the time so that not each hexagon has to keep the time for itself
             this.activateEntities(dt); //activating all the entities
             foreach (Hexagon hexagon in tiles)
-                hexagon.activate(time); //letting each hexagon grow it's plants
+                hexagon.activate(time / msPerTick); //letting each hexagon grow it's plants
         }
 
 
@@ -151,7 +198,7 @@ namespace IntroProject
             return null;
         }
 
-        public int[] countMalesAndFemales() 
+        public int[] countMalesAndFemales()
         {
             int males = 0;
             int females = 0;
@@ -161,7 +208,7 @@ namespace IntroProject
                     males++;
                 else
                     females++;
-            return new int[2]{males,females };
+            return new int[2] { males, females };
         }
 
         private float calcNoise(float x, float y) //adding multiple perlin noise functions on top of eachother to make it look more natural
@@ -179,8 +226,8 @@ namespace IntroProject
                     result += factor * scaledPerlinNoise;
                 result += (1 - factor) * scaledPerlinNoise;
             }
-            
-            return Bias(result,x,y);
+
+            return Bias(result, x, y);
         }
 
         public Entity GetCreature(int x, int y, float range)
@@ -214,7 +261,7 @@ namespace IntroProject
         }
 
         private float Bias(float f, float x, float y) //a bias is needed so that the edges of the map are always water
-        { 
+        {
             //not much strange happens here, just deciding wich edge you're closest to and then deciding a bias
             //based on how far you are from this edge
             x *= size + margin;
@@ -235,7 +282,7 @@ namespace IntroProject
 
 
         public void drawBase() //just basic going through all the pixels and deciding in wich hexagon they reside
-        { 
+        {
             mapBase = new Bitmap(tiles[width - 1, height - 1].x + 2 * size, tiles[width - 1, height - 1].y + (int)(size * Hexagon.sqrt3));
 
             if (margin == 0)
@@ -253,7 +300,7 @@ namespace IntroProject
         }
 
         private Color drawPixel(int x, int y) //returns the color of the hexagon at this position
-        { 
+        {
             int[] pos = PosToHexPos(x, y);
             if (pos[0] < 0 || pos[0] >= width || pos[1] < 0 || pos[1] >= height)
                 return Color.FromArgb(0, 0, 0, 0);
@@ -262,7 +309,7 @@ namespace IntroProject
 
         public void draw(Graphics g, int xPos, int yPos, int scrWidth, int scrHeight)
         {
-            g.DrawImage(mapBase, xPos - size, yPos - (int) (size*Hexagon.sqrt3/2)); //sticks a copy of the base on the graphics
+            g.DrawImage(mapBase, xPos - size, yPos - (int)(size * Hexagon.sqrt3 / 2)); //sticks a copy of the base on the graphics
             int[] start = PosToHexPos(-xPos, -yPos);
             start[0]--;
             start[1]--;
@@ -273,11 +320,11 @@ namespace IntroProject
                 for (int y = start[1]; y <= end[1]; y++)
                     if (x >= 0 && y >= 0 && x < width && y < height)
                         tiles[x, y].drawEntities(g, xPos, yPos);
-                    
+
         }
 
         public void placeRandom(Entity e) //place an entity on a random chunck above sea level
-        { 
+        {
             int x, y;
             do
             {
@@ -294,40 +341,40 @@ namespace IntroProject
             int yOff = 0;
             if (x % 2 == 1)
                 yOff = (int)((size * Hexagon.sqrt3 + margin) / 2); //the even colums are slightly lower therefore an offset is needed
-            
+
             int yPos = (int)((margin + Hexagon.sqrt3 * size) * y) + yOff;//the amount of heights you go down + the offset
             return new int[2] { xPos, yPos };
         }
 
-        public int[] PosToHexPos(int x, int y) 
+        public int[] PosToHexPos(int x, int y)
         {
             //first finds the general area and then specifies more and more
-            int column = (int) (x / (size * 3 + margin * Hexagon.sqrt3)); // 2-wide column which includes this point
+            int column = (int)(x / (size * 3 + margin * Hexagon.sqrt3)); // 2-wide column which includes this point
             if (x < 0)
                 column--;
             int row = (int)(y / (size * Hexagon.sqrt3 + margin));
 
             if (y < 0)
                 row--;
-            
+
             int relXPos = x - (int)((column + 0.5) * (size * 3 + margin * Hexagon.sqrt3)); // x center-relative
-            int relYPos = y - (int)((row    + 0.5) * (size * Hexagon.sqrt3 + margin)); // y relative to the middle hexagon
+            int relYPos = y - (int)((row + 0.5) * (size * Hexagon.sqrt3 + margin)); // y relative to the middle hexagon
             int rXPos = Math.Abs(relXPos);//generalizing the positive and negative versions into one
             int rYPos = Math.Abs(relYPos);
-            
+
 
             int mSize = (int)(size + (margin) / Hexagon.sqrt3);
             if (rXPos < mSize - (rYPos / Hexagon.sqrt3)) //if you are in the middle hexagon
-                return new int[2] {column * 2 + 1, row };
+                return new int[2] { column * 2 + 1, row };
             if (relXPos > 0)//outside of the middle hex, two positives mean it's in the top right hex rest of the hexagons work the same as this
                 if (relYPos > 0)
-                    return new int[2] { column * 2 + 2 , row + 1};
+                    return new int[2] { column * 2 + 2, row + 1 };
                 else
-                    return new int[2] { column * 2 + 2, row};
+                    return new int[2] { column * 2 + 2, row };
 
             if (relYPos > 0)
                 return new int[2] { column * 2, row + 1 };
-            return new int[2] { column * 2, row};
+            return new int[2] { column * 2, row };
         }
 
         public void Update()
