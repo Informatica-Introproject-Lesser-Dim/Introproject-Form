@@ -23,6 +23,7 @@ namespace IntroProject
     {
         public Gene gene { get; protected set; }
         public int Alive;
+        public Point2D direction = new Point2D().SetPosition(1,0);
 
         public bool isReadyToMate { get => coolDown == 0; }
         protected Route route;
@@ -39,6 +40,10 @@ namespace IntroProject
         protected float maxEnergy;
         public double stamina;
 
+        double dirTimer = 3;
+
+        public Point2D oldPos = new Point2D().SetPosition(0,0);
+
         public Creature() : base()
         {
             energyVal = 600; //start with quite a lot so they dont die too quickly
@@ -48,6 +53,16 @@ namespace IntroProject
             gene.@class = this.GetType().Name;
             stamina = gene.SprintDuration;
             gender = gene.Gender;
+        }
+
+        public override void draw(Graphics g, int hexX, int hexY, Entity e)
+        {
+            base.draw(g, hexX, hexY, e);
+            Point2D start = new Point2D().SetPosition(X, Y);
+            Point2D end = start.Clone();
+            end = end + direction * 40;
+            g.DrawLine(Pens.Red, (int)start.X + hexX, (int)start.Y + hexY, (int)end.X + hexX, (int)end.Y + hexY);
+
         }
 
         protected Entity findClosest(List<Entity> targets)
@@ -64,6 +79,23 @@ namespace IntroProject
                 }
             }
             return result;
+        }
+
+        public void calcNewDir(double dt) {
+            if (dirTimer > 0) 
+            {
+                dirTimer -= dt;
+                return;
+            }
+                
+            if (oldPos.X == GlobalLoc.X && oldPos.Y == GlobalLoc.Y)
+                return;
+            
+
+            direction = this.GlobalLoc - oldPos;
+            direction = direction * (1.0/ Trigonometry.Hypo(direction));
+            oldPos = this.GlobalLoc.Clone();
+            dirTimer = 5;
         }
 
         private double calcDistancePow2(Entity e) =>
@@ -457,6 +489,7 @@ namespace IntroProject
 
                 if (route.move((float)dt * speed)) {
                     (x, y) = route.GetPos();
+                    this.calcNewDir(dt);
                     if (route.isDone()) {
                         route = null; //put any functions wich are to activate when the route is done here
                         if (goal == Goal.Food)
@@ -477,6 +510,7 @@ namespace IntroProject
                     return;
                 }
                 (x, y) = route.GetPos();
+                this.calcNewDir(dt);
                 return;
             }
             //do whatever and entity should do when it doesnt have a route

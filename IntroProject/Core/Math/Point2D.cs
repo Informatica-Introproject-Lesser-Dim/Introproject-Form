@@ -40,6 +40,11 @@
             y = this.y;
         }
 
+        public Point2D Clone()
+        {
+            return new Point2D().SetPosition(X, Y);
+        }
+
         public Point2D flip() => 
             //90 degree flip to your left
             new Point2D().SetPosition(-Y, X);
@@ -52,5 +57,6 @@
 
         public static Point2D operator *(Point2D a, double scale) =>
             new Point2D().SetPosition(a.X * scale, a.Y * scale);
+
     }
 }

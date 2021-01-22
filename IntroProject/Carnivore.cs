@@ -79,7 +79,8 @@ namespace IntroProject
 
             delta *= 1 / dist;
 
-            ((Creature)target).scare(delta);
+            direction = delta.Clone();
+            ((Creature)target).scare(delta.Clone());
 
             delta *= dt * gene.SprintSpeed;
             (X, Y) = delta + this;
