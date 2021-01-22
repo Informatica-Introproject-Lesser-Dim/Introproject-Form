@@ -9,8 +9,8 @@ namespace IntroProject.Presentation.Controls
     {
         public int screenSizeX, screenSizeY, hexagonSize;
         public Point startButtonLocation, exitButtonLocation, settingsButtonLocation, runPresetButtonLocation, languageButtonLocation, fullScreenButtonLocation, helpButtonLocation;
-        EventHandler _start, _settingStart, _preSet;
-        public HomeMenu(int w, int h, EventHandler start, EventHandler settingStart, EventHandler preSet)
+        EventHandler _start, _settingStart, _preSet, _fullScreen, _help;
+        public HomeMenu(int w, int h, EventHandler start, EventHandler settingStart, EventHandler preSet, EventHandler fullScreen, EventHandler help)
         {
             this.Size = new Size(w, h);
             BackgroundImage = Properties.Resources.Background_blurred;
@@ -21,6 +21,8 @@ namespace IntroProject.Presentation.Controls
             _start = start;
             _settingStart = settingStart;
             _preSet = preSet;
+            _fullScreen = fullScreen;
+            _help = help;
 
             int[] menuButtonLocations = createMenuButtonLocations();
             startButtonLocation = new Point(menuButtonLocations[0], menuButtonLocations[1]);
@@ -52,8 +54,8 @@ namespace IntroProject.Presentation.Controls
             settingsHexagonBt.Click += _settingStart;
             runPresetHexagonBt.Click += _preSet;
             languageHexagonBt.Click += languageBTPressed;
-            fullScreenHexagonBt.Click += fullScreenBTPressed;
-            helpHexagonBt.Click += helpBTPressed;
+            fullScreenHexagonBt.Click += _fullScreen;
+            helpHexagonBt.Click += _help;
 
         }
         Button LoadButton(Point hexagonLocation, int currentHexagonSize)
@@ -91,14 +93,6 @@ namespace IntroProject.Presentation.Controls
         {
             Settings.LanguageIndex = Settings.LanguageIndex == 0 ? 1 : 0;
             Refresh();
-        }
-        private void fullScreenBTPressed(object sender, EventArgs e)
-        {
-            //Debug.WriteLine("fullScreen button pressed");
-        }
-        private void helpBTPressed(object sender, EventArgs e)
-        {
-            //Debug.WriteLine("help button pressed");
         }
         private int[] createMenuButtonLocations()
         {

@@ -30,7 +30,9 @@ namespace IntroProject.Presentation
                 if (!mapscr.buttonPaused)
                     mapscr.paused = false; 
             });
-            helpMenu = new HelpMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { helpMenu.Hide(); if (!mapscr.buttonPaused) mapscr.paused = false; });
+            helpMenu = new HelpMenu(Size.Width, Size.Height,
+                                   (object o, EventArgs ea) => { helpMenu.Hide(); if (!mapscr.buttonPaused) mapscr.paused = false; },
+                                   (object o, EventArgs ea) => { homeMenu.Show(); helpMenu.Hide(); helpMenu.backExit(); });
             statisticsMenu = new StatisticsMenu(Size.Width, Size.Height, (object o, EventArgs ea) => { statisticsMenu.Hide(); if (!mapscr.buttonPaused) mapscr.paused = false; });
             dropMenu = new DropMenu(Size.Width/10, Size.Height, 
                                    (object o, EventArgs ea) => { settingsMenu.Show(); settingsMenu.BringToFront(); mapscr.paused = true; }, 
@@ -42,7 +44,9 @@ namespace IntroProject.Presentation
             homeMenu = new HomeMenu(Size.Width, Size.Height,
                                    (object o, EventArgs ea) => { mapscr.MakeMap(); homeMenu.Hide(); },
                                    (object o, EventArgs ea) => { homeMenu.Hide(); settingsMenu.Show(); settingsMenu.BringToFront(); },
-                                   (object o, EventArgs ea) => { settingsMenu.ImportSettings(o, ea); homeMenu.Hide(); }
+                                   (object o, EventArgs ea) => { settingsMenu.ImportSettings(o, ea); homeMenu.Hide(); },
+                                   (object o, EventArgs ea) => { SetFormFullscreen();},
+                                   (object o, EventArgs ea) => { homeMenu.Hide(); helpMenu.Show(); helpMenu.BringToFront(); helpMenu.backHome(); }
                                    );
 
             Controls.Add(homeMenu);
@@ -69,6 +73,10 @@ namespace IntroProject.Presentation
                 mapscr.plus.Size = new Size(maxim, maxim);
             };
             mapscr.plus.Click += (object o, EventArgs ea) => { dropMenu.Show(); mapscr.plus.Hide(); };
+        }
+        public void SetFormFullscreen()
+        {
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
         }
     }
 }
