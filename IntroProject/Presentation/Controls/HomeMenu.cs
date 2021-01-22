@@ -13,6 +13,8 @@ namespace IntroProject.Presentation.Controls
         public HomeMenu(int w, int h, EventHandler start, EventHandler settingStart)
         {
             this.Size = new Size(w, h);
+            BackgroundImage = Properties.Resources.Background_blurred;
+            BackgroundImageLayout = ImageLayout.Stretch;
             screenSizeX = w;
             screenSizeY = h;
             hexagonSize = (int)(h / 8);

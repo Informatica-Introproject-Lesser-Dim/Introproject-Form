@@ -385,6 +385,7 @@ namespace IntroProject
 
             foreach (Hexagon tile in tiles)
                 tile.UpdateColor();
+            drawBase();
         }
     }
 }

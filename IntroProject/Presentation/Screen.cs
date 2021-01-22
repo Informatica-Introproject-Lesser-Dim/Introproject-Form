@@ -58,6 +58,7 @@ namespace IntroProject.Presentation
             Resize += (object o, EventArgs ea) => 
             {
                 int maxim = Math.Max(Size.Width, Size.Height) / 36;
+                homeMenu.Size = new Size(Size.Width, Size.Height);
                 mapscr.Size = new Size(Size.Width, Size.Height);
                 dropMenu.Size = new Size(Size.Width / 10, Size.Height);
                 settingsMenu.Size = new Size(Size.Width, Size.Height);
