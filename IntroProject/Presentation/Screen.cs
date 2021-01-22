@@ -39,6 +39,12 @@ namespace IntroProject.Presentation
                                     mapscr.plus);
             dropMenu.Dock = DockStyle.Right;
 
+            homeMenu = new HomeMenu(Size.Width, Size.Height,
+                                   (object o, EventArgs ea) => { mapscr.MakeMap(); homeMenu.Hide(); },
+                                   (object o, EventArgs ea) => { homeMenu.Hide(); settingsMenu.Show(); settingsMenu.BringToFront(); mapscr.paused = true; }
+                                   );
+
+            Controls.Add(homeMenu);
             Controls.Add(dropMenu);
             Controls.Add(mapscr);
             Controls.Add(settingsMenu);

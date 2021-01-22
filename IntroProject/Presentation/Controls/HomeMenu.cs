@@ -8,15 +8,17 @@ namespace IntroProject.Presentation.Controls
     class HomeMenu : UserControl
     {
         public int screenSizeX, screenSizeY, hexagonSize;
-        Button startHexagonBt = new Button(), exitHexagonBt = new Button(), settingsHexagonBt = new Button(), runPresetHexagonBt = new Button(), languageHexagonBt = new Button(), fullScreenHexagonBt = new Button(), helpHexagonBt = new Button();
         public Point startButtonLocation, exitButtonLocation, settingsButtonLocation, runPresetButtonLocation, languageButtonLocation, fullScreenButtonLocation, helpButtonLocation;
-        EventHandler _exitMenu;
-        public HomeMenu(int w, int h, EventHandler exitMenu)
+        EventHandler _exitMenu, _start, _settingStart;
+        public HomeMenu(int w, int h, EventHandler start, EventHandler settingStart)
         {
-            _exitMenu = exitMenu;
+            this.Size = new Size(w, h);
             screenSizeX = w;
             screenSizeY = h;
             hexagonSize = (int)(h / 8);
+            _start = start;
+            _settingStart = settingStart;
+
             int[] menuButtonLocations = createMenuButtonLocations();
             startButtonLocation = new Point(menuButtonLocations[0], menuButtonLocations[1]);
             exitButtonLocation = new Point(menuButtonLocations[2], menuButtonLocations[3]);
@@ -25,45 +27,45 @@ namespace IntroProject.Presentation.Controls
             languageButtonLocation = new Point(menuButtonLocations[8], menuButtonLocations[9]);
             fullScreenButtonLocation = new Point(menuButtonLocations[10], menuButtonLocations[11]);
             helpButtonLocation = new Point(menuButtonLocations[12], menuButtonLocations[13]);
-            createAllButtons();
 
             createAllLabels();
+            createAllButtons();
+
         }
 
         public void createAllButtons()
         {
-            LoadButton(startButtonLocation, hexagonSize, startHexagonBt);
-            LoadButton(exitButtonLocation, hexagonSize, exitHexagonBt);
-            LoadButton(settingsButtonLocation, hexagonSize, settingsHexagonBt);
-            LoadButton(runPresetButtonLocation, hexagonSize, runPresetHexagonBt);
-            LoadButton(languageButtonLocation, hexagonSize, languageHexagonBt);
-            LoadButton(fullScreenButtonLocation, hexagonSize, fullScreenHexagonBt);
-            LoadButton(helpButtonLocation, hexagonSize, helpHexagonBt);
+            Button startHexagonBt = LoadButton(startButtonLocation + new Size(1,1), hexagonSize + 2);
+            Button exitHexagonBt = LoadButton(exitButtonLocation, hexagonSize);
+            Button settingsHexagonBt = LoadButton(settingsButtonLocation, hexagonSize);
+            Button runPresetHexagonBt = LoadButton(runPresetButtonLocation, hexagonSize);
+            Button languageHexagonBt = LoadButton(languageButtonLocation, hexagonSize);
+            Button fullScreenHexagonBt = LoadButton(fullScreenButtonLocation, hexagonSize);
+            Button helpHexagonBt = LoadButton(helpButtonLocation, hexagonSize);
 
-            startHexagonBt.Click += startBTPressed;
+            startHexagonBt.Click += _start;
             exitHexagonBt.Click += exitBTPressed;
-            settingsHexagonBt.Click += settingsBTPressed;
+            settingsHexagonBt.Click += _settingStart;
             runPresetHexagonBt.Click += runPresetBTPressed;
             languageHexagonBt.Click += languageBTPressed;
             fullScreenHexagonBt.Click += fullScreenBTPressed;
             helpHexagonBt.Click += helpBTPressed;
 
-            Controls.Add(startHexagonBt);
-            Controls.Add(exitHexagonBt);
-            Controls.Add(settingsHexagonBt);
-            Controls.Add(runPresetHexagonBt);
-            Controls.Add(languageHexagonBt);
-            Controls.Add(fullScreenHexagonBt);
-            Controls.Add(helpHexagonBt);
         }
-        void LoadButton(Point hexagonLocation, int currentHexagonSize, Button hexagonButton)
+        Button LoadButton(Point hexagonLocation, int currentHexagonSize)
         {
+            Button hexagonButton = new Button();
             Point[] usedHexagonPoints = HexagonPoints(hexagonLocation.X, hexagonLocation.Y, currentHexagonSize);
             hexagonButton.SetBounds(usedHexagonPoints[0].X - 5, usedHexagonPoints[0].Y - 5, usedHexagonPoints[2].X + 5, usedHexagonPoints[3].Y + 5);
             GraphicsPath hexagonPath = new GraphicsPath(FillMode.Winding);
             hexagonPath.AddPolygon(usedHexagonPoints);
             Region hexagonRegion = new Region(hexagonPath);
             hexagonButton.Region = hexagonRegion;
+            hexagonButton.BackColor = Color.FromArgb(0, 0, 0);
+
+            Controls.Add(hexagonButton);
+
+            return hexagonButton;
         }
         public Point[] HexagonPoints(int centreX, int centreY, int size)
         {
@@ -81,7 +83,6 @@ namespace IntroProject.Presentation.Controls
         }
         private void startBTPressed(object sender, EventArgs e)
         {
-            //save changes
             //exit menu
         }
         private void exitBTPressed(object sender, EventArgs e) => Application.Exit();
@@ -94,6 +95,7 @@ namespace IntroProject.Presentation.Controls
         private void runPresetBTPressed(object sender, EventArgs e)
         {
             //Debug.WriteLine("runPreset button pressed");
+            //Import & Run
         }
         private void languageBTPressed(object sender, EventArgs e)
         {
@@ -135,13 +137,14 @@ namespace IntroProject.Presentation.Controls
         {
             LazyLabel label = new LazyLabel();
 
-            label.Location = new Point(x, y);
-            label.Width = 150;
-            label.Height = 40;
+            label.Location = new Point(x + 45, y + 10);
+            label.Width = 60; 
+            label.Height = 20; 
             label.LazyText = name;
             label.Dock = DockStyle.None;
             label.AutoSize = false;
             label.TextAlign = ContentAlignment.MiddleCenter;
+            label.BackColor = Color.Transparent;
             Controls.Add(label);
 
             return label;

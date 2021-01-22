@@ -55,8 +55,6 @@ namespace IntroProject.Presentation.Controls
             Size = new Size(w, h);
             Paint += drawScreen;
 
-            MakeMap();
-
             MouseClick += MapClick;
         }
 
@@ -147,6 +145,8 @@ namespace IntroProject.Presentation.Controls
                 xCam = Width / 2 - selected.GlobalLoc.x;
                 yCam = Height / 2 - selected.GlobalLoc.y;
             }
+            if (map == null)
+                return;
             map.draw(pea.Graphics, xCam, yCam, Width, Height);
             n++;
 
@@ -184,7 +184,7 @@ namespace IntroProject.Presentation.Controls
         public void UpdateVars(bool newMap)
         {
             Calculator.Update();
-            if (newMap)
+            if (newMap || map == null)
                 MakeMap();
             else
                 map.Update();
