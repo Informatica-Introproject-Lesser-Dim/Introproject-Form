@@ -27,7 +27,7 @@ namespace IntroProject
                   img = Properties.Resources.Zebra_Normal;
                   break;
             }
-            g.DrawImageUnscaled(img, hexX + x - r, hexY + y - r);
+            g.DrawImage(rotateImage(img), hexX + x - img.Width/2, hexY + y - img.Height/2);
         }
     }
 }

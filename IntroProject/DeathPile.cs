@@ -24,7 +24,7 @@ namespace IntroProject
         public override void draw(Graphics g, int hexX, int hexY, Entity e)
         {
             Image img = Properties.Resources.Skull;
-            g.DrawImageUnscaled(img, hexX + x - r, hexY + y - r);
+            g.DrawImageUnscaled(img, hexX + x - img.Width/2, hexY + y - img.Height/2);
         }
     }
 }

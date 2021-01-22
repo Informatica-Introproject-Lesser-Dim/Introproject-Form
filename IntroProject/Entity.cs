@@ -53,6 +53,8 @@ namespace IntroProject
             return energyVal;
         }
 
+        
+
         public virtual void draw(Graphics g, int hexX, int hexY, Entity e)
         {
             if (selected)

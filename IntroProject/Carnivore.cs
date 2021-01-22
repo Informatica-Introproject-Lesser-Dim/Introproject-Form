@@ -144,7 +144,8 @@ namespace IntroProject
                   img = Properties.Resources.Lion_Normal;
                   break;
             }
-            g.DrawImageUnscaled(img, hexX + x - r, hexY + y - r);
+
+            g.DrawImageUnscaled(rotateImage(img), hexX + x - img.Width/2, hexY + y - img.Height/2);
         }
 
         public Carnivore(Gene gene, double energy) : base(gene, energy) { }
