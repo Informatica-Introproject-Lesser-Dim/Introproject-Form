@@ -14,7 +14,8 @@ namespace IntroProject
         Mate,
         Water, //might be implemented later
         Nothing,
-        Creature
+        Creature,
+        Scared
     }
 
 
@@ -107,6 +108,42 @@ namespace IntroProject
                 return;
             this.energyVal += entity.BeingEaten();
             this.sleep = 30;
+        }
+
+        public void scare(Point2D dir) {
+            if (this.goal == Goal.Scared)
+                return;
+            sleep = 5;
+            this.goal = Goal.Scared;
+            Point2D dir2 = dir.flip();
+
+
+            Point2D randomGoal;
+            int[] randomHexPos;
+            Hexagon randomHex = this.chunk;
+            Random random = new Random();
+            double maxDist = 400;
+            double scale = 2.0 / 3;
+            int i = 0;
+            for(; i < 50; i++)
+            {
+                randomGoal = this.GlobalLoc + dir * maxDist * random.NextDouble() + dir2 * maxDist * scale * (random.NextDouble() * 2 - 1);
+                randomHexPos = chunk.parent.PosToHexPos((int)randomGoal.X, (int)randomGoal.Y);
+                if (randomHexPos[0] < 0 || randomHexPos[0] >= chunk.parent.width || randomHexPos[1] < 0 || randomHexPos[1] >= chunk.parent.height)
+                    continue;
+                randomHex = chunk.parent[randomHexPos[0], randomHexPos[1]];
+                if (randomHex == null)
+                    continue;
+                if (randomHex.heightOfTile < Hexagon.seaLevel)
+                    continue;
+                break;
+            }
+            if (i == 50)
+                return;
+
+            Ghost dummy = new Ghost(0, 0, randomHex);
+            SingleTargetAStar aStar = new SingleTargetAStar(this, this.chunk, this.gene, this.chunk.size, this.energyVal, dummy);
+            route = aStar.getResult();
         }
 
         protected void MateWithFemale(Creature other)
@@ -320,6 +357,7 @@ namespace IntroProject
             SingleTargetAStar aStar = new SingleTargetAStar(this, this.chunk, this.gene, this.chunk.size, this.energyVal, creature);
             route = aStar.getResult();
 
+
             if (route != null)
             {
                 goal = Goal.Mate;
@@ -383,11 +421,23 @@ namespace IntroProject
 
         public void move(double dt)//needs a rework 'cause the target won't be an entity
         { 
+            
             if (this.chunk.heightOfTile < Hexagon.seaLevel)
                 this.energyVal -= Calculator.EnergyPerTic(gene) * gene.SwimCost * dt;
             
             else this.energyVal -= Calculator.EnergyPerTic(gene) * gene.WalkCost * dt;
             
+
+            float speed = this.gene.Velocity;
+            if (this.goal == Goal.Scared && stamina > 0)
+            {
+                this.energyVal -= Calculator.SprintEnergyPerTic(gene) * dt;
+                speed = this.gene.SprintSpeed;
+                stamina -= 2*dt;
+            }
+                
+
+
             if (route != null) 
             {
                 if (goal == Goal.Mate)//ik weet niet of het hier wel intentioneel is of dat je wat er binnenin staat kunt samenvoegen
@@ -405,7 +455,7 @@ namespace IntroProject
                     return;
                 }
 
-                if (route.move((float)dt * gene.Velocity)) {
+                if (route.move((float)dt * speed)) {
                     (x, y) = route.GetPos();
                     if (route.isDone()) {
                         route = null; //put any functions wich are to activate when the route is done here
@@ -418,7 +468,8 @@ namespace IntroProject
                         if (goal == Goal.Mate)
                             MateWithFemale(mateTarget);
                         myFood = null;
-                        sleep += 30;
+                        if (goal != Goal.Scared)
+                            sleep += 30;
                         return;
                     }
                     this.chunk.moveEntity(this, route.getDir());

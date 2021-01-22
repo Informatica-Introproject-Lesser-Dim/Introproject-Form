@@ -40,6 +40,10 @@
             y = this.y;
         }
 
+        public Point2D flip() => 
+            //90 degree flip to your left
+            new Point2D().SetPosition(-Y, X);
+
         public static Point2D operator +(Point2D a, Point2D b) =>
             new Point2D().SetPosition(a.X + b.X, a.Y + b.Y);
 

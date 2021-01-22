@@ -70,6 +70,7 @@ namespace IntroProject
             Point2D delta = target.GlobalLoc - GlobalLoc;
 
             double dist = Trigonometry.Distance(target.GlobalLoc, GlobalLoc);
+            
             if (dist < 5)
             {
                 eat(target);
@@ -77,11 +78,16 @@ namespace IntroProject
             }
 
             delta *= 1 / dist;
+
+            ((Creature)target).scare(delta);
+
             delta *= dt * gene.SprintSpeed;
             (X, Y) = delta + this;
 
             energyVal -= Calculator.SprintEnergyPerTic(gene);
             stamina -= 2*dt;
+
+
 
             int[] hexPos = chunk.parent.PosToHexPos(GlobalLoc.x, GlobalLoc.y);
             Hexagon newHex = chunk.parent[hexPos[0], hexPos[1]];

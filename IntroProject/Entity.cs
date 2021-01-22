@@ -59,4 +59,14 @@ namespace IntroProject
                 g.FillEllipse(Brushes.Navy, hexX + x - r, hexY + y - r, r * 2, r * 2);
         }
     }
+
+    public class Ghost : Entity
+    {
+
+        public Ghost(int x, int y, Hexagon hex) {
+            this.x = x;
+            this.y = y;
+            this.chunk = hex;
+        }
+    }
 }
