@@ -236,7 +236,6 @@ namespace IntroProject
         }
     }
 
-
     //How to use: every time you want to add a route to the list you must initialize a routeElement and add the cost
     class RouteList
     {
