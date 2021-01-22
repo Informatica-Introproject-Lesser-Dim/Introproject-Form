@@ -13,6 +13,7 @@ namespace IntroProject.Presentation
         SettingsMenu settingsMenu;
         HelpMenu helpMenu;
         StatisticsMenu statisticsMenu;
+        HomeMenu homeMenu;
 
         public HexagonOfLife()
         {

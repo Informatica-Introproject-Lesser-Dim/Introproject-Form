@@ -36,8 +36,11 @@ namespace IntroProject.Presentation.Controls
             exit.FlatAppearance.BorderColor = Color.FromArgb(123, 156, 148);
             exit.Click += exitMenu;
 
+            //Makes the Import Settings Button
+            int i = 2 * Size.Width / 3 + 40, j = 3 * Size.Height / 10 + 60;
+
             Button importSet = new Button();
-            importSet.Location = new Point(Size.Width - (edge * 2 + 16), 5);
+            importSet.Location = new Point(i, j);
             importSet.Size = new Size(edge * 2, edge * 2);
             importSet.FlatAppearance.BorderColor = Color.FromArgb(123, 156, 148);
             importSet.BackColor = Color.White;
@@ -46,8 +49,8 @@ namespace IntroProject.Presentation.Controls
             importSet.Click += ImplementChanges;
 
 
-            //Makes the Save Settings Button
-            int k = 2 * Size.Width / 3 + 40, l = Size.Height / 10 + 60;
+            //Makes the Export Settings Button
+            int k = 2 * Size.Width / 3 + 40, l = 60;
 
             Button ExportSetts = new Button();
             ExportSetts.Location = new Point(k, l);
@@ -58,10 +61,10 @@ namespace IntroProject.Presentation.Controls
             ExportSetts.Click += ExportSettings;
 
             //Makes the Save Settings Button
-            int n = 2 * Size.Width / 3 + 40, m = 6 * Size.Height / 10 + 60;
+            int m = 2 * Size.Width / 3 + 40, n = 6 * Size.Height / 10 + 60;
 
             Button SaveSetts = new Button();
-            SaveSetts.Location = new Point(n, m);
+            SaveSetts.Location = new Point(m, n);
             SaveSetts.Size = new Size(edge * 2, edge * 2);
             SaveSetts.FlatAppearance.BorderColor = Color.FromArgb(123, 156, 148);
             SaveSetts.BackColor = Color.White;
@@ -76,13 +79,15 @@ namespace IntroProject.Presentation.Controls
             //Resize Method for the buttons
             Resize += (object o, EventArgs ea) =>
             {
-                int n = 2 * Size.Width / 3 + 40, m = 6 * Size.Height / 10 + 60;
+                int i = 2 * Size.Width / 3 + 40, j = 3 * Size.Height / 10 + 60, k = 2 * Size.Width / 3 + 40, l = 60, m = 2 * Size.Width / 3 + 40, n = 6 * Size.Height / 10 + 60;
                 edge = Math.Max(Size.Width, Size.Height) / 36;
                 exit.Size = new Size(edge, edge);
                 importSet.Size = new Size(edge * 2, edge * 2);
-                importSet.Location = new Point(Size.Width - (edge * 2) - 16, 5);
+                importSet.Location = new Point(i, j);
                 SaveSetts.Size = new Size(edge * 2, edge * 2);
-                SaveSetts.Location = new Point(n, m);
+                SaveSetts.Location = new Point(m, n);
+                ExportSetts.Size = new Size(edge * 2, edge * 2);
+                ExportSetts.Location = new Point(k, l);
             };
             /* Each triple sentence is an slider group, First the construnction, where after the TrackBar specific event and textbox equivalent handlers.
                Don't forget, slider values are integers. So there is a scale in every thing
@@ -280,20 +285,26 @@ namespace IntroProject.Presentation.Controls
             if (openFileDialog.ShowDialog() == DialogResult.OK)
                 try
                 {
-                    StreamReader sr = new StreamReader(openFileDialog.FileName);
-
-                    string[] settings = new string[15];
-                    string lineInfo;
-                    int i = 0;
-
-                    while ((lineInfo = sr.ReadLine()) != null)
+                    if (!(openFileDialog.FileName.EndsWith(".txt")))
+                        MessageBox.Show($"Wrong File Type error.\n\nError message: {String.Format("{0} is not of the correct type", openFileDialog.FileName)}\n\n" +
+                        "It must be an .txt file");
+                    else
                     {
-                        settings[i] = lineInfo;
-                        i++;
-                    }
+                        StreamReader sr = new StreamReader(openFileDialog.FileName);
 
-                    sr.Close();
-                    Import(settings);
+                        string[] settings = new string[15];
+                        string lineInfo;
+                        int i = 0;
+
+                        while ((lineInfo = sr.ReadLine()) != null)
+                        {
+                            settings[i] = lineInfo;
+                            i++;
+                        }
+
+                        sr.Close();
+                        Import(settings);
+                    }
                 }
                 catch (SecurityException ex)
                 {
