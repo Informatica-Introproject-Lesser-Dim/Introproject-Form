@@ -41,7 +41,8 @@ namespace IntroProject.Presentation
 
             homeMenu = new HomeMenu(Size.Width, Size.Height,
                                    (object o, EventArgs ea) => { mapscr.MakeMap(); homeMenu.Hide(); },
-                                   (object o, EventArgs ea) => { homeMenu.Hide(); settingsMenu.Show(); settingsMenu.BringToFront(); mapscr.paused = true; }
+                                   (object o, EventArgs ea) => { homeMenu.Hide(); settingsMenu.Show(); settingsMenu.BringToFront(); },
+                                   (object o, EventArgs ea) => { settingsMenu.ImportSettings(o, ea); homeMenu.Hide(); }
                                    );
 
             Controls.Add(homeMenu);

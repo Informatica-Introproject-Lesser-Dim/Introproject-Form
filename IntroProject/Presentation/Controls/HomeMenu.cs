@@ -9,8 +9,8 @@ namespace IntroProject.Presentation.Controls
     {
         public int screenSizeX, screenSizeY, hexagonSize;
         public Point startButtonLocation, exitButtonLocation, settingsButtonLocation, runPresetButtonLocation, languageButtonLocation, fullScreenButtonLocation, helpButtonLocation;
-        EventHandler _exitMenu, _start, _settingStart;
-        public HomeMenu(int w, int h, EventHandler start, EventHandler settingStart)
+        EventHandler _start, _settingStart, _preSet;
+        public HomeMenu(int w, int h, EventHandler start, EventHandler settingStart, EventHandler preSet)
         {
             this.Size = new Size(w, h);
             BackgroundImage = Properties.Resources.Background_blurred;
@@ -20,6 +20,7 @@ namespace IntroProject.Presentation.Controls
             hexagonSize = (int)(h / 8);
             _start = start;
             _settingStart = settingStart;
+            _preSet = preSet;
 
             int[] menuButtonLocations = createMenuButtonLocations();
             startButtonLocation = new Point(menuButtonLocations[0], menuButtonLocations[1]);
@@ -38,6 +39,7 @@ namespace IntroProject.Presentation.Controls
         public void createAllButtons()
         {
             Button startHexagonBt = LoadButton(startButtonLocation + new Size(1,1), hexagonSize + 2);
+            startHexagonBt.BackColor = Color.Brown;
             Button exitHexagonBt = LoadButton(exitButtonLocation, hexagonSize);
             Button settingsHexagonBt = LoadButton(settingsButtonLocation, hexagonSize);
             Button runPresetHexagonBt = LoadButton(runPresetButtonLocation, hexagonSize);
@@ -48,7 +50,7 @@ namespace IntroProject.Presentation.Controls
             startHexagonBt.Click += _start;
             exitHexagonBt.Click += exitBTPressed;
             settingsHexagonBt.Click += _settingStart;
-            runPresetHexagonBt.Click += runPresetBTPressed;
+            runPresetHexagonBt.Click += _preSet;
             languageHexagonBt.Click += languageBTPressed;
             fullScreenHexagonBt.Click += fullScreenBTPressed;
             helpHexagonBt.Click += helpBTPressed;
@@ -63,7 +65,7 @@ namespace IntroProject.Presentation.Controls
             hexagonPath.AddPolygon(usedHexagonPoints);
             Region hexagonRegion = new Region(hexagonPath);
             hexagonButton.Region = hexagonRegion;
-            hexagonButton.BackColor = Color.FromArgb(0, 0, 0);
+            hexagonButton.BackColor = Color.FromArgb(30, 30, 30);
 
             Controls.Add(hexagonButton);
 
@@ -83,25 +85,12 @@ namespace IntroProject.Presentation.Controls
             hexagonPoints[5] = new Point(boundBy.Left, boundBy.Top + halfHeight);
             return hexagonPoints;
         }
-        private void startBTPressed(object sender, EventArgs e)
-        {
-            //exit menu
-        }
         private void exitBTPressed(object sender, EventArgs e) => Application.Exit();
-        public void settingsBTPressed(object sender, EventArgs e)
-        {
-            SettingsMenu settingsMenu = new SettingsMenu(screenSizeX,screenSizeY,_exitMenu);
 
-        }
-
-        private void runPresetBTPressed(object sender, EventArgs e)
-        {
-            //Debug.WriteLine("runPreset button pressed");
-            //Import & Run
-        }
         private void languageBTPressed(object sender, EventArgs e)
         {
-            //Debug.WriteLine("language button pressed");
+            Settings.LanguageIndex = Settings.LanguageIndex == 0 ? 1 : 0;
+            Refresh();
         }
         private void fullScreenBTPressed(object sender, EventArgs e)
         {
@@ -126,16 +115,16 @@ namespace IntroProject.Presentation.Controls
         private void createAllLabels()
         {
             int[] labelLoc = MenuLabelLocations(150, 40);
-            CreateLabel(labelLoc[0], labelLoc[1], () => "start");
-            CreateLabel(labelLoc[2], labelLoc[3], () => "exit");
-            CreateLabel(labelLoc[4], labelLoc[5], () => "settings");
-            CreateLabel(labelLoc[6], labelLoc[7], () => "runPreset");
-            CreateLabel(labelLoc[8], labelLoc[9], () => "language");
-            CreateLabel(labelLoc[10], labelLoc[11], () => "fullScreen");
-            CreateLabel(labelLoc[12], labelLoc[13], () => "help");
+            CreateLabel(labelLoc[0], labelLoc[1], () => "start", Color.Brown);
+            CreateLabel(labelLoc[2], labelLoc[3], () => "exit", Color.IndianRed);
+            CreateLabel(labelLoc[4], labelLoc[5], () => "settings", Color.MediumPurple);
+            CreateLabel(labelLoc[6], labelLoc[7], () => "runPreset", Color.ForestGreen);
+            CreateLabel(labelLoc[8], labelLoc[9], () => "language", Color.Honeydew);
+            CreateLabel(labelLoc[10], labelLoc[11], () => "fullScreen", Color.Yellow);
+            CreateLabel(labelLoc[12], labelLoc[13], () => "help", Color.LightSkyBlue);
 
         }
-        private LazyLabel CreateLabel(int x, int y, Func<string> name)
+        private LazyLabel CreateLabel(int x, int y, Func<string> name, Color color)
         {
             LazyLabel label = new LazyLabel();
 
@@ -146,7 +135,7 @@ namespace IntroProject.Presentation.Controls
             label.Dock = DockStyle.None;
             label.AutoSize = false;
             label.TextAlign = ContentAlignment.MiddleCenter;
-            label.BackColor = Color.Transparent;
+            label.BackColor = color;
             Controls.Add(label);
 
             return label;
