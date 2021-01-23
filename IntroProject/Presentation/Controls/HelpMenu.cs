@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 
 using IntroProject.Core.Utils;
+using Microsoft.Win32;
 
 namespace IntroProject.Presentation.Controls
 {
@@ -11,7 +12,7 @@ namespace IntroProject.Presentation.Controls
         MultipleLanguages translator = MultipleLanguages.Instance;
         Button exit;
         EventHandler _exitMenu, _HomeExit;
-        private Label textLabel = new Label();
+        private RichTextBox textBox = new RichTextBox();
 
         public HelpMenu(int w, int h, EventHandler exitMenu, EventHandler HomeExit)
         {
@@ -27,13 +28,44 @@ namespace IntroProject.Presentation.Controls
             exit.FlatAppearance.BorderColor = Color.FromArgb(123, 156, 148);
             exit.Click += exitMenu;
 
-            textLabel.Location = new Point(this.Size.Width / 2 - 200, 30);
-            textLabel.Font = new Font("Arial", 22, FontStyle.Regular);
-            textLabel.Size = new Size(400, 300);
-            textLabel.Text = translator.DisplayText("helpText");
+            textBox.Location = new Point(this.Size.Width / 2 - 200, 30);
+            textBox.Font = new Font("Arial", 22, FontStyle.Regular);
+            textBox.Size = new Size(400, 300);
+            textBox.Text = translator.DisplayText("helpText") + " https://github.com/Informatica-Introproject-Lesser-Dim/Introproject-Form/wiki";
+            textBox.ReadOnly = true;
+            textBox.DetectUrls = true;
+            textBox.ScrollBars = RichTextBoxScrollBars.None;
+            textBox.LinkClicked += (object sender, LinkClickedEventArgs e) =>
+                System.Diagnostics.Process.Start(GetSystemDefaultBrowser(), e.LinkText);
 
-            this.Controls.Add(textLabel);
+            this.Controls.Add(textBox);
             this.Controls.Add(exit);
+        }
+    // All this to find IE
+    private string GetSystemDefaultBrowser()
+    {
+        string name = string.Empty;
+        RegistryKey regKey = null;
+        try
+        {
+            regKey = Registry.ClassesRoot.OpenSubKey("HTTP\\shell\\open\\command", false);
+
+            name = regKey.GetValue(null).ToString().ToLower().Replace("" + (char)34, "");
+
+            if (!name.EndsWith("exe"))
+                name = name.Substring(0, name.LastIndexOf(".exe") + 4);
+
+        }
+        catch (Exception ex)
+        {
+            name = string.Format("ERROR: An exception of type: {0} occurred in method: {1} in the following module: {2}", ex.GetType(), ex.TargetSite, this.GetType());
+        }
+        finally
+        {
+            if (regKey != null)
+                regKey.Close();
+        }
+        return name;
         }
         public void backHome()
         {
