@@ -54,6 +54,7 @@ namespace IntroProject.Presentation.Controls
         public void InitChart(int GraphChoice)
         {
             WorkableStats = StatisticsValues.statisticsvalues;
+            this.Controls.Remove(this.plot1);
 
             this.plot1 = new PlotView
             {
@@ -73,17 +74,13 @@ namespace IntroProject.Presentation.Controls
             };
 
             pm.Series.Clear();
+            pm.Axes.Clear();
             
             if(GraphChoice == 1)
             { 
                 var Choice1 = new LineSeries
                 {
-                    Title = "PopulationSize Carnivores",
-                    Color = OxyColors.SkyBlue,
-                    MarkerSize = 6,
-                    MarkerStroke = OxyColors.White,
-                    MarkerFill = OxyColors.Red,
-                    MarkerStrokeThickness = 1.5
+                    Title = "PopulationSize Carnivores"
                 };
                 foreach (Statistics stats in WorkableStats)
                     Choice1.Points.Add(new DataPoint(stats.time, stats.PopulationSizeCarnivores));
