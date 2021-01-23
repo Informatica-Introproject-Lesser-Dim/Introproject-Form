@@ -80,11 +80,13 @@ namespace IntroProject.Presentation.Controls
         {
             map = new Map(100, 70, size, 0);
 
-            for (int i = 0; i < Settings.StartEntities; i++)
+            for (int i = 0; i < Settings.StartHerbivore; i++)
             {
                 map.placeRandom(new Herbivore());
-                if (i % 3 == 0)
-                    map.placeRandom(new Carnivore());
+            }
+            for (int i = 0; i < Settings.StartCarnivore; i++)
+            {
+                map.placeRandom(new Carnivore());
             }
         }
 

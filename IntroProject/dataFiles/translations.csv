@@ -1,8 +1,9 @@
 ﻿Ref,Dutch,English
 helpText,Hallo! Heb je zin om wat evolutie in actie te zien? Er is zat te zien; Laten we starten,Hey there; Good to have you learning evolution with us! There is a lot to learn so let's get started
 SDforSpeed,Snelheid,Speed
-SDmaxEntity,Maximaal aantal aanwezige wezens,Maximum possible amount of creatures
-SDstartingCountEntity,Begin aantal aanwezige wezens,Number of creatures at start
+SDforSpeedExplenation,Deze slider bepaalt de snelheid van de entities. Een hogere waarde betekent een grotere snelheid, With this slider you decide the speed of the program. A higher value means a greater speed.
+SDstartingCountCarnivore,Begin aantal aanwezige Carnivore,Number of Carnivore at start
+SDstartingCountHerbivore,Begin aantal aanwezige Herbivore,Number of Herbivore at start
 SDhatchSpeed,Groeisnelheid kinderen,GrowSpeed childern
 SDseaLevel,Waterpeil,Sealevel
 SDmatingCost,Energie kosten van voortplanten,Energy cost for mating
