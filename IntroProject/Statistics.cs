@@ -6,8 +6,8 @@ namespace IntroProject
 {
     public class Statistics
     {
-        private double time, TotalVelocityHerbivores, TotalVelocityCarnivores, TotalSizeHerbivores, TotalSizeCarnivores;
-        private int PopulationSizeHerbivores, PopulationSizeCarnivores;
+        public double time, TotalVelocityHerbivores, TotalVelocityCarnivores, TotalSizeHerbivores, TotalSizeCarnivores;
+        public int PopulationSizeHerbivores, PopulationSizeCarnivores;
 
         public Statistics(double time, int PopSizeH, int PopSizeC, double TotVH, double TotVC, double TotSH, double TotSC)
         {

@@ -58,8 +58,6 @@ namespace IntroProject.Presentation.Controls
             MouseClick += MapClick;
         }
 
-        public List<Statistics> GetStats() => map.statistics;
-
         private void Play_Click(object sender, EventArgs ea)
         {
             play.Hide();

@@ -14,7 +14,6 @@ namespace IntroProject
         private List<Entity> children;
         private List<Entity> deaths;
         private List<Entity> eaten;
-        public List<Statistics> statistics;
         private double time = 0;
         public double HerbivoreVelocity;
         public double CarnivoreVelocity;
@@ -52,7 +51,6 @@ namespace IntroProject
             deaths = new List<Entity>();
             tiles = new Hexagon[width, height];
             perlin = new SimplexPerlin[4];
-            statistics = new List<Statistics>();
             Hexagon.calcHeight(Settings.MiddleHeight);
 
             for (int i = 0; i < n; i++)
@@ -169,10 +167,11 @@ namespace IntroProject
                     deaths.Add(deathPile);
             }  
         }
+
         public void TimeStep(double dt)
         {
             Statistics CurrentStats = new Statistics(time, HerbivoreCount, CarnivoreCount, HerbivoreVelocity, CarnivoreVelocity, HerbivoreSize, CarnivoreSize);
-            statistics.Add(CurrentStats);
+            StatisticsValues.AddStats(CurrentStats);
             time += dt; //the map keeps the time so that not each hexagon has to keep the time for itself
             this.activateEntities(dt); //activating all the entities
             foreach (Hexagon hexagon in tiles)
@@ -213,14 +212,9 @@ namespace IntroProject
         }
         public int[] countHerbivoresAndCarnivores()
         {
-            int herbivores = 0;
-            int carnivores = 0;
+            int herbivores = HerbivoreCount;
+            int carnivores = CarnivoreCount;
 
-            foreach (Entity e in entities)
-                if (e.GetType().Name == "Herbivore")
-                    herbivores++;
-                else
-                    carnivores++;
             return new int[2] { herbivores, carnivores };
         }
 
