@@ -107,6 +107,8 @@ namespace IntroProject
             if (entity == null)
                 return;
             this.sleep = 30;
+            if (energyVal >= 0.8 * maxEnergy)
+                return;
             if (energyVal + entity.BeingEaten() >= maxEnergy)
                 energyVal = maxEnergy;
             else energyVal += entity.BeingEaten();
