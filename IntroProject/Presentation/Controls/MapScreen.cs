@@ -83,7 +83,6 @@ namespace IntroProject.Presentation.Controls
             for (int i = 0; i < Settings.StartHerbivore; i++)
             {
                 map.placeRandom(new Herbivore());
-                map.placeRandom(new DeathPile(0,0,100));
             }
             for (int i = 0; i < Settings.StartCarnivore; i++)
             {
@@ -162,9 +161,12 @@ namespace IntroProject.Presentation.Controls
             }
 
             int[] genders = map.countMalesAndFemales();
+            int[] type = map.countHerbivoresAndCarnivores();
 
             pea.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(50, 0, 0, 0)), 50, 200, 200, 100);
-            pea.Graphics.DrawString("Male Count: " + genders[0].ToString() +
+            pea.Graphics.DrawString("Herbivore Count: " + type[0].ToString() +
+                                    "\nCarnivore Count: " + type[1].ToString() +
+                                    "\nMale Count: " + genders[0].ToString() +
                                     "\nMales Born: " + map.malesAdded +
                                     "\nFemale Count: " + genders[1].ToString() +
                                     "\nFemales Born:" + map.femalesAdded

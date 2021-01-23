@@ -211,6 +211,18 @@ namespace IntroProject
                     females++;
             return new int[2] { males, females };
         }
+        public int[] countHerbivoresAndCarnivores()
+        {
+            int herbivores = 0;
+            int carnivores = 0;
+
+            foreach (Entity e in entities)
+                if (e.GetType().Name == "Herbivore")
+                    herbivores++;
+                else
+                    carnivores++;
+            return new int[2] { herbivores, carnivores };
+        }
 
         private float calcNoise(float x, float y) //adding multiple perlin noise functions on top of eachother to make it look more natural
         {
