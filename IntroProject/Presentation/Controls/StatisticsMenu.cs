@@ -16,7 +16,6 @@ namespace IntroProject.Presentation.Controls
         int r = 0;
         private PlotView plot1;
         public IList<Statistics> WorkableStats = new List<Statistics>();
-        private bool GraphChoice1, GraphChoice2, GraphChoice3, GraphChoice4, GraphChoice5, GraphChoice6;
 
         public StatisticsMenu(int w, int h, EventHandler exitMenu)
         {
@@ -31,8 +30,6 @@ namespace IntroProject.Presentation.Controls
             exit.Click += exitMenu;
             Controls.Add(exit);
 
-            InitChart();
-
             Resize += (object o, EventArgs ea) =>
             {
                 edge = Math.Max(Size.Width, Size.Height) / 36;
@@ -46,15 +43,15 @@ namespace IntroProject.Presentation.Controls
             Button statname5 = ButtonList("HerbivoreVelocity");
             Button statname6 = ButtonList("HerbivoreSize");
 
-            statname1.Click += (object o, EventArgs ea) => { GraphChoice1 = !GraphChoice1; InitChart(); };
-            statname2.Click += (object o, EventArgs ea) => { GraphChoice2 = !GraphChoice2; InitChart(); };
-            statname3.Click += (object o, EventArgs ea) => { GraphChoice3 = !GraphChoice3; InitChart(); };
-            statname4.Click += (object o, EventArgs ea) => { GraphChoice4 = !GraphChoice4; InitChart(); };
-            statname5.Click += (object o, EventArgs ea) => { GraphChoice5 = !GraphChoice5; InitChart(); };
-            statname6.Click += (object o, EventArgs ea) => { GraphChoice6 = !GraphChoice6; InitChart(); };
+            statname1.Click += (object o, EventArgs ea) => { InitChart(1); };
+            statname2.Click += (object o, EventArgs ea) => { InitChart(2); };
+            statname3.Click += (object o, EventArgs ea) => { InitChart(3); };
+            statname4.Click += (object o, EventArgs ea) => { InitChart(4); };
+            statname5.Click += (object o, EventArgs ea) => { InitChart(5); };
+            statname6.Click += (object o, EventArgs ea) => { InitChart(6); };
         }
 
-        public void InitChart()
+        public void InitChart(int GraphChoice)
         {
             WorkableStats = StatisticsValues.statisticsvalues;
 
@@ -75,42 +72,21 @@ namespace IntroProject.Presentation.Controls
                 PlotType = PlotType.Cartesian
             };
 
-            pm.Axes.Add(new LinearAxis
-            {
-                Position = AxisPosition.Left,
-                Minimum = 0,
-                Maximum = 25,
-                MajorStep = 5,
-                MinorStep = 1,
-                TickStyle = OxyPlot.Axes.TickStyle.Outside
-            });
-
-            pm.Axes.Add(new LinearAxis
-            {
-                Position = AxisPosition.Top,
-                Minimum = 0,
-                Maximum = GetTime(WorkableStats),
-                MajorStep = GetTime(WorkableStats) / 10,
-                MinorStep = GetTime(WorkableStats) / 100,
-                TickStyle = OxyPlot.Axes.TickStyle.Outside
-            });
-
-            if(GraphChoice1)
-            {
+            pm.Series.Clear();
+            
+            if(GraphChoice == 1)
+            { 
                 var Choice1 = new LineSeries
                 {
                     Title = "PopulationSize Carnivores",
                     Color = OxyColors.SkyBlue,
                     MarkerSize = 6,
                     MarkerStroke = OxyColors.White,
-                    MarkerFill = OxyColors.SkyBlue,
+                    MarkerFill = OxyColors.Red,
                     MarkerStrokeThickness = 1.5
                 };
                 foreach (Statistics stats in WorkableStats)
-                {
                     Choice1.Points.Add(new DataPoint(stats.time, stats.PopulationSizeCarnivores));
-                    Debug.WriteLine(Convert.ToString(stats.PopulationSizeCarnivores) + " " + Convert.ToString(stats.time));
-                }
                 pm.Series.Add(Choice1);
             }
 
@@ -121,7 +97,7 @@ namespace IntroProject.Presentation.Controls
         private double GetTime(IList<Statistics> stats)
         {
             double time = 1;
-            if (stats.Count > 0)
+            if (stats.Count != 0)
                 time = stats[^1].time;
             return time;
         }
