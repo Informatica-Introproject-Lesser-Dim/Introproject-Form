@@ -396,8 +396,6 @@ namespace IntroProject.Presentation.Controls
             export += MC + "\n";
             export += GG + "\n";
             export += GMF + "\n";
-            export += MiT + "\n";
-            export += MaT + "\n";
             export += WE + "\n";
             export += JE + "\n";
             export += PE + "\n";
