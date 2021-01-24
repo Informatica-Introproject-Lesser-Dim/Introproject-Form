@@ -19,7 +19,7 @@ namespace IntroProject.Presentation.Controls
         private CheckBox AddHeat;
         private ComboBox languageIndex;
         private List<TrackBar> trackBars = new List<TrackBar>();
-        private int TE, SE, HS, MiT, MaT, GG, GMF;
+        private int TE, SE, HS, GG, GMF;
         private float Sp, MH, MC, WE, JE, PE;
 
         public SettingsMenu(int w, int h, EventHandler exitMenu)
@@ -37,10 +37,10 @@ namespace IntroProject.Presentation.Controls
             exit.Click += exitMenu;
 
             //Makes the Import Settings Button
-            int i = 2 * Size.Width / 3 + 40, j = 3 * Size.Height / 10 + 60;
+            int i = 2 * Size.Width / 3 + 40, j = Size.Height / 10 + 60;
 
             Button importSet = new Button();
-            importSet.Location = new Point(i, j);
+            importSet.Location = new Point(i, j + edge);
             importSet.Size = new Size(edge * 2, edge * 2);
             importSet.FlatAppearance.BorderColor = Color.FromArgb(123, 156, 148);
             importSet.BackColor = Color.White;
@@ -61,7 +61,7 @@ namespace IntroProject.Presentation.Controls
             ExportSetts.Click += ExportSettings;
 
             //Makes the Save Settings Button
-            int m = 2 * Size.Width / 3 + 40, n = 6 * Size.Height / 10 + 60;
+            int m = (int)(1.5 * Size.Width) / 3, n = 6 * Size.Height / 10;
 
             Button SaveSetts = new Button();
             SaveSetts.Location = new Point(m, n);
@@ -79,15 +79,15 @@ namespace IntroProject.Presentation.Controls
             //Resize Method for the buttons
             Resize += (object o, EventArgs ea) =>
             {
-                int i = 2 * Size.Width / 3 + 40, j = 3 * Size.Height / 10 + 60, k = 2 * Size.Width / 3 + 40, l = 60, m = 2 * Size.Width / 3 + 40, n = 6 * Size.Height / 10 + 60;
+                int i = 2 * Size.Width / 3 + 40, j = Size.Height / 10 + 60, k = 2 * Size.Width / 3 + 40, l = 60, m = (int)(1.5 * Size.Width) / 3, n = 6 * Size.Height / 10 + 10;
                 edge = Math.Max(Size.Width, Size.Height) / 36;
                 exit.Size = new Size(edge, edge);
                 importSet.Size = new Size(edge * 2, edge * 2);
-                importSet.Location = new Point(i, j);
-                SaveSetts.Size = new Size(edge * 2, edge * 2);
-                SaveSetts.Location = new Point(m, n);
+                importSet.Location = new Point(i, j + edge);
                 ExportSetts.Size = new Size(edge * 2, edge * 2);
                 ExportSetts.Location = new Point(k, l);
+                SaveSetts.Size = new Size(edge * 2, edge * 2);
+                SaveSetts.Location = new Point(m, n);
             };
             /* Each triple sentence is an slider group, First the construnction, where after the TrackBar specific event and textbox equivalent handlers.
                Don't forget, slider values are integers. So there is a scale in every thing
@@ -172,7 +172,7 @@ namespace IntroProject.Presentation.Controls
         private (TrackBar, TextBox, ToolTip) MakeSlider(int x, int y, Func<string> name, float basevalue, int minvalue, int maxvalue, int scale, string uitleg)
         { 
             Size sliderTextBoxSize = new Size(30, 20);
-            int w = (x * (Size.Width/3))+ 40, h = (y * (Size.Height / 10)) + 60;
+            int edge = Math.Max(Size.Width, Size.Height) / 36, w = (x * (Size.Width / 3)) + 40, h = (y * (Size.Height / 10)) + edge;
 
             LazyLabel label = MakeLazySliderLabel(name, w, h);
 
@@ -192,7 +192,7 @@ namespace IntroProject.Presentation.Controls
 
             Resize += (object o, EventArgs ea) =>
             {
-                int w = (x * (Size.Width / 3)) + 40, h = (y * (Size.Height / 10)) + 60;
+                int edge = Math.Max(Size.Width, Size.Height) / 36, w = (x * (Size.Width / 3)) + 40, h = (y * (Size.Height / 10)) + edge + 10;
                 label.Location = new Point(w, h);
                 trackBar.Size = new Size((Size.Width / 4), 40);
                 trackBar.Location = new Point(w, (h + 20));
@@ -214,7 +214,7 @@ namespace IntroProject.Presentation.Controls
 
         private void makeHeatBox(int x, int y, Func<string> name, string uitleg)
         {
-            int w = (x * (Size.Width / 3)) + 40, h = (y * (Size.Height / 10)) + 60;
+            int edge = Math.Max(Size.Width, Size.Height) / 36, w = (x * (Size.Width / 3)) + 40, h = (y * (Size.Height / 10)) + edge + 10;
             AddHeat = new CheckBox();
             LazyLabel label = MakeLazySliderLabel(name, w, h);
 
@@ -230,7 +230,7 @@ namespace IntroProject.Presentation.Controls
 
             Resize += (object o, EventArgs ea) =>
             {
-                int w = (x * (Size.Width / 3)) + 40, h = (y * (Size.Height / 10)) + 60;
+                int edge = Math.Max(Size.Width, Size.Height) / 36, w = (x * (Size.Width / 3)) + 40, h = (y * (Size.Height / 10)) + edge + 10;
                 label.Location = new Point(w, h);
                 AddHeat.Location = new Point((w + 10), (h + 20));
             };
@@ -241,7 +241,7 @@ namespace IntroProject.Presentation.Controls
 
         public void makeLanguageBox(int x, int y, Func<string> name, string uitleg)
         {
-            int w = (x * (Size.Width / 3)) + 40, h = (y * (Size.Height / 10)) + 60;
+            int edge = Math.Max(Size.Width, Size.Height) / 36, w = (x * (Size.Width / 3)) + 40, h = (y * (Size.Height / 10)) + edge + 10;
             languageIndex = new ComboBox();
 
             LazyLabel label = MakeLazySliderLabel(name, w, h);
@@ -262,7 +262,7 @@ namespace IntroProject.Presentation.Controls
 
             Resize += (object o, EventArgs ea) =>
             {
-                int w = (x * (Size.Width / 3)) + 40, h = (y * (Size.Height / 10)) + 60;
+                int edge = Math.Max(Size.Width, Size.Height) / 36, w = (x * (Size.Width / 3)) + 40, h = (y * (Size.Height / 10)) + edge + 10;
                 label.Location = new Point(w, h);
                 languageIndex.Location = new Point((w + 10), (h + 20));
             };
@@ -306,7 +306,7 @@ namespace IntroProject.Presentation.Controls
         private LazyLabel MakeLazySliderLabel(Func<string> name, int w, int h)
         {
             LazyLabel label = new LazyLabel();
-            label.Size = new Size(200, 20);
+            label.Size = new Size(400, 20);
             label.LazyText = name;
             label.ForeColor = Color.White;
             label.Location = new Point(w, h);
