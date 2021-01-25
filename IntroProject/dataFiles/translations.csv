@@ -20,6 +20,7 @@ DRchangedSettings0,Sommige instellingen zijn veranderd. Weet je zeker dat je dez
 DRchangedSettings1,Sla veranderingen op,Save these changes
 DRdoYouWantToRestart0,Een aantal van deze veranderingen hebben een nieuwe kaart nodig. Weet je zeker dat je het proces wil herstarten?,Some of these settings require a restart. Are you sure you want to implement these changes?
 DRdoYouWantToRestart1,Herstarten?,Restart?
+Language,Taal,Language
 Carnivore,Carnivoor,Carnivore
 Herbivore,Herbivoor,Herbivore
 CarnivoreAmount,Aantal Carnivoren,Carnivore Amount

@@ -158,7 +158,7 @@ namespace IntroProject.Presentation.Controls
 
             makeHeatBox(1, 4,() => multipleLanguages.DisplayText("CBheatMap"));
 
-            makeLanguageBox(1, 5, () => "Language Selection");
+            makeLanguageBox(1, 5, () => multipleLanguages.DisplayText("Language"));
 
             Controls.Add(exit);
         }
