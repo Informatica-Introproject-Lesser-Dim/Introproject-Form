@@ -183,10 +183,5 @@ namespace IntroProject.Presentation.Controls
             };
             return menuLabelLocations;
         }
-        internal class LazyLabel : Label
-        {
-            public Func<string> LazyText { get; set; } = () => "";
-            public override string Text { get => LazyText(); }
-        }
     }
 }

@@ -163,11 +163,6 @@ namespace IntroProject.Presentation.Controls
             Controls.Add(exit);
         }
 
-        internal class LazyLabel : Label
-        {
-            public Func<string> LazyText { get; set; } = () => "";
-            public override string Text { get => LazyText(); }
-        }
         //Makes a TrackBar with connected Textbox, which are returned for specialzation
         private (TrackBar, TextBox) MakeSlider(int x, int y, Func<string> name, float basevalue, int minvalue, int maxvalue, int scale)
         { 
