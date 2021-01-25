@@ -7,47 +7,51 @@ namespace IntroProject.Presentation.Controls
 {
     class HomeMenu : UserControl
     {
-        public int screenSizeX, screenSizeY, hexagonSize;
-        public Point startButtonLocation, exitButtonLocation, settingsButtonLocation, runPresetButtonLocation, languageButtonLocation, fullScreenButtonLocation, helpButtonLocation;
+        public int hexagonSize;
         EventHandler _start, _settingStart, _preSet, _fullScreen, _help;
         public HomeMenu(int w, int h, EventHandler start, EventHandler settingStart, EventHandler preSet, EventHandler fullScreen, EventHandler help)
         {
             this.Size = new Size(w, h);
-            BackgroundImage = Properties.Resources.Background_blurred;
-            BackgroundImageLayout = ImageLayout.Stretch;
-            screenSizeX = w;
-            screenSizeY = h;
-            hexagonSize = (int)(h / 8);
+            hexagonSize = (int)(Size.Height / 8);
             _start = start;
             _settingStart = settingStart;
             _preSet = preSet;
             _fullScreen = fullScreen;
             _help = help;
 
-            int[] menuButtonLocations = createMenuButtonLocations();
-            startButtonLocation = new Point(menuButtonLocations[0], menuButtonLocations[1]);
-            exitButtonLocation = new Point(menuButtonLocations[2], menuButtonLocations[3]);
-            settingsButtonLocation = new Point(menuButtonLocations[4], menuButtonLocations[5]);
-            runPresetButtonLocation = new Point(menuButtonLocations[6], menuButtonLocations[7]);
-            languageButtonLocation = new Point(menuButtonLocations[8], menuButtonLocations[9]);
-            fullScreenButtonLocation = new Point(menuButtonLocations[10], menuButtonLocations[11]);
-            helpButtonLocation = new Point(menuButtonLocations[12], menuButtonLocations[13]);
-
             createAllLabels();
             createAllButtons();
 
+            BackgroundImage = Properties.Resources.Background_blurred;
+            BackgroundImageLayout = ImageLayout.Tile;
         }
 
         public void createAllButtons()
         {
-            Button startHexagonBt = LoadButton(startButtonLocation + new Size(1,1), hexagonSize + 2);
+            int[] menuButtonLocations = createMenuButtonLocations();
+            Point[] buttonLocations = ButtonLocations(menuButtonLocations);
+            Button startHexagonBt = LoadButton(buttonLocations[0] + new Size(1,1), hexagonSize + 2);
             startHexagonBt.BackColor = Color.Brown;
-            Button exitHexagonBt = LoadButton(exitButtonLocation, hexagonSize);
-            Button settingsHexagonBt = LoadButton(settingsButtonLocation, hexagonSize);
-            Button runPresetHexagonBt = LoadButton(runPresetButtonLocation, hexagonSize);
-            Button languageHexagonBt = LoadButton(languageButtonLocation, hexagonSize);
-            Button fullScreenHexagonBt = LoadButton(fullScreenButtonLocation, hexagonSize);
-            Button helpHexagonBt = LoadButton(helpButtonLocation, hexagonSize);
+            Button exitHexagonBt = LoadButton(buttonLocations[1], hexagonSize);
+            Button settingsHexagonBt = LoadButton(buttonLocations[2], hexagonSize);
+            Button runPresetHexagonBt = LoadButton(buttonLocations[3], hexagonSize);
+            Button languageHexagonBt = LoadButton(buttonLocations[4], hexagonSize);
+            Button fullScreenHexagonBt = LoadButton(buttonLocations[5], hexagonSize);
+            Button helpHexagonBt = LoadButton(buttonLocations[6], hexagonSize);
+
+
+            Resize += (object sender, EventArgs h) =>
+            {
+                menuButtonLocations = createMenuButtonLocations();
+                buttonLocations = ButtonLocations(menuButtonLocations);
+                ButtonLocationChange(startHexagonBt, buttonLocations[0] + new Size(1, 1), hexagonSize + 2);
+                ButtonLocationChange(exitHexagonBt, buttonLocations[1], hexagonSize);
+                ButtonLocationChange(settingsHexagonBt, buttonLocations[2], hexagonSize);
+                ButtonLocationChange(runPresetHexagonBt, buttonLocations[3], hexagonSize);
+                ButtonLocationChange(languageHexagonBt, buttonLocations[4], hexagonSize);
+                ButtonLocationChange(fullScreenHexagonBt, buttonLocations[5], hexagonSize);
+                ButtonLocationChange(helpHexagonBt, buttonLocations[6], hexagonSize);
+            };
 
             startHexagonBt.Click += _start;
             exitHexagonBt.Click += exitBTPressed;
@@ -61,12 +65,7 @@ namespace IntroProject.Presentation.Controls
         Button LoadButton(Point hexagonLocation, int currentHexagonSize)
         {
             Button hexagonButton = new Button();
-            Point[] usedHexagonPoints = HexagonPoints(hexagonLocation.X, hexagonLocation.Y, currentHexagonSize);
-            hexagonButton.SetBounds(usedHexagonPoints[0].X - 5, usedHexagonPoints[0].Y - 5, usedHexagonPoints[2].X + 5, usedHexagonPoints[3].Y + 5);
-            GraphicsPath hexagonPath = new GraphicsPath(FillMode.Winding);
-            hexagonPath.AddPolygon(usedHexagonPoints);
-            Region hexagonRegion = new Region(hexagonPath);
-            hexagonButton.Region = hexagonRegion;
+            ButtonLocationChange(hexagonButton, hexagonLocation, currentHexagonSize);
             hexagonButton.BackColor = Color.FromArgb(30, 30, 30);
 
             Controls.Add(hexagonButton);
@@ -94,30 +93,67 @@ namespace IntroProject.Presentation.Controls
             Settings.LanguageIndex = Settings.LanguageIndex == 0 ? 1 : 0;
             Refresh();
         }
+        private Point[] ButtonLocations(int[] primitivePoints)
+        {
+            Point[] buttonPoints = new Point[7];
+            buttonPoints[0] = new Point(primitivePoints[0], primitivePoints[1]);
+            buttonPoints[1] = new Point(primitivePoints[2], primitivePoints[3]);
+            buttonPoints[2] = new Point(primitivePoints[4], primitivePoints[5]);
+            buttonPoints[3] = new Point(primitivePoints[6], primitivePoints[7]);
+            buttonPoints[4] = new Point(primitivePoints[8], primitivePoints[9]);
+            buttonPoints[5] = new Point(primitivePoints[10], primitivePoints[11]);
+            buttonPoints[6] = new Point(primitivePoints[12], primitivePoints[13]);
+
+            return buttonPoints;
+        }
+        private void ButtonLocationChange(Button hexagonButton, Point hexagonLocation, int currentHexagonSize)
+        {
+            Point[] hexagonPoints = HexagonPoints(hexagonLocation.X, hexagonLocation.Y, currentHexagonSize);
+            GraphicsPath hexagonPath = new GraphicsPath(FillMode.Winding);
+            hexagonPath.AddPolygon(hexagonPoints);
+            Region hexagonRegion = new Region(hexagonPath);
+            hexagonButton.SetBounds(hexagonPoints[0].X - 5, hexagonPoints[0].Y - 5, hexagonPoints[2].X + 5, hexagonPoints[3].Y + 5);
+            hexagonButton.Region = hexagonRegion;
+
+        }
         private int[] createMenuButtonLocations()
         {
             int[] res = {
-                          (int)(screenSizeX / 4 + 3 * hexagonSize * 2.6 / 24), screenSizeY / 4 + hexagonSize / 2,
-                          (int)(screenSizeX / 4 + 3 * hexagonSize * 2.6 / 24), screenSizeY / 4 + hexagonSize + hexagonSize / 2,
-                          (int)(screenSizeX / 4 + 3 * hexagonSize * 2.6 / 12 + 3 * hexagonSize * 2.6 / 24) , (int)(screenSizeY / 4) ,
-                          (int)(screenSizeX / 4 + 3 * hexagonSize * 2.6 / 12 + 3 * hexagonSize * 2.6 / 24) , (int)(screenSizeY / 4 + hexagonSize ) ,
-                          (int)(screenSizeX / 4 + 3 * hexagonSize * 2.6 / 24) , screenSizeY/4 - hexagonSize / 2,
-                          (int)(screenSizeX / 4 - 3 * hexagonSize * 2.6 / 12 + 3 * hexagonSize * 2.6 / 24)   , (int)(screenSizeY / 4) ,
-                          (int)(screenSizeX / 4 - 3 * hexagonSize * 2.6 / 12 + 3 * hexagonSize * 2.6 / 24)   , (int)(screenSizeY / 4 + hexagonSize) };
+                          (int)(Size.Width / 4 + 3 * hexagonSize * 2.6 / 24), Size.Height / 4 + hexagonSize / 2,
+                          (int)(Size.Width / 4 + 3 * hexagonSize * 2.6 / 24), Size.Height / 4 + hexagonSize + hexagonSize / 2,
+                          (int)(Size.Width / 4 + 3 * hexagonSize * 2.6 / 12 + 3 * hexagonSize * 2.6 / 24) , (int)(Size.Height / 4) ,
+                          (int)(Size.Width / 4 + 3 * hexagonSize * 2.6 / 12 + 3 * hexagonSize * 2.6 / 24) , (int)(Size.Height / 4 + hexagonSize ) ,
+                          (int)(Size.Width / 4 + 3 * hexagonSize * 2.6 / 24) , Size.Height/4 - hexagonSize / 2,
+                          (int)(Size.Width / 4 - 3 * hexagonSize * 2.6 / 12 + 3 * hexagonSize * 2.6 / 24)   , (int)(Size.Height / 4) ,
+                          (int)(Size.Width / 4 - 3 * hexagonSize * 2.6 / 12 + 3 * hexagonSize * 2.6 / 24)   , (int)(Size.Height / 4 + hexagonSize) };
             return res;
         }
         private void createAllLabels()
         {
             int[] labelLoc = MenuLabelLocations(150, 40);
-            CreateLabel(labelLoc[0], labelLoc[1], () => "start", Color.Brown);
-            CreateLabel(labelLoc[2], labelLoc[3], () => "exit", Color.IndianRed);
-            CreateLabel(labelLoc[4], labelLoc[5], () => "settings", Color.MediumPurple);
-            CreateLabel(labelLoc[6], labelLoc[7], () => "runPreset", Color.ForestGreen);
-            CreateLabel(labelLoc[8], labelLoc[9], () => "language", Color.Honeydew);
-            CreateLabel(labelLoc[10], labelLoc[11], () => "fullScreen", Color.Yellow);
-            CreateLabel(labelLoc[12], labelLoc[13], () => "help", Color.LightSkyBlue);
+            Label a = CreateLabel(labelLoc[0], labelLoc[1], () => "start", Color.Brown);
+            Label b = CreateLabel(labelLoc[2], labelLoc[3], () => "exit", Color.IndianRed);
+            Label c = CreateLabel(labelLoc[4], labelLoc[5], () => "settings", Color.MediumPurple);
+            Label d = CreateLabel(labelLoc[6], labelLoc[7], () => "runPreset", Color.ForestGreen);
+            Label e = CreateLabel(labelLoc[8], labelLoc[9], () => "language", Color.Honeydew);
+            Label f = CreateLabel(labelLoc[10], labelLoc[11], () => "fullScreen", Color.Yellow);
+            Label g = CreateLabel(labelLoc[12], labelLoc[13], () => "help", Color.LightSkyBlue);
+
+            Resize += (object sender, EventArgs h) =>
+            {
+                hexagonSize = (int)(Size.Height / 8);
+                labelLoc = MenuLabelLocations(150, 40);
+                a.Location = new Point(labelLoc[0] + 45, labelLoc[1] + 10);
+                b.Location = new Point(labelLoc[2] + 45, labelLoc[3] + 10);
+                c.Location = new Point(labelLoc[4] + 45, labelLoc[5] + 10);
+                d.Location = new Point(labelLoc[6] + 45, labelLoc[7] + 10);
+                e.Location = new Point(labelLoc[8] + 45, labelLoc[9] + 10);
+                f.Location = new Point(labelLoc[10] + 45, labelLoc[11] + 10);
+                g.Location = new Point(labelLoc[12] + 45, labelLoc[13] + 10);
+            };
 
         }
+
         private LazyLabel CreateLabel(int x, int y, Func<string> name, Color color)
         {
             LazyLabel label = new LazyLabel();
@@ -137,13 +173,13 @@ namespace IntroProject.Presentation.Controls
         private int[] MenuLabelLocations(int w, int h)
         {
             int[] menuLabelLocations = {
-                (int)(screenSizeX / 2 - w / 3), (int)(screenSizeY / 2 -w/3),
-                (int)(screenSizeX / 2 - w / 3), (int)(screenSizeY / 2 + hexagonSize*2-h/3),
-                (int)(screenSizeX / 2 + 3 * hexagonSize * 2.6 / 12 * 2 - w / 3), (int)(screenSizeY / 2 - hexagonSize -h/3),
-                (int)(screenSizeX / 2 + 3 * hexagonSize * 2.6 / 12 * 2 - w / 3), (int)(screenSizeY / 2 + hexagonSize -h/3),
-                (int)(screenSizeX / 2 - w / 3), (int)(screenSizeY / 2 - hexagonSize*2-h/3),
-                (int)(screenSizeX / 2 - 3 * hexagonSize * 2.6 / 12 * 2 - w / 3), (int)(screenSizeY / 2 - hexagonSize -h/3),
-                (int)(screenSizeX / 2 - 3 * hexagonSize * 2.6 / 12 * 2 - w / 3), (int)(screenSizeY / 2 + hexagonSize -h/3)
+                (int)(Size.Width / 2 - w / 3), (int)(Size.Height / 2 -w/3),
+                (int)(Size.Width / 2 - w / 3), (int)(Size.Height / 2 + hexagonSize*2-h/3),
+                (int)(Size.Width / 2 + 3 * hexagonSize * 2.6 / 12 * 2 - w / 3), (int)(Size.Height / 2 - hexagonSize -h/3),
+                (int)(Size.Width / 2 + 3 * hexagonSize * 2.6 / 12 * 2 - w / 3), (int)(Size.Height / 2 + hexagonSize -h/3),
+                (int)(Size.Width / 2 - w / 3), (int)(Size.Height / 2 - hexagonSize*2-h/3),
+                (int)(Size.Width / 2 - 3 * hexagonSize * 2.6 / 12 * 2 - w / 3), (int)(Size.Height / 2 - hexagonSize -h/3),
+                (int)(Size.Width / 2 - 3 * hexagonSize * 2.6 / 12 * 2 - w / 3), (int)(Size.Height / 2 + hexagonSize -h/3)
             };
             return menuLabelLocations;
         }

@@ -80,7 +80,7 @@ namespace IntroProject.Presentation.Controls
 
         public void MakeMap()
         {
-            map = new Map(100, 70, size, 0);
+            map = new Map(40, 40, size, 0);
 
             for (int i = 0; i < Settings.StartHerbivore; i++)
             {

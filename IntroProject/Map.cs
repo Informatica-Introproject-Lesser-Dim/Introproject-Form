@@ -30,7 +30,7 @@ namespace IntroProject
         private int margin;
 
         private double msPerTick { get { return 30 / Settings.StepSize; } }
-
+        private bool heated = false;
         public Hexagon[,] tiles;
         public Hexagon this[int x, int y] { get { return getHex(x, y); } }
 
@@ -391,7 +391,7 @@ namespace IntroProject
 
             foreach (Hexagon tile in tiles)
                 tile.UpdateColor();
-            drawBase();
+            if (heated != Settings.AddHeatMap) { drawBase(); heated = Settings.AddHeatMap; }
         }
     }
 }
