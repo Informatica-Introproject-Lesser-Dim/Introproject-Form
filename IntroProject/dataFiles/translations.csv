@@ -1,20 +1,20 @@
 ﻿Ref,Dutch,English
 helpText,Hallo! Heb je zin om wat evolutie in actie te zien? Er is zat te zien; Laten we starten. Voor meer info kan je de wiki raadplegen:,Hey there; Good to have you learning evolution with us! There is a lot to learn so let's get started. For more info; See the wiki:
-SDforSpeed,Snelheid,Speed
+SDforSpeed,Simulatie Snelheid,Speed of Simulation
 SDforSpeedExplenation,Deze slider bepaalt de snelheid van de entities. Een hogere waarde betekent een grotere snelheid, With this slider you decide the speed of the program. A higher value means a greater speed.
-SDstartingCountCarnivore,Begin aantal aanwezige Carnivore,Number of Carnivore at start
-SDstartingCountHerbivore,Begin aantal aanwezige Herbivore,Number of Herbivore at start
-SDhatchSpeed,Groeisnelheid kinderen,GrowSpeed childern
+SDstartingCountCarnivore,Begin aantal aanwezige Carnivoren,Number of Carnivores at start
+SDstartingCountHerbivore,Begin aantal aanwezige Herbivoren,Number of Herbivores at start
+SDhatchSpeed,Groeisnelheid kinderen,GrowSpeed children
 SDseaLevel,Waterpeil,Sealevel
 SDmatingCost,Energie kosten van voortplanten,Energy cost for mating
 SDgrassGrowSpeed,Hoe snel groeit gras,Speed of grass growth
 SDgrassMaxEnergy,Maximale voedingswaarde gras,Maximum foodvalue of grass
 SDminTemp,Minimale temperatuur,Minimum temperature
 SDmaxTemp,Maximale temperatuur,Maximum temperature
-SDwalkEnergyCost,Energie kosten voor lopen,Energy cost for 
+SDwalkEnergyCost,Energie kosten voor lopen,Energy cost for walking
 SDjumpEnergyCost,Energie kosten voor klimmen,Energy cost for climbing
-SDpassiveEnergyCost,Energieverlies als een wezen niks doet,Energy loss if creature does nothing
-CBheatMap,Temperatuurkaart,Heatmap
+SDpassiveEnergyCost,Energieverlies als een wezen niks doet,Passive energy consumption
+CBheatMap,Temperatuurkaart,Temperature overlay
 BTimportSettings,Importeer instellingen,Import settings
 DRchangedSettings0,Sommige instellingen zijn veranderd. Weet je zeker dat je deze instellingen wil behouden?,Some Settings have been changed. Are you sure you want to implement these changes?
 DRchangedSettings1,Sla veranderingen op,Save these changes
