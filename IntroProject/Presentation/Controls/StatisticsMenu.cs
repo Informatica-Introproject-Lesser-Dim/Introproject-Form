@@ -2,17 +2,20 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 using OxyPlot;
 using OxyPlot.Series;
+using OxyPlot.Axes;
 using OxyPlot.WindowsForms;
 
 namespace IntroProject.Presentation.Controls
-{
+{ 
     public class StatisticsMenu : UserControl
     {
         int r = 0;
         private PlotView plot1;
+        public IList<Statistics> WorkableStats = new List<Statistics>();
 
         public StatisticsMenu(int w, int h, EventHandler exitMenu)
         {
@@ -27,57 +30,179 @@ namespace IntroProject.Presentation.Controls
             exit.Click += exitMenu;
             Controls.Add(exit);
 
-            InitChart();
-            MakeGraph(0);
-
             Resize += (object o, EventArgs ea) =>
             {
                 edge = Math.Max(Size.Width, Size.Height) / 36;
                 exit.Size = new Size(edge, edge);
             };
 
-            Button statname1 = ButtonList("CarnivorePopulation");
-            Button statname2 = ButtonList("CarnivoreVelocity");
-            Button statname3 = ButtonList("CarnivoreSize");
-            Button statname4 = ButtonList("HerbivorePopulation");
-            Button statname5 = ButtonList("HerbivoreVelocity");
-            Button statname6 = ButtonList("HerbivoreSize");
+            Button statname1 = ButtonList("PopulationSize");
+            Button statname2 = ButtonList("Velocity");
+            Button statname3 = ButtonList("Size");
+            Button statname4 = ButtonList("Statistics");
+            Button statname5 = ButtonList("Statistics");
+            Button statname6 = ButtonList("Statistics");
+
+            statname1.Click += (object o, EventArgs ea) => { InitChart(1); };
+            statname2.Click += (object o, EventArgs ea) => { InitChart(2); };
+            statname3.Click += (object o, EventArgs ea) => { InitChart(3); };
+            statname4.Click += (object o, EventArgs ea) => { InitChart(4); };
+            statname5.Click += (object o, EventArgs ea) => { InitChart(5); };
+            statname6.Click += (object o, EventArgs ea) => { InitChart(6); };
         }
 
-        private void InitChart()
+        public void InitChart(int GraphChoice)
         {
-            this.plot1 = new OxyPlot.WindowsForms.PlotView
+            WorkableStats = StatisticsValues.statisticsvalues;
+            this.Controls.Remove(this.plot1);
+
+            this.plot1 = new PlotView
             {
-                Dock = DockStyle.Fill,
-                Location = new Point(0, 0),
+                Location = new Point(Width / 10, 0),
                 Margin = new Padding(0),
                 Name = "plot1",
-                Size = new Size(632, 446),
-                TabIndex = 0
+                Size = new Size((int)(Width * 0.8), (int)(Height * 0.9)),
+                TabIndex = 0,
             };
+
             var pm = new PlotModel
             {
-                Title = "Trigonometric functions",
-                Subtitle = "Example using the FunctionSeries",
-                PlotType = PlotType.Cartesian,
-                Background = OxyColors.White
+                Title = "Graphs of Life",
+                Subtitle = "Epic",
+                Background = OxyColors.SlateGray,
+                PlotType = PlotType.Cartesian
             };
-            pm.Series.Add(new FunctionSeries(__temp, -10, 10, 0.1, "__temp"));
+
+            pm.Series.Clear();
+            pm.Axes.Clear();
+            
+            if(GraphChoice == 1)
+            { 
+                var Choice1C = new LineSeries
+                {
+                    Title = "PopulationSize Carnivores"
+                };
+                var Choice1H = new LineSeries
+                {
+                    Title = "PopulationSize Herbivores"
+                };
+                foreach (Statistics stats in WorkableStats)
+                {
+                    Choice1C.Points.Add(new DataPoint(stats.time / 1000, stats.PopulationSizeCarnivores));
+                    Choice1H.Points.Add(new DataPoint(stats.time / 1000, stats.PopulationSizeHerbivores));
+                }
+                pm.Series.Add(Choice1C);
+                pm.Series.Add(Choice1H);
+                pm.Axes.Add(new LinearAxis
+                { 
+                    Title = "PopulationSize",
+                    Position = AxisPosition.Left,
+                    AbsoluteMinimum = 0,
+                    AbsoluteMaximum = GetMax(WorkableStats, 1) + 1,
+                    MinimumMajorStep = 1
+                });
+                pm.Axes.Add(new LinearAxis
+                { 
+                    Title = "Time in seconds",
+                    Position = AxisPosition.Bottom,
+                    AbsoluteMinimum = 0,
+                    AbsoluteMaximum = GetTime(WorkableStats)
+                });
+            }
+
+            if(GraphChoice == 2)
+            {
+                var Choice2C = new LineSeries
+                {
+                    Title = "Average Velocity Carnivores"
+                };
+                var Choice2H = new LineSeries
+                {
+                    Title = "Average Velocity Herbivores"
+                };
+                foreach(Statistics stats in WorkableStats)
+                {
+                    Choice2C.Points.Add(new DataPoint(stats.time / 1000, stats.TotalVelocityCarnivores / stats.PopulationSizeCarnivores));
+                    Choice2H.Points.Add(new DataPoint(stats.time / 1000, stats.TotalVelocityHerbivores / stats.PopulationSizeHerbivores));
+                }
+                pm.Series.Add(Choice2C);
+                pm.Series.Add(Choice2H);
+                pm.Axes.Add(new LinearAxis
+                {
+                    Title = "Average Velocity",
+                    Position = AxisPosition.Left,
+                    AbsoluteMinimum = 0,
+                    AbsoluteMaximum = GetMax(WorkableStats, 2) + 1
+                });
+                pm.Axes.Add(new LinearAxis
+                {
+                    Title = "Time in seconds",
+                    Position = AxisPosition.Bottom,
+                    AbsoluteMinimum = 0,
+                    AbsoluteMaximum = GetTime(WorkableStats)
+                });
+            }
+
+            if (GraphChoice == 3)
+            {
+                var Choice3C = new LineSeries
+                {
+                    Title = "Average Size Carnivores"
+                };
+                var Choice3H = new LineSeries
+                {
+                    Title = "Average Size Herbivores"
+                };
+                foreach (Statistics stats in WorkableStats)
+                {
+                    Choice3C.Points.Add(new DataPoint(stats.time / 1000, stats.TotalSizeCarnivores / stats.PopulationSizeCarnivores));
+                    Choice3H.Points.Add(new DataPoint(stats.time / 1000, stats.TotalSizeHerbivores / stats.PopulationSizeHerbivores));
+                }
+                pm.Series.Add(Choice3C);
+                pm.Series.Add(Choice3H);
+                pm.Axes.Add(new LinearAxis
+                {
+                    Title = "Average Size",
+                    Position = AxisPosition.Left,
+                    AbsoluteMinimum = 0,
+                    AbsoluteMaximum = GetMax(WorkableStats, 3) + 1
+                });
+                pm.Axes.Add(new LinearAxis
+                {
+                    Title = "Time in seconds",
+                    Position = AxisPosition.Bottom,
+                    AbsoluteMinimum = 0,
+                    AbsoluteMaximum = GetTime(WorkableStats)
+                });
+            }
             plot1.Model = pm;
             this.Controls.Add(this.plot1);
         }
 
-        private double __temp(double arg)
+        private double GetMax(IList<Statistics> statistics, int type)
         {
-            var a = new List<double> { 0, 5, 3, 5, 3 };
-            int index = Math.Max(0, Math.Min(a.Count - 1, (int)arg));
-            return a[index];
+            double Max = 0;
+            if (type == 1)
+                foreach (Statistics stats in statistics)
+                    Max = Math.Max(Max, Math.Max(stats.PopulationSizeCarnivores, stats.PopulationSizeHerbivores));
+
+            if (type == 2)
+                foreach (Statistics stats in statistics)
+                    Max = Math.Max(Max, Math.Max(stats.TotalVelocityCarnivores / stats.PopulationSizeCarnivores, stats.TotalVelocityHerbivores / stats.PopulationSizeHerbivores));
+
+            if (type == 3)
+                foreach (Statistics stats in statistics)
+                    Max = Math.Max(Max, Math.Max(stats.TotalSizeCarnivores / stats.PopulationSizeCarnivores, stats.TotalSizeHerbivores / stats.PopulationSizeHerbivores));
+
+            return Max;
         }
 
-        public void MakeGraph(int i)
+        private double GetTime(IList<Statistics> stats)
         {
-            //Getstats and make a graph depending on the type i given by the press of the buttons
-
+            double time = 1;
+            if (stats.Count != 0)
+                time = stats[^1].time / 1000;
+            return time;
         }
 
         private Button ButtonList(String name) //makes a button and next call makes a button under the previus.
