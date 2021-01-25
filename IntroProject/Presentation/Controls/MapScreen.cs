@@ -156,8 +156,9 @@ namespace IntroProject.Presentation.Controls
             if (selected != null)
             {
                 pea.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(50, 0, 0, 0)), Width - 500, 100, 200, 100);
-                pea.Graphics.DrawString(selected.GetType().ToString().Substring(13, selected.GetType().ToString().Length - 13) + "\n" +
-                                        "Energy: " + Math.Round(selected.energyVal, 2) + "\nGender: " + selected.gender,
+                pea.Graphics.DrawString(multipleLanguages.DisplayText(selected.GetType().ToString()[13..]) +
+                                        SummaryOverlayRow("Energy") + Math.Round(selected.energyVal, 2) +
+                                        SummaryOverlayRow("Gender") + multipleLanguages.DisplayText("GenderN" + selected.gender.ToString()),
                                         font, new SolidBrush(Color.Black),
                                         Width - 490, 110);
             }
