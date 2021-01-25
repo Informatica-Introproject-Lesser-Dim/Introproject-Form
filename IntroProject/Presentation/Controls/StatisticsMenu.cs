@@ -99,7 +99,7 @@ namespace IntroProject.Presentation.Controls
                     Position = AxisPosition.Left,
                     AbsoluteMinimum = 0,
                     AbsoluteMaximum = GetMax(WorkableStats, 1) + 1,
-                    MajorStep = 1
+                    MinimumMajorStep = 1
                 });
                 pm.Axes.Add(new LinearAxis
                 { 
