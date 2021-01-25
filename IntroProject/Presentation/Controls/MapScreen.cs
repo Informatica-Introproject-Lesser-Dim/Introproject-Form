@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
+using IntroProject.Core.Utils;
+
 namespace IntroProject.Presentation.Controls
 {
     public class MapScreen : UserControl
     {
         DateTime oldTime = DateTime.Now;
         TimeSpan dt;
+
+        MultipleLanguages multipleLanguages = new MultipleLanguages();
 
         public Button plus = new ButtonImaged(Properties.Resources.Plus_icon);
         private Button play = new ButtonImaged(Properties.Resources.Play_icon);
@@ -161,17 +165,21 @@ namespace IntroProject.Presentation.Controls
             int[] genders = map.countMalesAndFemales();
             int[] type = map.countHerbivoresAndCarnivores();
 
-            pea.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(50, 0, 0, 0)), 50, 200, 200, 170);
-            pea.Graphics.DrawString("Herbivore Count: " + type[0].ToString() +
-                                    "\nCarnivore Count: " + type[1].ToString() +
-                                    "\nMale Count: " + genders[0].ToString() +
-                                    "\nMales Born: " + map.malesAdded +
-                                    "\nFemale Count: " + genders[1].ToString() +
-                                    "\nFemales Born:" + map.femalesAdded
-                                        , font, new SolidBrush(Color.Black),
-                                        60, 210);
+            Point SummaryOverlayPos = new Point(50, Height - 300);
+            pea.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(50, 0, 0, 0)), SummaryOverlayPos.X, SummaryOverlayPos.Y, 300, 170);
+            pea.Graphics.DrawString(SummaryOverlayRow("HerbivoreAmount") + type[0].ToString() +
+                                    SummaryOverlayRow("CarnivoreAmount") + type[1].ToString() +
+                                    SummaryOverlayRow("MalesAmount") + genders[0].ToString() +
+                                    SummaryOverlayRow("MalesBorn") + map.malesAdded +
+                                    SummaryOverlayRow("FemalesAmount") + genders[1].ToString() +
+                                    SummaryOverlayRow("FemalesBorn") + map.femalesAdded
+                                    , font, new SolidBrush(Color.Black), SummaryOverlayPos.X + 10, SummaryOverlayPos.Y - 10);
             Invalidate();
         }
+
+        private string SummaryOverlayRow(string field) =>
+            '\n' + multipleLanguages.DisplayText(field) + ": ";
+
 
         protected override CreateParams CreateParams
         {
