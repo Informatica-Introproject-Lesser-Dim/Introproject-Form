@@ -33,3 +33,10 @@ Energy,Energie,Energy
 Gender,Gender,Gender
 GenderN0,Vrouwtje,Female
 GenderN1,Mannetje,Male
+MMstart,start,start
+MMexit,afsluiten,close
+MMsettings,instellingen,settings
+MMrunPreset,open bestand,run preset
+MMLanguage,taal,language
+MMfullScreen,voledig scherm,fullscreen
+MMhelp,help,help

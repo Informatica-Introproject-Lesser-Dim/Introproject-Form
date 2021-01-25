@@ -1,7 +1,9 @@
-﻿using System;
+﻿using IntroProject.Core.Utils;
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace IntroProject.Presentation.Controls
 {
@@ -9,6 +11,7 @@ namespace IntroProject.Presentation.Controls
     {
         public int hexagonSize;
         EventHandler _start, _settingStart, _preSet, _fullScreen, _help;
+        MultipleLanguages multipleLanguages = new MultipleLanguages();
         public HomeMenu(int w, int h, EventHandler start, EventHandler settingStart, EventHandler preSet, EventHandler fullScreen, EventHandler help)
         {
             this.Size = new Size(w, h);
@@ -18,7 +21,6 @@ namespace IntroProject.Presentation.Controls
             _preSet = preSet;
             _fullScreen = fullScreen;
             _help = help;
-
             createAllLabels();
             createAllButtons();
 
@@ -72,6 +74,8 @@ namespace IntroProject.Presentation.Controls
 
             return hexagonButton;
         }
+
+
         public Point[] HexagonPoints(int centreX, int centreY, int size)
         {
             Point[] hexagonPoints = new Point[6];
@@ -131,13 +135,13 @@ namespace IntroProject.Presentation.Controls
         private void createAllLabels()
         {
             int[] labelLoc = MenuLabelLocations(150, 40);
-            Label a = CreateLabel(labelLoc[0], labelLoc[1], () => "start", Color.Brown);
-            Label b = CreateLabel(labelLoc[2], labelLoc[3], () => "exit", Color.IndianRed);
-            Label c = CreateLabel(labelLoc[4], labelLoc[5], () => "settings", Color.MediumPurple);
-            Label d = CreateLabel(labelLoc[6], labelLoc[7], () => "runPreset", Color.ForestGreen);
-            Label e = CreateLabel(labelLoc[8], labelLoc[9], () => "language", Color.Honeydew);
-            Label f = CreateLabel(labelLoc[10], labelLoc[11], () => "fullScreen", Color.Yellow);
-            Label g = CreateLabel(labelLoc[12], labelLoc[13], () => "help", Color.LightSkyBlue);
+            Label a = CreateLabel(labelLoc[0], labelLoc[1], () => multipleLanguages.DisplayText("MMstart"), Color.Brown);
+            Label b = CreateLabel(labelLoc[2], labelLoc[3], () => multipleLanguages.DisplayText("MMexit"), Color.IndianRed);
+            Label c = CreateLabel(labelLoc[4], labelLoc[5], () => multipleLanguages.DisplayText("MMsettings"), Color.MediumPurple);
+            Label d = CreateLabel(labelLoc[6], labelLoc[7], () => multipleLanguages.DisplayText("MMrunPreset"), Color.ForestGreen);
+            Label e = CreateLabel(labelLoc[8], labelLoc[9], () => multipleLanguages.DisplayText("MMlanguage"), Color.Honeydew);
+            Label f = CreateLabel(labelLoc[10], labelLoc[11], () => multipleLanguages.DisplayText("MMfullScreen"), Color.Yellow);
+            Label g = CreateLabel(labelLoc[12], labelLoc[13], () => multipleLanguages.DisplayText("MMhelp"), Color.LightSkyBlue);
 
             Resize += (object sender, EventArgs h) =>
             {
