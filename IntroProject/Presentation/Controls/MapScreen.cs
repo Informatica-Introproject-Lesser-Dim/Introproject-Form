@@ -163,7 +163,7 @@ namespace IntroProject.Presentation.Controls
             int[] genders = map.countMalesAndFemales();
             int[] type = map.countHerbivoresAndCarnivores();
 
-            pea.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(50, 0, 0, 0)), 50, 200, 200, 180);
+            pea.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(50, 0, 0, 0)), 50, 200, 200, 170);
             pea.Graphics.DrawString("Herbivore Count: " + type[0].ToString() +
                                     "\nCarnivore Count: " + type[1].ToString() +
                                     "\nMale Count: " + genders[0].ToString() +
