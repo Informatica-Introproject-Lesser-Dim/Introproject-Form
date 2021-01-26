@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 
@@ -161,7 +163,14 @@ namespace IntroProject
                   img = Properties.Resources.Lion_Normal;
                   break;
             }
-            g.DrawImageUnscaled(img, hexX + x - r, hexY + y - r);
+            try
+            {
+                g.DrawImageUnscaled(img, hexX + x - r, hexY + y - r);
+            }
+            catch (Exception exept)
+            {
+                Debug.WriteLine("exeption found", exept);
+            }
         }
 
         public Carnivore(Gene gene, double energy) : base(gene, energy) { }
