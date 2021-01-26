@@ -305,7 +305,7 @@ namespace IntroProject.Presentation.Controls
             trackBars[9].Value = (int)(float.Parse(settings[9]) * 10000);
             trackBars[10].Value = (int)(float.Parse(settings[10]) * 1000000);
             AddHeat.Checked = bool.Parse(settings[11]);
-            languageIndex.SelectedIndex = int.Parse(settings[11]);
+            languageIndex.SelectedIndex = int.Parse(settings[12]);
         }
 
         public void ImplementChanges(object o, EventArgs ea)
