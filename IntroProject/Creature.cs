@@ -250,9 +250,26 @@ namespace IntroProject
             this.goal = Goal.Nothing;
         }
 
+        public bool carnivoreCheck() 
+        {
+            List<Entity> carnivores = new List<Entity>();
+
+            for (int i = 0; i < 3; i++)
+                carnivores = carnivores.Concat(chunk.searchPoint(i, EntityType.Carnivore)).ToList();
+
+            if (carnivores.Count == 0)
+                return false;
+            ((Carnivore) carnivores[0]).Scare((Herbivore)this);
+            return true;
+
+        }
+
         public virtual void passiveSearch(double dt) //check wether the place you are is ok
         {
             goal = Goal.Food;
+
+            if (carnivoreCheck())
+                return;
 
             if (passiveCheck(this.chunk))
             {
