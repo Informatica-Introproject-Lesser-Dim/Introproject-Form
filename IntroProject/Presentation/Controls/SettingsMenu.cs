@@ -19,7 +19,7 @@ namespace IntroProject.Presentation.Controls
         private CheckBox AddHeat;
         private ComboBox languageIndex;
         private List<TrackBar> trackBars = new List<TrackBar>();
-        private int TE, SE, HS, GG, GMF;
+        private int TE, SE, GG, GMF;
         private float Sp, MH, MC, WE, JE, PE;
 
         public SettingsMenu(int w, int h, EventHandler exitMenu)
@@ -94,8 +94,8 @@ namespace IntroProject.Presentation.Controls
                If the scale is a visual addition, don't forget to remove it from the trackbar value.
                MakeSlider takes: x & y, name, Scaled value, flat minimum, flat maximum, scalar, explenation.
             */
-            int r = 100, s = 10000, t = 1000000, value;
-            float fvalue;
+            int value;
+            float r = 100f, s = 10000f, t = 1000000f,fvalue;
 
             (TrackBar TrackBarSpeed, TextBox TextBoxSpeed) = MakeSlider(0, 0, () => multipleLanguages.DisplayText("SDforSpeed"), Settings.StepSize, 25, 400, 100);
             TrackBarSpeed.ValueChanged += (object o, EventArgs ea) => { Sp = TrackBarSpeed.Value / (float)r; };
@@ -112,49 +112,44 @@ namespace IntroProject.Presentation.Controls
             TextBoxStartEntities.Leave += (object o, EventArgs ea) => { SE = int.Parse(TextBoxStartEntities.Text); };
             trackBars.Add(TrackBarStartEntities); //2
 
-            (TrackBar TrackBarHatchSpeed, TextBox TextBoxHatchSpeed) = MakeSlider(0, 3,() => multipleLanguages.DisplayText("SDhatchSpeed"), Settings.HatchSpeed, 10, 100, 1);
-            TrackBarHatchSpeed.ValueChanged += (object o, EventArgs ea) => { HS = TrackBarHatchSpeed.Value; };
-            TextBoxHatchSpeed.Leave += (object o, EventArgs ea) => { HS = int.Parse(TextBoxHatchSpeed.Text); };
-            trackBars.Add(TrackBarHatchSpeed); //3
-
             fvalue = (Settings.MiddleHeight + 1f) / 2f;
-            (TrackBar TrackBarMiddleHeight, TextBox TextBoxMiddleHeight) = MakeSlider(0, 4,() => multipleLanguages.DisplayText("SDseaLevel"), fvalue, 0, 99, 100);
+            (TrackBar TrackBarMiddleHeight, TextBox TextBoxMiddleHeight) = MakeSlider(0, 3,() => multipleLanguages.DisplayText("SDseaLevel"), fvalue, 0, 99, 100);
             TrackBarMiddleHeight.ValueChanged += (object o, EventArgs ea) => { MH = (TrackBarMiddleHeight.Value/50f) - 0.99f; };
             TextBoxMiddleHeight.Leave += (object o, EventArgs ea) => { MH = float.Parse(TextBoxMiddleHeight.Text) - 0.99f; };
-            trackBars.Add(TrackBarMiddleHeight); //4
+            trackBars.Add(TrackBarMiddleHeight); //3
 
-            (TrackBar TrackBarMatingCost, TextBox TextBoxMatingCost) = MakeSlider(0, 5,() => multipleLanguages.DisplayText("SDmatingCost"), Settings.MatingCost, 20, 150, 100);
+            (TrackBar TrackBarMatingCost, TextBox TextBoxMatingCost) = MakeSlider(0, 4,() => multipleLanguages.DisplayText("SDmatingCost"), Settings.MatingCost, 20, 150, 100);
             TrackBarMatingCost.ValueChanged += (object o, EventArgs ea) => { MC = TrackBarMatingCost.Value / (float)r; };
             TextBoxMatingCost.Leave += (object o, EventArgs ea) => { MC = float.Parse(TextBoxMatingCost.Text); };
-            trackBars.Add(TrackBarMatingCost); //5
+            trackBars.Add(TrackBarMatingCost); //4
 
-            (TrackBar TrackBarGrassGrowth, TextBox TextBoxGrassGrowth) = MakeSlider(0, 6,() => multipleLanguages.DisplayText("SDgrassGrowSpeed"), Settings.GrassGrowth, 100, 500, 1);
+            (TrackBar TrackBarGrassGrowth, TextBox TextBoxGrassGrowth) = MakeSlider(0, 5,() => multipleLanguages.DisplayText("SDgrassGrowSpeed"), Settings.GrassGrowth, 100, 500, 1);
             TrackBarGrassGrowth.ValueChanged += (object o, EventArgs ea) => { GG = TrackBarGrassGrowth.Value; };
             TextBoxGrassGrowth.Leave += (object o, EventArgs ea) => { GG = int.Parse(TextBoxGrassGrowth.Text); };
-            trackBars.Add(TrackBarGrassGrowth); //6
+            trackBars.Add(TrackBarGrassGrowth); //5
 
             (TrackBar TrackBarGrassMaxFeed, TextBox TextBoxGrassMaxFeed) = MakeSlider(1, 0,() => multipleLanguages.DisplayText("SDgrassMaxEnergy"), Settings.GrassMaxFeed, 1000, 3000, 1);
             TrackBarGrassMaxFeed.ValueChanged += (object o, EventArgs ea) => { GMF = TrackBarGrassMaxFeed.Value; };
             TextBoxGrassMaxFeed.Leave += (object o, EventArgs ea) => { GMF = int.Parse(TextBoxGrassMaxFeed.Text); };
-            trackBars.Add(TrackBarGrassMaxFeed); //7
+            trackBars.Add(TrackBarGrassMaxFeed); //6
 
             value = (int)(Settings.WalkEnergy * (float)r);
             (TrackBar TrackBarWalkEnergy, TextBox TextBoxWalkEnergy) = MakeSlider(1, 1,() => multipleLanguages.DisplayText("SDwalkEnergyCost"), value, 5, 30, 1);
-            TrackBarWalkEnergy.ValueChanged += (object o, EventArgs ea) => { WE = TrackBarWalkEnergy.Value / (float)r; };
+            TrackBarWalkEnergy.ValueChanged += (object o, EventArgs ea) => { WE = TrackBarWalkEnergy.Value / r; };
             TextBoxWalkEnergy.Leave += (object o, EventArgs ea) => { WE = float.Parse(TextBoxWalkEnergy.Text); };
-            trackBars.Add(TrackBarWalkEnergy); //8
+            trackBars.Add(TrackBarWalkEnergy); //7
 
             value = (int)(Settings.JumpEnergy * (float)s);
             (TrackBar TrackBarJumpEnergy, TextBox TextBoxJumpEnergy) = MakeSlider(1, 2,() => multipleLanguages.DisplayText("SDjumpEnergyCost"), value, 5, 30, 1);
-            TrackBarJumpEnergy.ValueChanged += (object o, EventArgs ea) => { JE = TrackBarJumpEnergy.Value / (float)s; };
+            TrackBarJumpEnergy.ValueChanged += (object o, EventArgs ea) => { JE = TrackBarJumpEnergy.Value / s; };
             TextBoxJumpEnergy.Leave += (object o, EventArgs ea) => { JE = float.Parse(TextBoxJumpEnergy.Text); };
-            trackBars.Add(TrackBarJumpEnergy); //9
+            trackBars.Add(TrackBarJumpEnergy); //8
 
             value = (int)(Settings.PassiveEnergy * (float)t);
             (TrackBar TrackBarPassiveEnergy, TextBox TextBoxPassiveEnergy) = MakeSlider(1, 3,() => multipleLanguages.DisplayText("SDpassiveEnergyCost"), value, 5, 30, 1);
-            TrackBarPassiveEnergy.ValueChanged += (object o, EventArgs ea) => { PE = TrackBarPassiveEnergy.Value / (float)t; };
+            TrackBarPassiveEnergy.ValueChanged += (object o, EventArgs ea) => { PE = TrackBarPassiveEnergy.Value / t; };
             TextBoxPassiveEnergy.Leave += (object o, EventArgs ea) => { PE = float.Parse(TextBoxPassiveEnergy.Text); };
-            trackBars.Add(TrackBarPassiveEnergy); //10
+            trackBars.Add(TrackBarPassiveEnergy); //9
 
             makeHeatBox(1, 4,() => multipleLanguages.DisplayText("CBheatMap"));
 
@@ -296,16 +291,15 @@ namespace IntroProject.Presentation.Controls
             trackBars[0].Value = (int) float.Parse(settings[0]) * 100;
             trackBars[1].Value = int.Parse(settings[1]);
             trackBars[2].Value = int.Parse(settings[2]);
-            trackBars[3].Value = int.Parse(settings[3]);
-            trackBars[4].Value = (int) (float.Parse(settings[4] + 1f) * 50f);
-            trackBars[5].Value = (int) (float.Parse(settings[5]) * 100);
+            trackBars[3].Value = (int) (float.Parse(settings[3] + 1f) * 50f);
+            trackBars[4].Value = (int) (float.Parse(settings[4]) * 100);
+            trackBars[5].Value = int.Parse(settings[5]);
             trackBars[6].Value = int.Parse(settings[6]);
-            trackBars[7].Value = int.Parse(settings[7]);
-            trackBars[8].Value = (int)(float.Parse(settings[8]) * 100);
-            trackBars[9].Value = (int)(float.Parse(settings[9]) * 10000);
-            trackBars[10].Value = (int)(float.Parse(settings[10]) * 1000000);
-            AddHeat.Checked = bool.Parse(settings[11]);
-            languageIndex.SelectedIndex = int.Parse(settings[12]);
+            trackBars[7].Value = (int)(float.Parse(settings[7]) * 100);
+            trackBars[8].Value = (int)(float.Parse(settings[8]) * 10000);
+            trackBars[9].Value = (int)(float.Parse(settings[9]) * 1000000);
+            AddHeat.Checked = bool.Parse(settings[10]);
+            languageIndex.SelectedIndex = int.Parse(settings[11]);
         }
 
         public void ImplementChanges(object o, EventArgs ea)
@@ -333,7 +327,7 @@ namespace IntroProject.Presentation.Controls
                         {
                             trackBars[1].Value = Settings.StartCarnivore;
                             trackBars[2].Value = Settings.StartHerbivore;
-                            trackBars[4].Value = (int) Settings.MiddleHeight * 100;
+                            trackBars[3].Value = (int) Settings.MiddleHeight * 100;
                         }
                     }
                 }
@@ -368,7 +362,6 @@ namespace IntroProject.Presentation.Controls
             export = Sp.ToString() + "\n";
             export += TE + "\n";
             export += SE + "\n";
-            export += HS + "\n";
             export += MH + "\n";
             export += MC + "\n";
             export += GG + "\n";
@@ -384,7 +377,6 @@ namespace IntroProject.Presentation.Controls
         {
             TE = Settings.StartCarnivore;
             SE = Settings.StartHerbivore;
-            HS = Settings.HatchSpeed;
             GG = Settings.GrassGrowth;
             GMF = Settings.GrassMaxFeed;
             Sp = Settings.StepSize;
@@ -398,7 +390,6 @@ namespace IntroProject.Presentation.Controls
         private void ImplementSettings()
         {
             Settings.StepSize = Sp;
-            Settings.HatchSpeed = HS;
             Settings.MatingCost = MC;
             Settings.GrassGrowth = GG;
             Settings.GrassMaxFeed = GMF;
@@ -415,14 +406,13 @@ namespace IntroProject.Presentation.Controls
             trackBars[0].Value = (int) (Settings.StepSize * 100f);
             trackBars[1].Value = Settings.StartCarnivore;
             trackBars[2].Value = Settings.StartHerbivore;
-            trackBars[3].Value = Settings.HatchSpeed;
-            trackBars[4].Value = (int) ((Settings.MiddleHeight + 1f) * 50f);
-            trackBars[5].Value = (int) (Settings.MatingCost * 100f);
-            trackBars[6].Value = Settings.GrassGrowth;
-            trackBars[7].Value = Settings.GrassMaxFeed;
-            trackBars[8].Value = (int) (Settings.WalkEnergy * 100f);
-            trackBars[9].Value = (int) (Settings.JumpEnergy * 10000f);
-            trackBars[10].Value = (int) (Settings.PassiveEnergy * 1000000f);
+            trackBars[3].Value = (int) ((Settings.MiddleHeight + 1f) * 50f);
+            trackBars[4].Value = (int) (Settings.MatingCost * 100f);
+            trackBars[5].Value = Settings.GrassGrowth;
+            trackBars[6].Value = Settings.GrassMaxFeed;
+            trackBars[7].Value = (int) (Settings.WalkEnergy * 100f);
+            trackBars[8].Value = (int) (Settings.JumpEnergy * 10000f);
+            trackBars[9].Value = (int) (Settings.PassiveEnergy * 1000000f);
             AddHeat.Checked = Settings.AddHeatMap;
             languageIndex.SelectedIndex = Settings.LanguageIndex;
         }
