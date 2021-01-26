@@ -12,23 +12,15 @@ namespace IntroProject.Presentation.Controls
         public int hexagonSize;
         EventHandler _start, _settingStart, _preSet, _fullScreen, _help;
         MultipleLanguages multipleLanguages = new MultipleLanguages();
-        Color[] loadCollors = new Color[14]
+        Color[] loadCollors = new Color[7]
             {
                 Color.FromArgb(255,123,156,148),    // DarkGreen
-                Color.FromArgb(125,117,100,87),     // LightBrown
+                Color.FromArgb(255,117,100,87),     // LightBrown
                 Color.FromArgb(255,159,222,233),    // GreenBlue
                 Color.FromArgb(255,180,206,255),    // Blue
                 Color.FromArgb(255,193,239,198),    // Green
                 Color.FromArgb(255,255,253,158),    // Yellow
                 Color.FromArgb(255,254,197,163),    // Red
-                
-                Color.FromArgb(255,123,156,148),
-                Color.FromArgb(125,117,100,87),
-                Color.FromArgb(255,159,222,233),
-                Color.FromArgb(255,180,206,255),
-                Color.FromArgb(255,193,239,198),
-                Color.FromArgb(255,255,253,158),
-                Color.FromArgb(255,254,197,163)
             };
 
         public HomeMenu(int w, int h, EventHandler start, EventHandler settingStart, EventHandler preSet, EventHandler fullScreen, EventHandler help)

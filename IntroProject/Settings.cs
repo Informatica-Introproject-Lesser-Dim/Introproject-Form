@@ -15,6 +15,6 @@
         public static float JumpEnergy = 0.001f; //Calculator.cs
         public static float PassiveEnergy = 0.00001f; //Calculator.cs
         public static bool AddHeatMap = false; //Hexagon.cs
-        public static int LanguageIndex = 0;
+        public static int LanguageIndex = 1;
     }
 }
