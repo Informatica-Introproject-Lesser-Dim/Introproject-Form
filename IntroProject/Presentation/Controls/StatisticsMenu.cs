@@ -39,16 +39,10 @@ namespace IntroProject.Presentation.Controls
             Button statname1 = ButtonList("PopulationSize");
             Button statname2 = ButtonList("Velocity");
             Button statname3 = ButtonList("Size");
-            Button statname4 = ButtonList("Statistics");
-            Button statname5 = ButtonList("Statistics");
-            Button statname6 = ButtonList("Statistics");
 
             statname1.Click += (object o, EventArgs ea) => { InitChart(1); };
             statname2.Click += (object o, EventArgs ea) => { InitChart(2); };
             statname3.Click += (object o, EventArgs ea) => { InitChart(3); };
-            statname4.Click += (object o, EventArgs ea) => { InitChart(4); };
-            statname5.Click += (object o, EventArgs ea) => { InitChart(5); };
-            statname6.Click += (object o, EventArgs ea) => { InitChart(6); };
         }
 
         public void InitChart(int GraphChoice)
