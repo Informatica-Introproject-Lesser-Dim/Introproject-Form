@@ -20,6 +20,16 @@ namespace IntroProject
             stamina = gene.SprintDuration;
         }
 
+        public void Scare(Herbivore herbivore) 
+        {
+            Point2D delta = herbivore.GlobalLoc - GlobalLoc;
+
+            double dist = Trigonometry.Distance(herbivore.GlobalLoc, GlobalLoc);
+            delta *= 1 / dist;
+
+            herbivore.scare(delta);
+        }
+
         public override void passiveSearch(double dt)
         {
             
