@@ -9,5 +9,6 @@ namespace IntroProject
         public static IList<Statistics> statisticsvalues = new List<Statistics>();
 
         public static void AddStats(Statistics stats) => statisticsvalues.Add(stats);
+        public static void ClearStats() => statisticsvalues.Clear();
     }
 }

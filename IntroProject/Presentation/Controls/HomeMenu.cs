@@ -88,7 +88,6 @@ namespace IntroProject.Presentation.Controls
             ButtonLocationChange(hexagonButton, hexagonLocation, currentHexagonSize);
 
             Controls.Add(hexagonButton);
-
             return hexagonButton;
         }
 
@@ -178,7 +177,7 @@ namespace IntroProject.Presentation.Controls
         private LazyLabel CreateLabel(int x, int y, Func<string> name, Color color)
         {
             LazyLabel label = new LazyLabel();
-            label.Width = 60; //Yes it is funcy, but value has to be declared else cant read it 
+            label.Width = 60; //Value has to be declared else label.width cant read it 
             label.LazyText = name;
             label.AutoSize = true;
             label.Location = new Point(x + 15 + label.Width/2 , y );
@@ -191,7 +190,7 @@ namespace IntroProject.Presentation.Controls
         private LazyLabel CreateStartLabel(int x, int y, Func<string> name, Color color)
         {
             LazyLabel label = new LazyLabel();
-            label.Width = 60; //Yes it is funcy, but value has to be declared else cant read it 
+            label.Width = 60; //Value has to be declared else label.width cant read it
             label.LazyText = name;
             label.AutoSize = true;
             label.Location = new Point(x + 15 + label.Width / 2, y+35);

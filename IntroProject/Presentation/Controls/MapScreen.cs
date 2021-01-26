@@ -81,7 +81,7 @@ namespace IntroProject.Presentation.Controls
         public void MakeMap()
         {
             map = new Map(50, 50, size, 0);
-
+            StatisticsValues.ClearStats();
             for (int i = 0; i < Settings.StartHerbivore; i++)
             {
                 map.placeRandom(new Herbivore());
