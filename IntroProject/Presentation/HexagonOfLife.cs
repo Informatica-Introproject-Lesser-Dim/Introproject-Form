@@ -37,7 +37,7 @@ namespace IntroProject.Presentation
             dropMenu = new DropMenu(Size.Width/10, Size.Height, 
                                    (object o, EventArgs ea) => { settingsMenu.Show(); settingsMenu.BringToFront(); mapscr.paused = true; }, 
                                    (object o, EventArgs ea) => { helpMenu.Show(); helpMenu.BringToFront(); mapscr.paused = true; }, 
-                                   (object o, EventArgs ea) => { statisticsMenu.Show(); statisticsMenu.BringToFront(); mapscr.paused = true; },          
+                                   (object o, EventArgs ea) => { statisticsMenu.Show(); statisticsMenu.BringToFront(); mapscr.paused = true; statisticsMenu.InitChart(1); },          
                                     mapscr.plus);
             dropMenu.Dock = DockStyle.Right;
 
