@@ -80,11 +80,14 @@ namespace IntroProject.Presentation.Controls
             { 
                 var Choice1C = new LineSeries
                 {
-                    Title = "PopulationSize Carnivores"
+                    Title = "PopulationSize Carnivores",
+                    Color = OxyColor.FromArgb(255, 254, 197, 163)
                 };
                 var Choice1H = new LineSeries
                 {
-                    Title = "PopulationSize Herbivores"
+                    Title = "PopulationSize Herbivores",
+                    Color = OxyColor.FromArgb(255, 255, 253, 158)
+
                 };
                 foreach (Statistics stats in WorkableStats)
                 {
@@ -114,11 +117,13 @@ namespace IntroProject.Presentation.Controls
             {
                 var Choice2C = new LineSeries
                 {
-                    Title = "Average Velocity Carnivores"
+                    Title = "Average Velocity Carnivores",
+                    Color = OxyColor.FromArgb(255, 254, 197, 163)
                 };
                 var Choice2H = new LineSeries
                 {
-                    Title = "Average Velocity Herbivores"
+                    Title = "Average Velocity Herbivores",
+                    Color = OxyColor.FromArgb(255, 255, 253, 158)
                 };
                 foreach(Statistics stats in WorkableStats)
                 {
@@ -147,11 +152,14 @@ namespace IntroProject.Presentation.Controls
             {
                 var Choice3C = new LineSeries
                 {
-                    Title = "Average Size Carnivores"
+                    Title = "Average Size Carnivores",
+                    Color = OxyColor.FromArgb(255, 254, 197, 163)
+
                 };
                 var Choice3H = new LineSeries
                 {
-                    Title = "Average Size Herbivores"
+                    Title = "Average Size Herbivores",
+                    Color = OxyColor.FromArgb(255, 255, 253, 158)
                 };
                 foreach (Statistics stats in WorkableStats)
                 {
