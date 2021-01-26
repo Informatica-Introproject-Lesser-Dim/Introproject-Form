@@ -297,7 +297,7 @@ namespace IntroProject.Presentation.Controls
             trackBars[1].Value = int.Parse(settings[1]);
             trackBars[2].Value = int.Parse(settings[2]);
             trackBars[3].Value = int.Parse(settings[3]);
-            trackBars[4].Value = (int)float.Parse(settings[4]) * 100;
+            trackBars[4].Value = (int) (float.Parse(settings[4] + 1f) * 50f);
             trackBars[5].Value = (int) (float.Parse(settings[5]) * 100);
             trackBars[6].Value = int.Parse(settings[6]);
             trackBars[7].Value = int.Parse(settings[7]);
