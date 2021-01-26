@@ -28,10 +28,13 @@ namespace IntroProject.Presentation.Controls
             exit.FlatAppearance.BorderColor = Color.FromArgb(123, 156, 148);
             exit.Click += exitMenu;
 
-            textBox.Location = new Point(this.Size.Width / 2 - 200, 30);
+            textBox.BackColor = Color.FromArgb(123, 156, 148);
+            textBox.BorderStyle = BorderStyle.None;
+            textBox.Size = new Size(800, 300);
+            textBox.Location = new Point(this.Width / 2 - 400, 40);
             textBox.Font = new Font("Arial", 22, FontStyle.Regular);
-            textBox.Size = new Size(400, 300);
             textBox.Text = translator.DisplayText("helpText") + " https://github.com/Informatica-Introproject-Lesser-Dim/Introproject-Form/wiki";
+            textBox.BackColor = Color.FromArgb(123, 156, 148);
             textBox.ReadOnly = true;
             textBox.DetectUrls = true;
             textBox.ScrollBars = RichTextBoxScrollBars.None;
