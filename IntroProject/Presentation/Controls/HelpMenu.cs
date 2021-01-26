@@ -30,10 +30,11 @@ namespace IntroProject.Presentation.Controls
 
             textBox.BackColor = Color.FromArgb(123, 156, 148);
             textBox.BorderStyle = BorderStyle.None;
-            textBox.Location = new Point(80, 40);
-            textBox.Font = new Font("Arial", 22, FontStyle.Regular);
             textBox.Size = new Size(800, 300);
+            textBox.Location = new Point(this.Width / 2 - 400, 40);
+            textBox.Font = new Font("Arial", 22, FontStyle.Regular);
             textBox.Text = translator.DisplayText("helpText") + " https://github.com/Informatica-Introproject-Lesser-Dim/Introproject-Form/wiki";
+            textBox.BackColor = Color.FromArgb(123, 156, 148);
             textBox.ReadOnly = true;
             textBox.DetectUrls = true;
             textBox.ScrollBars = RichTextBoxScrollBars.None;
