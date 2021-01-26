@@ -163,13 +163,13 @@ namespace IntroProject.Presentation.Controls
             {
                 hexagonSize = (int)(Size.Height / 8);
                 labelLoc = MenuLabelLocations(150, 40);
-                a.Location = new Point(labelLoc[0] + 45, labelLoc[1] + 10);
-                b.Location = new Point(labelLoc[2] + 45, labelLoc[3] + 10);
-                c.Location = new Point(labelLoc[4] + 45, labelLoc[5] + 10);
-                d.Location = new Point(labelLoc[6] + 45, labelLoc[7] + 10);
-                e.Location = new Point(labelLoc[8] + 45, labelLoc[9] + 10);
-                f.Location = new Point(labelLoc[10] + 45, labelLoc[11] + 10);
-                g.Location = new Point(labelLoc[12] + 45, labelLoc[13] + 10);
+                a.Location = new Point(labelLoc[0] + a.Width / 4, labelLoc[1] + 30);
+                b.Location = new Point(labelLoc[2] + b.Width / 4, labelLoc[3] - 5);
+                c.Location = new Point(labelLoc[4], labelLoc[5] - 5);
+                d.Location = new Point(labelLoc[6], labelLoc[7] - 5);
+                e.Location = new Point(labelLoc[8] + e.Width / 4, labelLoc[9] - 5);
+                f.Location = new Point(labelLoc[10], labelLoc[11] - 5);
+                g.Location = new Point(labelLoc[12] + g.Width / 4, labelLoc[13] - 5);
             };
 
         }
