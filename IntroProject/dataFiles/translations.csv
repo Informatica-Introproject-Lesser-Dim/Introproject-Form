@@ -32,10 +32,10 @@ Energy,Energie,Energy
 Gender,Geslacht,Gender
 GenderN0,vrouw,female
 GenderN1,man,male
-MMstart,start,start
-MMexit,afsluiten,close
-MMsettings,instellingen,settings
-MMrunPreset,open bestand,run preset
-MMlanguage,taal,language
-MMfullScreen,volledig scherm,fullscreen
-MMhelp,help,help
+MMstart,    start,    start
+MMexit,afsluiten,   close  
+MMsettings,instellingen,   settings 
+MMrunPreset,open bestand  ,  run preset    
+MMlanguage,   taal ,language
+MMfullScreen,maximaliseer,  fullscreen     
+MMhelp,   help,   help

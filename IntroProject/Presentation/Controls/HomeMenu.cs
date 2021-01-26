@@ -177,11 +177,12 @@ namespace IntroProject.Presentation.Controls
         private LazyLabel CreateLabel(int x, int y, Func<string> name, Color color)
         {
             LazyLabel label = new LazyLabel();
-            label.Width = 60; //Value has to be declared else label.width cant read it 
+            label.Width = 60; //Value has to be declared else label.width cant read it
+            label.Font = new Font("Arial", 18);
             label.LazyText = name;
             label.AutoSize = true;
-            label.Location = new Point(x + 15 + label.Width/2 , y );
-            label.TextAlign = ContentAlignment.MiddleLeft;
+            label.Location = new Point(x +  label.Width/4 , y );
+            label.TextAlign = ContentAlignment.MiddleCenter;
             label.BackColor = color;
             Controls.Add(label);
 
@@ -191,10 +192,11 @@ namespace IntroProject.Presentation.Controls
         {
             LazyLabel label = new LazyLabel();
             label.Width = 60; //Value has to be declared else label.width cant read it
+            label.Font = new Font("Arial", 18);
             label.LazyText = name;
             label.AutoSize = true;
-            label.Location = new Point(x + 15 + label.Width / 2, y+35);
-            label.TextAlign = ContentAlignment.MiddleLeft;
+            label.Location = new Point(x + label.Width / 4, y+35);
+            label.TextAlign = ContentAlignment.MiddleCenter;
             label.BackColor = color;
             Controls.Add(label);
 
