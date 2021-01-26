@@ -37,6 +37,6 @@ MMstart,start,start
 MMexit,afsluiten,close
 MMsettings,instellingen,settings
 MMrunPreset,open bestand,run preset
-MMLanguage,taal,language
+MMlanguage,taal,language
 MMfullScreen,voledig scherm,fullscreen
 MMhelp,help,help

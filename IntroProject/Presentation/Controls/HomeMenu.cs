@@ -12,8 +12,27 @@ namespace IntroProject.Presentation.Controls
         public int hexagonSize;
         EventHandler _start, _settingStart, _preSet, _fullScreen, _help;
         MultipleLanguages multipleLanguages = new MultipleLanguages();
+        Color[] loadCollors = new Color[14]
+            {
+                Color.FromArgb(255,0,100,0),      //green
+                Color.FromArgb(255,189,182,107),  //yellow
+                Color.FromArgb(255,255,165,0),    //orange
+                Color.FromArgb(255,144,0,211),    //Purple
+                Color.FromArgb(255,127,255,0),    //LightGreen
+                Color.FromArgb(255,125,206,235),  //Aqua
+                Color.FromArgb(255,30,30,255),      //Blue
+                Color.FromArgb(255,0,100,0),       //repeat but lighter
+                Color.FromArgb(255,189,182,107),
+                Color.FromArgb(255,255,165,0),
+                Color.FromArgb(255,144,0,211),
+                Color.FromArgb(255,127,255,0),
+                Color.FromArgb(255,125,206,235),
+                Color.FromArgb(255,30,30,255)
+            };
+
         public HomeMenu(int w, int h, EventHandler start, EventHandler settingStart, EventHandler preSet, EventHandler fullScreen, EventHandler help)
         {
+
             this.Size = new Size(w, h);
             hexagonSize = (int)(Size.Height / 8);
             _start = start;
@@ -33,13 +52,19 @@ namespace IntroProject.Presentation.Controls
             int[] menuButtonLocations = createMenuButtonLocations();
             Point[] buttonLocations = ButtonLocations(menuButtonLocations);
             Button startHexagonBt = LoadButton(buttonLocations[0] + new Size(1,1), hexagonSize + 2);
-            startHexagonBt.BackColor = Color.Brown;
+            startHexagonBt.BackColor = loadCollors[0];
             Button exitHexagonBt = LoadButton(buttonLocations[1], hexagonSize);
+            exitHexagonBt.BackColor = loadCollors[1];
             Button settingsHexagonBt = LoadButton(buttonLocations[2], hexagonSize);
+            settingsHexagonBt.BackColor = loadCollors[2];
             Button runPresetHexagonBt = LoadButton(buttonLocations[3], hexagonSize);
+            runPresetHexagonBt.BackColor = loadCollors[3];
             Button languageHexagonBt = LoadButton(buttonLocations[4], hexagonSize);
+            languageHexagonBt.BackColor = loadCollors[4];
             Button fullScreenHexagonBt = LoadButton(buttonLocations[5], hexagonSize);
+            fullScreenHexagonBt.BackColor = loadCollors[5];
             Button helpHexagonBt = LoadButton(buttonLocations[6], hexagonSize);
+            helpHexagonBt.BackColor = loadCollors[6];
 
 
             Resize += (object sender, EventArgs h) =>
@@ -68,7 +93,6 @@ namespace IntroProject.Presentation.Controls
         {
             Button hexagonButton = new Button();
             ButtonLocationChange(hexagonButton, hexagonLocation, currentHexagonSize);
-            hexagonButton.BackColor = Color.FromArgb(30, 30, 30);
 
             Controls.Add(hexagonButton);
 
@@ -135,13 +159,13 @@ namespace IntroProject.Presentation.Controls
         private void createAllLabels()
         {
             int[] labelLoc = MenuLabelLocations(150, 40);
-            Label a = CreateLabel(labelLoc[0], labelLoc[1], () => multipleLanguages.DisplayText("MMstart"), Color.Brown);
-            Label b = CreateLabel(labelLoc[2], labelLoc[3], () => multipleLanguages.DisplayText("MMexit"), Color.IndianRed);
-            Label c = CreateLabel(labelLoc[4], labelLoc[5], () => multipleLanguages.DisplayText("MMsettings"), Color.MediumPurple);
-            Label d = CreateLabel(labelLoc[6], labelLoc[7], () => multipleLanguages.DisplayText("MMrunPreset"), Color.ForestGreen);
-            Label e = CreateLabel(labelLoc[8], labelLoc[9], () => multipleLanguages.DisplayText("MMlanguage"), Color.Honeydew);
-            Label f = CreateLabel(labelLoc[10], labelLoc[11], () => multipleLanguages.DisplayText("MMfullScreen"), Color.Yellow);
-            Label g = CreateLabel(labelLoc[12], labelLoc[13], () => multipleLanguages.DisplayText("MMhelp"), Color.LightSkyBlue);
+            Label a = CreateStartLabel(labelLoc[0], labelLoc[1], () => multipleLanguages.DisplayText("MMstart"), loadCollors[0]);
+            Label b = CreateLabel(labelLoc[2], labelLoc[3], () => multipleLanguages.DisplayText("MMexit"), loadCollors[1]);
+            Label c = CreateLabel(labelLoc[4], labelLoc[5], () => multipleLanguages.DisplayText("MMsettings"), loadCollors[2]);
+            Label d = CreateLabel(labelLoc[6], labelLoc[7], () => multipleLanguages.DisplayText("MMrunPreset"), loadCollors[3]);
+            Label e = CreateLabel(labelLoc[8], labelLoc[9], () => "language", loadCollors[4]);
+            Label f = CreateLabel(labelLoc[10], labelLoc[11], () => multipleLanguages.DisplayText("MMfullScreen"), loadCollors[5]);
+            Label g = CreateLabel(labelLoc[12], labelLoc[13], () => multipleLanguages.DisplayText("MMhelp"), loadCollors[6]);
 
             Resize += (object sender, EventArgs h) =>
             {
@@ -161,14 +185,24 @@ namespace IntroProject.Presentation.Controls
         private LazyLabel CreateLabel(int x, int y, Func<string> name, Color color)
         {
             LazyLabel label = new LazyLabel();
-
-            label.Location = new Point(x + 45, y + 10);
-            label.Width = 60; 
-            label.Height = 20; 
+            label.Width = 60; //Yes it is funcy, but value has to be declared else cant read it 
             label.LazyText = name;
-            label.Dock = DockStyle.None;
-            label.AutoSize = false;
-            label.TextAlign = ContentAlignment.MiddleCenter;
+            label.AutoSize = true;
+            label.Location = new Point(x + 15 + label.Width/2 , y );
+            label.TextAlign = ContentAlignment.MiddleLeft;
+            label.BackColor = color;
+            Controls.Add(label);
+
+            return label;
+        }
+        private LazyLabel CreateStartLabel(int x, int y, Func<string> name, Color color)
+        {
+            LazyLabel label = new LazyLabel();
+            label.Width = 60; //Yes it is funcy, but value has to be declared else cant read it 
+            label.LazyText = name;
+            label.AutoSize = true;
+            label.Location = new Point(x + 15 + label.Width / 2, y+35);
+            label.TextAlign = ContentAlignment.MiddleLeft;
             label.BackColor = color;
             Controls.Add(label);
 
