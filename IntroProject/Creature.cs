@@ -38,6 +38,7 @@ namespace IntroProject
         public double coolDown = 200; //cooldown so the creature doesnt continuously attempt mating
         protected float maxEnergy;
         public double stamina;
+        public double attackTimeout = 0;
 
         public Creature() : base()
         {
@@ -187,12 +188,18 @@ namespace IntroProject
 
         public void activate(double dt)
         {
+            if (stamina < 0)
+                sleep = 20;
+
             if (stamina < gene.SprintDuration)
                 stamina += dt;
             this.energyVal -= Calculator.StandardEnergyCost(gene) * dt;
 
             if (this.coolDown > 0)
                 coolDown -= dt;
+
+            if (this.attackTimeout > 0)
+                attackTimeout -= dt;
 
             if (this.energyVal <= 0)
                 this.dead = true;
@@ -218,7 +225,7 @@ namespace IntroProject
             if (route != null) //just move along the road if you have one, otherwise search for a new route
                 this.move(dt);
             else
-                passiveSearch();
+                passiveSearch(dt);
         }
 
         protected virtual bool SprintToCreature(double dt) => true;
@@ -243,7 +250,7 @@ namespace IntroProject
             this.goal = Goal.Nothing;
         }
 
-        public virtual void passiveSearch() //check wether the place you are is ok
+        public virtual void passiveSearch(double dt) //check wether the place you are is ok
         {
             goal = Goal.Food;
 

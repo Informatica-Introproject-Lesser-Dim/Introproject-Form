@@ -50,7 +50,9 @@ namespace IntroProject
             
             chunk.removeEntity(this);
 
-            return 0.6 * energyVal;
+            if (this is DeathPile)
+                return energyVal;
+            return 0.2 * energyVal;
         }
 
         public virtual void draw(Graphics g, int hexX, int hexY, Entity e)

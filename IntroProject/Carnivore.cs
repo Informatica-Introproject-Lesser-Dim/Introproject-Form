@@ -9,6 +9,7 @@ namespace IntroProject
     public class Carnivore : Creature
     {
         public Entity targetFood;
+
         public Carnivore() : base()
         {
             energyVal = 600; //start with quite a lot so they dont die too quickly
@@ -19,8 +20,10 @@ namespace IntroProject
             stamina = gene.SprintDuration;
         }
 
-        public override void passiveSearch()
+        public override void passiveSearch(double dt)
         {
+            
+                
             List<Entity> herbivores = new List<Entity>();
             List<Entity> deathPiles = new List<Entity>();
             for(int i = 0; i < 5; i++)
@@ -45,7 +48,9 @@ namespace IntroProject
                     return;
                 }
             }
-            if (herbivores.Count > 0)
+            
+
+            if (herbivores.Count > 0 && attackTimeout <= 0)
             {
                 Entity herbivore = findClosest(herbivores);
                 //make a straight line to this
@@ -66,6 +71,8 @@ namespace IntroProject
                 return true;
             if (stamina <= 0)
                 return true;
+
+            attackTimeout = 200;
 
             Point2D delta = target.GlobalLoc - GlobalLoc;
 
@@ -107,6 +114,7 @@ namespace IntroProject
 
             if (route != null)
             {
+                
                 targetFood = aStar.getFood();
                 if (targetFood != null)
                 {
