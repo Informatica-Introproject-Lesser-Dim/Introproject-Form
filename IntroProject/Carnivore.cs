@@ -84,7 +84,7 @@ namespace IntroProject
             if (stamina <= 0)
                 return true;
 
-            attackTimeout = 200;
+            attackTimeout = 500;
 
             Point2D delta = target.GlobalLoc - GlobalLoc;
 

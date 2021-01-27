@@ -110,9 +110,9 @@ namespace IntroProject
             this.sleep = 30;
             if (energyVal >= 0.8 * maxEnergy)
                 return;
-            if (energyVal + entity.BeingEaten() >= maxEnergy)
+            if (energyVal + (entity.BeingEaten()/4) >= maxEnergy)
                 energyVal = maxEnergy;
-            else energyVal += entity.BeingEaten();
+            else energyVal += (entity.BeingEaten()/4);
         }
 
         public void scare(Point2D dir) {
