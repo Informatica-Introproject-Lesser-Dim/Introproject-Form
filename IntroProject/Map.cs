@@ -25,13 +25,23 @@ namespace IntroProject
         public int femalesAdded = 0;
         public int width;
         public int height;
+        public int loadingScreenStage = 0;
         private int n = 4;
         private int size;
         private int margin;
+        Bitmap[] bitMapList = { new Bitmap(Properties.Resources.Loading0),
+                                new Bitmap(Properties.Resources.Loading1),
+                                new Bitmap(Properties.Resources.Loading2),
+                                new Bitmap(Properties.Resources.Loading3),
+                                new Bitmap(Properties.Resources.Loading4),
+                                new Bitmap(Properties.Resources.Loading5),
+                                new Bitmap(Properties.Resources.Loading6)};
+        int bitMapStageList;
 
         private double msPerTick { get { return 30 / Settings.StepSize; } }
         private bool heated = false;
         public Hexagon[,] tiles;
+        public DrawLoading drawLoading;
         public Hexagon this[int x, int y] { get { return getHex(x, y); } }
 
         Random random = new Random();
@@ -71,11 +81,30 @@ namespace IntroProject
             }
 
             for (int x = 0; x < width; x++)
+            {
                 for (int y = 0; y < height; y++)
+                {
                     tiles[x, y].setNeighbors(calcNeighbors(x, y));
-
+                }
+                if (x%4 ==0)
+                {
+                    loadingScreen(loadingScreenStage);
+                    loadingScreenStage++;
+                }
+            }
             drawBase();
         }
+        public void loadingScreen(int stage)
+        {
+            bitMapStageList = stage;
+            DrawLoading(bitMapStageList);
+        }
+        public void DrawLoading(int bitMapStageList)
+        {
+            drawLoading.draw(bitMapList[bitMapStageList], 100,100);
+        }
+
+        
 
         public void EntityForceAdd(Entity e)
         {

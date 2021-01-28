@@ -24,7 +24,7 @@ namespace IntroProject.Presentation.Controls
         int[] pos = new int[2] { 0, 0 };
         int xCam = 0, yCam = 0, n = 0;
         public const int size = 35;
-
+        
         public MapScreen(Size size) : this(size.Width, size.Height) { }
 
         public MapScreen(int w, int h)

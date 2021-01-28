@@ -78,5 +78,6 @@ namespace IntroProject.Presentation
         {
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
         }
+
     }
 }

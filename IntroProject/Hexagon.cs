@@ -1,4 +1,5 @@
 ﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -300,6 +301,7 @@ namespace IntroProject
         public void addEntity(Entity e)
         {
             e.chunk = this;
+            entities.Add(e);
             entities.Add(e);
         }
 
