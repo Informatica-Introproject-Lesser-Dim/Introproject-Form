@@ -22,7 +22,7 @@ namespace IntroProject.Presentation.Controls
                 Color.FromArgb(255,255,253,158),    // Yellow
                 Color.FromArgb(255,254,197,163),    // Red
             };
-
+        public PictureBox loadingGif;
         public HomeMenu(int w, int h, EventHandler start, EventHandler settingStart, EventHandler preSet, EventHandler fullScreen, EventHandler help)
         {
 
@@ -38,6 +38,14 @@ namespace IntroProject.Presentation.Controls
 
             BackgroundImage = Properties.Resources.Background_blurred;
             BackgroundImageLayout = ImageLayout.Tile;
+            loadingGif = new PictureBox
+            {
+                Image = Properties.Resources.LoadingGif,
+                Size = new Size(30, 30),
+                Location = new Point(w / 2 - 15, 30)
+            };
+            loadingGif.Hide();
+            this.Controls.Add(loadingGif);
         }
 
         public void createAllButtons()
@@ -73,7 +81,7 @@ namespace IntroProject.Presentation.Controls
                 ButtonLocationChange(helpHexagonBt, buttonLocations[6], hexagonSize);
             };
 
-            startHexagonBt.Click += _start;
+            startHexagonBt.Click += Start;
             exitHexagonBt.Click += exitBTPressed;
             settingsHexagonBt.Click += _settingStart;
             runPresetHexagonBt.Click += _preSet;
@@ -82,6 +90,18 @@ namespace IntroProject.Presentation.Controls
             helpHexagonBt.Click += _help;
 
         }
+
+        void Start(object o, EventArgs ea)
+        {
+            loadingGif.Show();
+            loadingGif.BringToFront();
+            _start.Invoke(o, ea);
+            loadingGif.Hide();
+            this.Controls.Remove(loadingGif);
+            loadingGif.Dispose();
+        }
+
+
         Button LoadButton(Point hexagonLocation, int currentHexagonSize)
         {
             Button hexagonButton = new Button();
