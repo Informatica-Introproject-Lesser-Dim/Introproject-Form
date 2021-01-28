@@ -12,7 +12,6 @@ namespace IntroProject
     {
         Food,
         Mate,
-        Water, //might be implemented later
         Nothing,
         Creature,
         Scared
@@ -56,6 +55,7 @@ namespace IntroProject
             Entity result = targets[0];
             double dist = calcDistancePow2(result);
 
+            //basic going through all the entities and comparing distances
             foreach (Entity e in targets) 
             {
                 double newDist = calcDistancePow2(e);
@@ -110,6 +110,8 @@ namespace IntroProject
             this.sleep = 30;
             if (energyVal >= 0.8 * maxEnergy)
                 return;
+
+            //avoid going over the maximum amount of energy
             if (energyVal + (entity.BeingEaten()/4) >= maxEnergy)
                 energyVal = maxEnergy;
             else energyVal += (entity.BeingEaten()/4);
@@ -118,8 +120,11 @@ namespace IntroProject
         public void scare(Point2D dir) {
             if (this.goal == Goal.Scared)
                 return;
+
             sleep = 5;
             this.goal = Goal.Scared;
+
+            //create a second vector at a 90 degree angle
             Point2D dir2 = dir.flip();
 
 
@@ -132,10 +137,19 @@ namespace IntroProject
             int i = 0;
             for(; i < 50; i++)
             {
+                //add the current position 
+                //to the direction vector times a random length between 0 and maxLength
+                //and add the 90 degree turned direction vector times a random length (between -maxlength and +maxlength now) times a scale reduction
                 randomGoal = this.GlobalLoc + dir * maxDist * random.NextDouble() + dir2 * maxDist * scale * (random.NextDouble() * 2 - 1);
+
+                //get the hexagon position
                 randomHexPos = chunk.parent.PosToHexPos((int)randomGoal.X, (int)randomGoal.Y);
+
+                //check whether it's within the map borders
                 if (randomHexPos[0] < 0 || randomHexPos[0] >= chunk.parent.width || randomHexPos[1] < 0 || randomHexPos[1] >= chunk.parent.height)
                     continue;
+
+                //get the hexagon itself
                 randomHex = chunk.parent[randomHexPos[0], randomHexPos[1]];
                 if (randomHex == null)
                     continue;
@@ -146,6 +160,7 @@ namespace IntroProject
             if (i == 50)
                 return;
 
+            //create a non existant entity at your goal location you can move towards
             Ghost dummy = new Ghost(0, 0, randomHex);
             SingleTargetAStar aStar = new SingleTargetAStar(this, this.chunk, this.gene, this.chunk.size, this.energyVal, dummy);
             route = aStar.getResult();
@@ -167,9 +182,12 @@ namespace IntroProject
 
         public virtual void MateWithMale(Creature other)
         {
+            //transfer part of your energy to the child
             double transferredEnergy =  this.energyVal * this.gene.energyDistribution ;
             energyVal -= transferredEnergy + MateWeight * 100;
             Creature child;
+
+            //create a child out of the mixof the parent's genes
             if (this is Herbivore)
                 child = other.FromParentInfo((HerbivoreGene)this.gene * (HerbivoreGene)other.gene, transferredEnergy);
             else if (this is Carnivore)
@@ -177,17 +195,21 @@ namespace IntroProject
             else
                 return;
 
+            //set child's position to your position
             child.x = this.x;
             child.y = this.y;
             child.sleep = 20;
-            this.chunk.EntityBirth(child);
-            //Now we only need to put this child in the entity list
 
+            //make sure it's added to the entity lists
+            this.chunk.EntityBirth(child);
+
+            //going your own way again
             this.goalReset();
         }
 
         public void activate(double dt)
         {
+            //just changing a bunch of timers
             if (stamina < 0)
                 sleep = 20;
 
@@ -254,11 +276,14 @@ namespace IntroProject
         {
             List<Entity> carnivores = new List<Entity>();
 
+            //gather all the carnivores nearby
             for (int i = 0; i < 3; i++)
                 carnivores = carnivores.Concat(chunk.searchPoint(i, EntityType.Carnivore)).ToList();
 
             if (carnivores.Count == 0)
                 return false;
+
+            //if there is a carnivore, make him activate your "scare" method
             ((Carnivore) carnivores[0]).Scare((Herbivore)this);
             return true;
 
@@ -447,15 +472,16 @@ namespace IntroProject
         }
 
 
-        public void move(double dt)//needs a rework 'cause the target won't be an entity
+        public void move(double dt)
         { 
-            
+            //extra energy cost if in the water
             if (this.chunk.heightOfTile < Hexagon.seaLevel)
                 this.energyVal -= Calculator.EnergyPerTic(gene) * gene.SwimCost * dt;
             
+            //regular walk cost
             else this.energyVal -= Calculator.EnergyPerTic(gene) * gene.WalkCost * dt;
             
-
+            //extra speed and energy cost if you're running away
             float speed = this.gene.Velocity;
             if (this.goal == Goal.Scared && stamina > 0)
             {
@@ -468,25 +494,34 @@ namespace IntroProject
 
             if (route != null) 
             {
-                if (goal == Goal.Mate)//ik weet niet of het hier wel intentioneel is of dat je wat er binnenin staat kunt samenvoegen
+                if (goal == Goal.Mate)
+                    //if your goal is to mate
                 {
+                    //check if your target still wants to mate
                     if (mateTarget.goal != Goal.Mate)
+                        //if not then reset your goal and do something else
                     {
                         route = null;
                         goal = Goal.Nothing;
                         return;
                     }
                 }
-                else if (myFood != null && !myFood.visible)
+                else if (goal == Goal.Food && myFood != null && !myFood.visible)
+                    //if your goal is to eat but the food isnt there anymore, reset
                 {
                     route = null;
                     return;
                 }
 
-                if (route.move((float)dt * speed)) {
+                if (route.move((float)dt * speed)) 
+                    //move the entity
+                {
                     (x, y) = route.GetPos();
-                    if (route.isDone()) {
-                        route = null; //put any functions wich are to activate when the route is done here
+                    if (route.isDone())
+                        //all the methods that need to happen once you reach the end of your route
+                    {
+
+                        route = null; 
                         if (goal == Goal.Food)
                             if (this is Carnivore)
                                 eat(((Carnivore)this).targetFood);
@@ -496,10 +531,13 @@ namespace IntroProject
                         if (goal == Goal.Mate)
                             MateWithFemale(mateTarget);
                         myFood = null;
+
+                        //you always take a rest unless you're running away from a lion
                         if (goal != Goal.Scared)
                             sleep += 30;
                         return;
                     }
+                    //tell the chunck you need to be moved
                     this.chunk.moveEntity(this, route.getDir());
                     energyVal -= Calculator.JumpCost(this.gene);
                     return;

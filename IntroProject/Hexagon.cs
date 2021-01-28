@@ -118,14 +118,18 @@ namespace IntroProject
         {
             if (entities.Contains(e))
             {
+                //find the vector from this hexagon to the goal hexagon and subtract it from the entity
                 (e.X, e.Y) = e - (hex - this);
 
+                //just regular removing from list stuff
                 hex.addEntity(e);
                 entities.Remove(e);
             }
         }
 
         private static (int, int) _calcSide(int size, int dir)
+            //calculate the position of the middle of one of the 6 sides
+            //relative to the middle of the hexagon
         {
             int x, y;
 
@@ -192,11 +196,15 @@ namespace IntroProject
 
         public int FoodValue() => vegetation.FoodValue();
 
-        public Grass bestFood(Point2D point) //gives you the number of the piece of food you should aim for first
+        public Grass bestFood(Point2D point) 
+            //returns which piece of grass would be best to aim for first
         {
+            //getting all the grass that's there
             List<Grass> grass = vegetation.FoodLocations();
             if (grass.Count == 0)
                 return null;
+
+            //finding the piece of grass with the highest "calcGrassVal"
             Grass result = grass[0];
             double val = calcGrassVal(point, result, vegetation.currentTime);
             double newVal;
@@ -215,9 +223,10 @@ namespace IntroProject
         }
 
         private double calcGrassVal(Point2D point, Grass grass, double time)
+            //value is the amount of energy devided by the distance
         {
             double dist = Trigonometry.Distance(point, grass);
-            return grass.getVal(time) / dist;
+            return grass.getVal(time) / dist; 
         }
 
         //bias has to be within 1 and 0, hunger can be anything bigger than 0
@@ -247,15 +256,22 @@ namespace IntroProject
             return result * hunger;
         }
 
-        public double searchLine(int dir, int j, double bias) //new version of searchline that specifically searches for plants
+        public double searchLine(int dir, int j, double bias) 
+            //new version of searchline that specifically searches for plants
         { 
+            //add your own food value
             double result = FoodValue();
 
             if (j > 0)
             {
-                if (dir % 2 == 1)
+                //if you're in an odd direction, ask the next hexagon in that direction for it's food value
+                if (dir % 2 == 1) 
                     if (this[dir] != null)
                         return result + bias * this[dir].searchLine(dir, j - 1, bias);
+
+                //if you're in an even direction
+                //both ask the next hexagon for it's food value
+                //but also create two new lines in the direction - 1 and direction + 1
                 for (int i = dir + 5; i <= dir + 7; i++)
                     if (this[i % 6] != null)
                         result += bias * this[i % 6].searchLine(i % 6, j - 1, bias);
