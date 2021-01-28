@@ -77,8 +77,6 @@ namespace IntroProject
 
         protected override bool SprintToCreature(double dt)
         {
-
-            //checking for situations in which you shouldnt continue running
             if (target == null)
                 return true;
             if (target.dead)
@@ -88,36 +86,30 @@ namespace IntroProject
 
             attackTimeout = 500;
 
-            //vector to the target
             Point2D delta = target.GlobalLoc - GlobalLoc;
 
             double dist = Trigonometry.Distance(target.GlobalLoc, GlobalLoc);
             
-            if (dist < 5) //if you're close enough to the creature you eat it
+            if (dist < 5)
             {
                 eat(target);
                 return true;
             }
 
-            //vector is scaled to length 1
             delta *= 1 / dist;
 
             ((Creature)target).scare(delta);
 
-            //vector is scaled with to the correct speed and added to the position
             delta *= dt * gene.SprintSpeed;
             (X, Y) = delta + this;
 
-            //just regular energy cost stuff
             energyVal -= Calculator.SprintEnergyPerTic(gene);
             stamina -= 2*dt;
 
 
-            //calculate the hexagon you're in right now depending on the global position
+
             int[] hexPos = chunk.parent.PosToHexPos(GlobalLoc.x, GlobalLoc.y);
             Hexagon newHex = chunk.parent[hexPos[0], hexPos[1]];
-
-            //if you're in a different hexagon than you were last frame...
             if (newHex != chunk) 
             {
                 energyVal -= Calculator.JumpCost(gene);
