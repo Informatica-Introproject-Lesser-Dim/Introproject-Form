@@ -73,7 +73,7 @@ namespace IntroProject.Presentation.Controls
                 ButtonLocationChange(helpHexagonBt, buttonLocations[6], hexagonSize);
             };
 
-            startHexagonBt.Click += Start;
+            startHexagonBt.Click += _start;
             exitHexagonBt.Click += exitBTPressed;
             settingsHexagonBt.Click += _settingStart;
             runPresetHexagonBt.Click += _preSet;
@@ -82,12 +82,6 @@ namespace IntroProject.Presentation.Controls
             helpHexagonBt.Click += _help;
 
         }
-
-        void Start(object o, EventArgs ea)
-        {
-            _start.Invoke(o, ea);
-        }
-
 
         Button LoadButton(Point hexagonLocation, int currentHexagonSize)
         {
