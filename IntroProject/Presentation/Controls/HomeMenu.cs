@@ -181,27 +181,36 @@ namespace IntroProject.Presentation.Controls
 
             Resize += (object sender, EventArgs h) =>
             {
+                int fSize = 18 * 1920 / Size.Width;
                 hexagonSize = (int)(Size.Height / 8);
                 labelLoc = MenuLabelLocations(150, 40);
-                a.Location = new Point(labelLoc[0] + a.Width / 4, labelLoc[1] + 30);
-                b.Location = new Point(labelLoc[2] + b.Width / 4, labelLoc[3] - 5);
-                c.Location = new Point(labelLoc[4], labelLoc[5] - 5);
-                d.Location = new Point(labelLoc[6], labelLoc[7] - 5);
-                e.Location = new Point(labelLoc[8] + e.Width / 4, labelLoc[9] - 5);
-                f.Location = new Point(labelLoc[10], labelLoc[11] - 5);
-                g.Location = new Point(labelLoc[12] + g.Width / 4, labelLoc[13] - 5);
+                a.Location = new Point(labelLoc[0] + a.Width / 4, labelLoc[1] + 35);
+                a.Font = new Font("Arial", fSize);
+                b.Location = new Point(labelLoc[2] + b.Width / 4, labelLoc[3]);
+                b.Font = new Font("Arial", fSize);
+                c.Location = new Point(labelLoc[4], labelLoc[5]);
+                c.Font = new Font("Arial", fSize);
+                d.Location = new Point(labelLoc[6], labelLoc[7]);
+                d.Font = new Font("Arial", fSize);
+                e.Location = new Point(labelLoc[8] + e.Width / 4, labelLoc[9]);
+                e.Font = new Font("Arial", fSize);
+                f.Location = new Point(labelLoc[10], labelLoc[11]);
+                f.Font = new Font("Arial", fSize);
+                g.Location = new Point(labelLoc[12] + g.Width / 4, labelLoc[13]);
+                g.Font = new Font("Arial", fSize);
             };
 
         }
 
         private LazyLabel CreateLabel(int x, int y, Func<string> name, Color color)
         {
+            int fSize = 18 * 1920 / Size.Width;
             LazyLabel label = new LazyLabel();
             label.Width = 60; //Value has to be declared else label.width cant read it
-            label.Font = new Font("Arial", 18);
+            label.Font = new Font("Arial", fSize);
             label.LazyText = name;
             label.AutoSize = true;
-            label.Location = new Point(x +  label.Width/4 , y );
+            label.Location = new Point(x +  label.Width/8 , y );
             label.TextAlign = ContentAlignment.MiddleCenter;
             label.BackColor = color;
             Controls.Add(label);
@@ -210,12 +219,13 @@ namespace IntroProject.Presentation.Controls
         }
         private LazyLabel CreateStartLabel(int x, int y, Func<string> name, Color color)
         {
+            int fSize = 18 * 1920 / Size.Width;
             LazyLabel label = new LazyLabel();
             label.Width = 60; //Value has to be declared else label.width cant read it
-            label.Font = new Font("Arial", 18);
+            label.Font = new Font("Arial", fSize);
             label.LazyText = name;
             label.AutoSize = true;
-            label.Location = new Point(x + label.Width / 4, y+35);
+            label.Location = new Point(x + label.Width / 8, y+35);
             label.TextAlign = ContentAlignment.MiddleCenter;
             label.BackColor = color;
             Controls.Add(label);
