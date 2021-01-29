@@ -103,7 +103,7 @@ namespace IntroProject
             (X, Y) = delta + this;
 
             energyVal -= Calculator.SprintEnergyPerTic(gene);
-            stamina -= (2 + Calculator.carnivoreCount * 0.1)*dt ;
+            stamina -= (2 + Calculator.carnivoreCount * 0.2)*dt ;
 
 
 
