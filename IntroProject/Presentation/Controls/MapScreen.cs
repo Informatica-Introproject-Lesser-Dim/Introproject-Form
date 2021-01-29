@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
+
 using IntroProject.Core.Utils;
 
 namespace IntroProject.Presentation.Controls
@@ -57,6 +58,7 @@ namespace IntroProject.Presentation.Controls
             Controls.Add(stop);
 
             Size = new Size(w, h);
+
             Paint += drawScreen;
 
             MouseClick += MapClick;
@@ -200,5 +202,6 @@ namespace IntroProject.Presentation.Controls
             else
                 map.Update();
         }
+
     }
 }

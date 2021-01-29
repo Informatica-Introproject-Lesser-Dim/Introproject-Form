@@ -142,6 +142,30 @@
   <data name="Lion_Sleep" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\images\lion_sleep.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Loading0" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Images\Loading0.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Loading1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Images\Loading1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Loading2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Images\Loading2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Loading3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Images\Loading3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Loading4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Images\Loading4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Loading5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Images\Loading5.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Loading6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Images\Loading6.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Loading7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Images\Loading7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="LoadingGif" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\loadinggif.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

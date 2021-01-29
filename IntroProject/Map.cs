@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 
@@ -71,9 +72,18 @@ namespace IntroProject
             }
 
             for (int x = 0; x < width; x++)
+            {
                 for (int y = 0; y < height; y++)
+                {
                     tiles[x, y].setNeighbors(calcNeighbors(x, y));
-
+                }
+                if (x % 4 == 0)
+                {
+                    Debug.WriteLine(x % 24);
+                    new LoadPicture(x % 24);
+                }
+            }
+            new LoadPicture(4);
             drawBase();
         }
 

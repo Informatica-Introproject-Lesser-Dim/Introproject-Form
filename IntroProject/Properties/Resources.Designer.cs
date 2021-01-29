@@ -213,6 +213,16 @@ namespace IntroProject.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Loading7 {
+            get {
+                object obj = ResourceManager.GetObject("Loading7", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap LoadingGif {
             get {
                 object obj = ResourceManager.GetObject("LoadingGif", resourceCulture);

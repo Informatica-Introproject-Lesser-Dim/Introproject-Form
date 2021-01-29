@@ -15,5 +15,6 @@
         public static float PassiveEnergy = 0.00001f; //Calculator.cs
         public static bool AddHeatMap = false; //Hexagon.cs
         public static int LanguageIndex = 1;
+        public static int currentLoadImage = 5;
     }
 }
