@@ -38,14 +38,6 @@ namespace IntroProject.Presentation.Controls
 
             BackgroundImage = Properties.Resources.Background_blurred;
             BackgroundImageLayout = ImageLayout.Tile;
-            loadingGif = new PictureBox
-            {
-                Image = Properties.Resources.LoadingGif,
-                Size = new Size(30, 30),
-                Location = new Point(w / 2 - 15, 30)
-            };
-            loadingGif.Hide();
-            this.Controls.Add(loadingGif);
         }
 
         public void createAllButtons()
@@ -93,12 +85,7 @@ namespace IntroProject.Presentation.Controls
 
         void Start(object o, EventArgs ea)
         {
-            loadingGif.Show();
-            loadingGif.BringToFront();
             _start.Invoke(o, ea);
-            loadingGif.Hide();
-            this.Controls.Remove(loadingGif);
-            loadingGif.Dispose();
         }
 
 
