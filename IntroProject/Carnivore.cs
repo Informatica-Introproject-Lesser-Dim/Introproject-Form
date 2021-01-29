@@ -34,7 +34,8 @@ namespace IntroProject
 
         public override void passiveSearch(double dt)
         {
-            
+            if (this.matingSearch())
+                return;
                 
             List<Entity> herbivores = new List<Entity>();
             List<Entity> deathPiles = new List<Entity>();
@@ -62,7 +63,7 @@ namespace IntroProject
             }
             
 
-            if (herbivores.Count > 0 && attackTimeout <= 0)
+            if (herbivores.Count > 0 && attackTimeout <= 150)
             {
                 Entity herbivore = findClosest(herbivores);
                 //make a straight line to this
@@ -84,8 +85,6 @@ namespace IntroProject
             if (stamina <= 0)
                 return true;
 
-            attackTimeout = 500;
-
             Point2D delta = target.GlobalLoc - GlobalLoc;
 
             double dist = Trigonometry.Distance(target.GlobalLoc, GlobalLoc);
@@ -104,7 +103,7 @@ namespace IntroProject
             (X, Y) = delta + this;
 
             energyVal -= Calculator.SprintEnergyPerTic(gene);
-            stamina -= 2*dt;
+            stamina -= (2 + Calculator.carnivoreCount * 0.1)*dt ;
 
 
 

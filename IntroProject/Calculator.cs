@@ -6,6 +6,7 @@ namespace IntroProject
 {
     static class Calculator
     {
+        public static int carnivoreCount = 3;
         //these values decide how costly every course of action is
         private static float jumpBias = Settings.JumpEnergy;
         private static float moveBias = Settings.WalkEnergy;
@@ -33,6 +34,8 @@ namespace IntroProject
 
         public static float StandardEnergyCost(Gene gene) 
         {
+            if (gene is CarnivoreGene)
+                return standardBias * gene.Size * carnivoreCount* (float)Math.Sqrt(carnivoreCount) * 0.1f;
             return standardBias * gene.Size;
         }
 

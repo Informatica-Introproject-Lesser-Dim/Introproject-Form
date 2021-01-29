@@ -163,13 +163,19 @@ namespace IntroProject
                     if (creature.dead)
                         deaths.Add(creature);
                 }
-                else if (e is DeathPile deathPile && e.dead)
-                    deaths.Add(deathPile);
+                else if (e is DeathPile deathPile) 
+                {
+                    deathPile.activate(dt / msPerTick);
+                    if (deathPile.dead)
+                        deaths.Add(deathPile);
+                }
+                    
             }  
         }
 
         public void TimeStep(double dt)
         {
+            Calculator.carnivoreCount = CarnivoreCount;
             Statistics CurrentStats = new Statistics(time, HerbivoreCount, CarnivoreCount, HerbivoreVelocity, CarnivoreVelocity, HerbivoreSize, CarnivoreSize);
             StatisticsValues.AddStats(CurrentStats);
             time += dt / msPerTick; //the map keeps the time so that not each hexagon has to keep the time for itself

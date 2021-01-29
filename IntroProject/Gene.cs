@@ -256,7 +256,7 @@ namespace IntroProject
 
         public override float Velocity { get { return (Fenotype[9] / 2 + 0.5f) * 4.5f + 0.5f; } } //within certain max and min values
 
-        public override float SprintSpeed { get { return (Fenotype[10] / 2 + 0.5f) * 2 + 0.5f + Velocity; } }
+        public override float SprintSpeed { get { return (Fenotype[10] / 2 + 0.5f) * 2.08f + 2f + Velocity; } }
 
         public override float SprintDuration { get { return (Fenotype[11] / 2 + 0.5f)* 990 + 30; } }
 
