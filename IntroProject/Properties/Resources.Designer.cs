@@ -101,6 +101,16 @@ namespace IntroProject.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon IntroProject_Logo_Herziening_png {
+            get {
+                object obj = ResourceManager.GetObject("IntroProject_Logo_Herziening_png", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Lion_Food {
