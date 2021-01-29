@@ -22,7 +22,8 @@ namespace IntroProject.Presentation
             Size = new Size(1800, 1200);
             mapscr = new MapScreen(Size);
             settingsMenu = new SettingsMenu(Size.Width, Size.Height, (object o, EventArgs ea) =>
-            { 
+            {
+                Cursor.Current = Cursors.WaitCursor;
                 settingsMenu.RevertSettings(); 
                 mapscr.UpdateVars(settingsMenu.newMap); 
                 settingsMenu.newMap = false; 
