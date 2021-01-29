@@ -27,8 +27,7 @@ namespace IntroProject
             age += dt;
             if (age > 100) 
             {
-                this.eaten = true;
-                this.dead = true;
+                this.BeingEaten();
             }
                 
         }
