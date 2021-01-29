@@ -87,7 +87,7 @@ namespace IntroProject.Presentation.Controls
         {
             Button hexagonButton = new Button();
             ButtonLocationChange(hexagonButton, hexagonLocation, currentHexagonSize);
-
+            hexagonButton.Cursor = Cursors.Hand;
             Controls.Add(hexagonButton);
             return hexagonButton;
         }
