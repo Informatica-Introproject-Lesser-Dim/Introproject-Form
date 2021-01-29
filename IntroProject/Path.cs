@@ -74,6 +74,7 @@ namespace IntroProject
             //calculate all the points in this curve
             for (double i = length; i >= 0; i -= 0.5)
             { 
+                //just normally increasing the angle with the same amount each step and addint the points
                 int xPos = x + (int)(r * Math.Cos(start + i / r));
                 int yPos = y + (int)(r * Math.Sin(start + i / r));
                 points.Add(new Point2D().SetPosition(xPos, yPos));

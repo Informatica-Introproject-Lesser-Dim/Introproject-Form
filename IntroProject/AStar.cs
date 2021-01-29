@@ -26,10 +26,13 @@ namespace IntroProject
 
         protected void InitializeEverything(Point2D loc, Hexagon chunck, Gene gene, int size, double energy)
         {
+            //changing the Tag so that it's different each time you create an AStar object
             Tag++;
+
+            //setting the normal values
             this.energy = energy;
             this.gene = gene;
-            maxCost = energy; //default value for now
+            maxCost = energy; 
 
             //add the starting point
             mark(chunck);
@@ -37,36 +40,49 @@ namespace IntroProject
             routeList = new RouteList();
             expandPoint(temp);
 
-            //start with the few base routes
+
             Route current;
-            while ((current = routeList.Pop()) != null) //add a test wether the current route is null aka no route has been found
+            //keep increasing all the routes
+            //untill you're out of routes => current route == null
+            while ((current = routeList.Pop()) != null)
             { 
+                //stop searching through the routes once you find one that reaches the end
                 if (isDone(current))
                     break;
+
+                //save the best route (in case we dont find any that reach a satisfactory end)
                 if (best == null)
                     best = current;
-                else if (current.quality > best.quality)//save it if it's better than the best route
+                else if (current.quality > best.quality)
                     best = current;
+
+                //adding new routes that expand from the current one
                 expandPoint(current);
             }
 
-            //now put the end point into current and have it as a result
+            //if you ran out of routes
             if (current == null)
             {
+                //too bad if there also wasnt a best route
                 if (best == null)
                     return;
+
+                //otherwise make the best route our final choice
                 current = best;
             }
             this.current = current.Clone();
             
-
+            //add the end point to our best route
             result = addEnd(current, size);
         }
 
         public virtual Route addEnd(Route r, int size) 
+            //vitual addEnd method because it's different for each version of AStar
         {
+            //if there is food in the final hexagon
             if (r.endHex.FoodValue() > 0)
             {
+                //set your end location to the location of the food
                 goal = r.endHex.bestFood(Hexagon.CalcSide(size, (r.lastDir + 3) % 6));
                 Point2D end = goal;
                 current.addEnd(end);
@@ -79,14 +95,25 @@ namespace IntroProject
         public Grass getTarget() => goal;
 
         private void addDir(Route r, int dir)
+            //add a clone of this route that is increased in this direction
+            //to our list of all routes
         {
-            //test if you can even go there etc and then add it to the route list
+            //get the next hexagon
             Hexagon goal = r.endHex[dir];
             
+            //if either: the tile doesnt exist
+            //or the jump is too high
+            //or you've already been on this tile (already set the tag once)
+            //then dont go to this hexagon
             if (goal == null || goal.heightOfTile - r.endHex.heightOfTile > gene.JumpHeight || goal.Tag == Tag)
                 return;
-            goal.Tag = Tag;//tag it so we dont use it again
+
+            //give the hexagon a tag so we dont enter it a second time
+            goal.Tag = Tag;
+
+            //adding the direction to the route and then calculate a cost for it
             Route result = r.addAndClone(dir);
+            
             float cost = calcCost(result);
             if (cost > maxCost || r.Length > maxLength)
                 return;
@@ -97,8 +124,6 @@ namespace IntroProject
         { 
             //distance squared to the closest bit of food
             double quality = calcQuality(r);
-
-            //Creature.calcDistancePow2(EntityType.Plant, r.endHex, new Point(r.endHex.x, r.endHex.y));
 
             //current cost is only based on energy cost for now, will need more things such as fear later on
             float current = r.Length*Calculator.EnergyPerMeter(gene) + r.jumpCount*Calculator.JumpCost(gene) + r.amountWaterTiles*30;
@@ -121,6 +146,8 @@ namespace IntroProject
         }
 
         protected virtual bool isDone(Route r)
+            //a route is done if it's quality exceeds your preference
+            //and there must be food in the hexagon
         {
             double val = r.quality;
             if (val < gene.ActivePreference)
@@ -140,7 +167,8 @@ namespace IntroProject
         private void mark(Hexagon hex) => hex.Tag = Tag;
     }
 
-    class SingleTargetAStar : AStar  //the same mechanism except you're aiming towards a specific target now
+    class SingleTargetAStar : AStar  
+        //the same mechanism except you're aiming towards a specific target now
     {
         private Entity theTarget;
 
@@ -158,20 +186,22 @@ namespace IntroProject
 
         public override Route getResult()
         {
-            //test of het result wel naar het einde gaat
+            //only return it if the result actually goes towards the chunck of our target
             if (current == null)
                 return null;
             if (!isDone(current))
                 return null;
             
+            //add the targetlocation to the route
             current.addEnd(theTarget.ChunckRelLoc);
             return current;
         }
 
         protected override float calcCost(Route r)
         {
+            //cost is now decided on the current route cost + the distance to our target 
             float current = r.Length * Calculator.EnergyPerMeter(gene) + r.jumpCount * Calculator.JumpCost(gene);
-            double expected = Calculator.EnergyPerMeter(gene) * Trigonometry.Distance(theTarget, r.endHex);
+            double expected = Calculator.EnergyPerMeter(gene) * Trigonometry.Distance(theTarget.GlobalLoc, r.endHex);
             return (float)expected + current;
         }
 
@@ -186,6 +216,7 @@ namespace IntroProject
 
         public override Route addEnd(Route r, int size)
         {
+            //add the location of a deathpile if there is any in this chunck
             List<Entity> entities = current.endHex.getByType(EntityType.Plant);
 
             if (entities.Count > 0)
@@ -198,21 +229,26 @@ namespace IntroProject
         }
 
         public CarnivoreAStar(Point2D loc, Hexagon chunck, Gene gene, int size, double energy) : base(loc,chunck,gene,size,energy)
+            //just normal initialisation
         {
 
         }
 
-        protected override double calcQuality(Route r) //calculates the quality and also saves it in the route
+        protected override double calcQuality(Route r) 
+            //calculates the quality and also saves it in the route
         {   
             double val = r.endHex.CarnivoreActive(gene.ActiveBias, ((CarnivoreGene)gene).LivingTargetBias);
             r.quality = val;
             return val;
         }
 
-        protected override bool isDone(Route r) //is done when you're in the chunck of a deathpile, or when you're 3 chunks from a creature
+        protected override bool isDone(Route r) 
         {
+            //ís done if you're in the same chunck as a deathpile
             if (r.endHex.getByType(EntityType.Plant).Count > 0)
                 return true;
+
+            //is also done if you're 3 tiles from a herbivore
             for (int i = 0; i < 3; i++)
                 if (r.endHex.searchPoint(i, EntityType.Herbivore).Count > 0)
                     return true;
@@ -232,7 +268,6 @@ namespace IntroProject
         public DeathPile getFood() 
         {
             return (DeathPile) theTarget;
-            //it is extremely rare for there to be multiple deathpiles in one chunck, therefore the first one is chosen
         }
     }
 
