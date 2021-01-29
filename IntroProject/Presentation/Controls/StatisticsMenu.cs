@@ -145,7 +145,7 @@ namespace IntroProject.Presentation.Controls
 
             if (GraphChoice == 3)
             {
-                pm.Subtitle = "Averige Size";
+                pm.Subtitle = "Average Size";
                 var Choice3C = new LineSeries
                 {
                     Title = "Average Size Carnivores",
