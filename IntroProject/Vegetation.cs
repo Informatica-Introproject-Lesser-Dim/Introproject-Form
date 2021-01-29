@@ -1,14 +1,11 @@
-﻿using System;
+﻿using IntroProject.Core.Math;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-
-using IntroProject.Core.Math;
 
 namespace IntroProject
 {
 
-    //TO DO: drawing method
-    //TO DO: way for eating the plants/grass (preferably in small bites at a time so that it isnt just instantly gone)
     public class Vegetation
     {
         //"Constants" (dont usually change while the program is running)
@@ -33,12 +30,14 @@ namespace IntroProject
             preGenGrassUnvisible();
             setSpawnTimer();
             Random random = new Random();
-            if (random.NextDouble() < 0.1) //at the start a random chance to grow pretty quickly
+            if (random.NextDouble() < 0.1) //at the start a random chance to instantly
                 this.Grow(true);
         }
 
         private void matchSpawnStatsWithTileHeight()
         {
+            //depending on the height and heat of the tile a certain maximum amount of plants
+            //and a certain fertillity is calculated
             if (tile.heightOfTile < Hexagon.sand - 0.05)
             {
                 maxPlants = 1;
@@ -83,44 +82,54 @@ namespace IntroProject
         private void Grow(bool x) {
             if (maxPlants == 0)
                 return;
-            bool temp = maxPlants > 1 && x;
-            double boost = 1;
+
+            bool temp = maxPlants > 1 && x; //whether plants are spread to neighbouring tiles
+
+            double boost = 1;//a speed increase for the following plants after this
             foreach (Grass g in grass)
             {
                 if (g.visible)
                 {
-                    boost += plantBoost;
+                    boost += plantBoost; //increase the boost for each plant that has grown
                     continue;
                 }
 
+                //grow the first plant found that hasnt grown yet
                 g.visible = true;
                 g.start(currentTime);
-                temp = false;
-                break;
+
+                //if there's one plant that hasnt grown yet: dont spread to neighbouring tiles
+                temp = false; 
+                break; //we dont want multiple plants to grow, so exit the loop
             }
 
             Random random = new Random();
 
-            if (temp)
+            //if you're spreading to neighbouring tiles
+            if (temp) 
             {
-                //try to put grass on neighbor tiles
+                //attempt to put grass on a neighbouring tile
                 Hexagon neighborTile = tile[random.Next(0, 6)];
                 if (neighborTile != null)
                     neighborTile.Grow();
 
-                boost /= 4; //putting grass on neighbor tiles happens but slower
+                boost /= 4; //growing on this tile takes slower now...
             }
 
             targetTime = currentTime + (random.Next((int)(min / fertillity), (int)(max / fertillity)) / boost); //when this is reached a new plant will grow
         }
-        public void draw(Graphics g, int x, int y) {
+        public void draw(Graphics g, int x, int y) 
+        {
             foreach (Grass gr in grass)
                 if (gr.visible)
                     gr.draw(g, x, y);
-        }//TO DO
+        }
 
         //general method for when you want to know an estamete of how "good" a chunck is without examining each individual piece of food in it
-        public int FoodValue() {
+        public int FoodValue() 
+            //just normal adding all the values together
+        {
+
             int result = 0;
             foreach (Grass g in grass)
                 if (g.visible)
@@ -190,7 +199,11 @@ namespace IntroProject
             g.FillEllipse(new SolidBrush(Color.FromArgb(70, 60, 255, 0)), this.x + x - radius, this.y + y - radius, radius * 2, radius * 2);
         }
 
-        public int getVal(double time) {
+        public int getVal(double time) 
+            //compares received time to the time when it started growing
+            //thene calculates which food value it should have by now
+        {
+
             double added = (time - this.time) / growthTime;
 
             if (added > growRange)
