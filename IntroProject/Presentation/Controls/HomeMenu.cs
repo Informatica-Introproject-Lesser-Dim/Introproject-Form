@@ -181,7 +181,7 @@ namespace IntroProject.Presentation.Controls
 
             Resize += (object sender, EventArgs h) =>
             {
-                int fSize = 18 * 1920 / Size.Width;
+                int fSize = 18 * Size.Width / 1920;
                 hexagonSize = (int)(Size.Height / 8);
                 labelLoc = MenuLabelLocations(150, 40);
                 a.Location = new Point(labelLoc[0] + a.Width / 4, labelLoc[1] + 35);
@@ -204,7 +204,7 @@ namespace IntroProject.Presentation.Controls
 
         private LazyLabel CreateLabel(int x, int y, Func<string> name, Color color)
         {
-            int fSize = 18 * 1920 / Size.Width;
+            int fSize = 18 * Size.Width / 1920;
             LazyLabel label = new LazyLabel();
             label.Width = 60; //Value has to be declared else label.width cant read it
             label.Font = new Font("Arial", fSize);
@@ -219,7 +219,7 @@ namespace IntroProject.Presentation.Controls
         }
         private LazyLabel CreateStartLabel(int x, int y, Func<string> name, Color color)
         {
-            int fSize = 18 * 1920 / Size.Width;
+            int fSize = 18 * Size.Width / 1920;
             LazyLabel label = new LazyLabel();
             label.Width = 60; //Value has to be declared else label.width cant read it
             label.Font = new Font("Arial", fSize);
