@@ -74,6 +74,7 @@ namespace IntroProject.Presentation.Controls
 
         private void NewMap(object sender, EventArgs ea)
         {
+            Cursor.Current = Cursors.WaitCursor;
             MakeMap();
             play.Click -= NewMap;
             play.Click += Play_Click;

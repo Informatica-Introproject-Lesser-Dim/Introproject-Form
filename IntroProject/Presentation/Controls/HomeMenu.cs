@@ -91,14 +91,12 @@ namespace IntroProject.Presentation.Controls
 
         }
 
+
         void Start(object o, EventArgs ea)
         {
-            loadingGif.Show();
-            loadingGif.BringToFront();
-            _start.Invoke(o, ea);
-            loadingGif.Hide();
-            this.Controls.Remove(loadingGif);
-            loadingGif.Dispose();
+            Cursor.Current = Cursors.WaitCursor;
+            //Cursor.Current = new Cursor(Properties.Resources.HexagonOfLIfe);
+            _start.Invoke(o, ea);           
         }
 
 

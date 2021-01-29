@@ -77,13 +77,9 @@ namespace IntroProject
                 {
                     tiles[x, y].setNeighbors(calcNeighbors(x, y));
                 }
-                if (x % 4 == 0)
-                {
-                    Debug.WriteLine(x % 24);
-                    new LoadPicture(x % 24);
-                }
+                
             }
-            new LoadPicture(4);
+            
             drawBase();
         }
 

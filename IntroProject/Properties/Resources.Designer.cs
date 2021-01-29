@@ -91,6 +91,16 @@ namespace IntroProject.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] HexagonOfLIfe {
+            get {
+                object obj = ResourceManager.GetObject("HexagonOfLIfe", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap IntroProject_Logo {
