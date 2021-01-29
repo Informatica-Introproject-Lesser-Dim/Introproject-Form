@@ -107,7 +107,8 @@ namespace IntroProject.Presentation.Controls
 
             newE.selected = true;
             selected = newE;
-            camAutoMove = true;
+            if (selected.GetType().Name != "DeathPile")
+                camAutoMove = true;
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -153,7 +154,7 @@ namespace IntroProject.Presentation.Controls
             map.draw(pea.Graphics, xCam, yCam, Width, Height);
             n++;
 
-            if (selected != null)
+            if (selected != null && selected.GetType().Name != "DeathPile")
             {
                 pea.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(50, 0, 0, 0)), Width - 500, 100, 200, 100);
                 pea.Graphics.DrawString(multipleLanguages.DisplayText(selected.GetType().ToString()[13..]) +
