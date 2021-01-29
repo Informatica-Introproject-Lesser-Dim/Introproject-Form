@@ -25,7 +25,7 @@ namespace IntroProject
         public void activate(double dt) 
         {
             age += dt;
-            if (age > 100) 
+            if (age > 500) 
             {
                 this.BeingEaten();
             }
