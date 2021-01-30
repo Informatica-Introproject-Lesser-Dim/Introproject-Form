@@ -6,31 +6,41 @@ namespace IntroProject
 {
     static class Calculator
     {
+        public static int carnivoreCount = 3;
+        //these values decide how costly every course of action is
         private static float jumpBias = Settings.JumpEnergy;
-        private static float moveBias = Settings.WalkEnergy;//mess a bit with these values when we got everything else set up correctly
+        private static float moveBias = Settings.WalkEnergy;
         private static float standardBias = Settings.PassiveEnergy;
         private static Random random = new Random();
-        public static float JumpCost(Gene gene) {
+        public static float JumpCost(Gene gene) 
+        {
             return gene.Size * gene.JumpHeight * gene.JumpHeight * jumpBias;
         }
 
-        public static float EnergyPerMeter(Gene gene) {
+        public static float EnergyPerMeter(Gene gene) 
+        {
             return moveBias * gene.Velocity * StandardEnergyCost(gene);
         }
 
-        public static float EnergyPerTic(Gene gene) {
+        public static float EnergyPerTic(Gene gene) 
+        {
             return EnergyPerMeter(gene) * gene.Velocity;
         }
 
-        public static float SprintEnergyPerTic(Gene gene) {
+        public static float SprintEnergyPerTic(Gene gene) 
+        {
             return moveBias * gene.SprintSpeed * gene.SprintSpeed * StandardEnergyCost(gene);
         }
 
-        public static float StandardEnergyCost(Gene gene) {
+        public static float StandardEnergyCost(Gene gene) 
+        {
+            if (gene is CarnivoreGene)
+                return standardBias * gene.Size * carnivoreCount* (float)Math.Sqrt(carnivoreCount) * 0.1f;
             return standardBias * gene.Size;
         }
 
-        public static double distanceSquared(double x1, double y1, double x2, double y2) {
+        public static double distanceSquared(double x1, double y1, double x2, double y2) 
+        {
             double dx = x1 - x2;
             double dy = y1 - y2;
             return dx * dx + dy * dy;

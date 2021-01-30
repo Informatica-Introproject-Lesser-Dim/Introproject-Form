@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Diagnostics;
+using System.Drawing;
 
 namespace IntroProject
 {
@@ -27,7 +29,14 @@ namespace IntroProject
                   img = Properties.Resources.Zebra_Normal;
                   break;
             }
-            g.DrawImageUnscaled(img, hexX + x - r, hexY + y - r);
+            try 
+            {
+                g.DrawImageUnscaled(img, hexX + x - r, hexY + y - r);
+            }
+            catch (Exception exept)
+            {
+                Debug.WriteLine("exeption found", exept);
+            }
         }
     }
 }

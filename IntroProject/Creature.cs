@@ -40,9 +40,11 @@ namespace IntroProject
         public double stamina;
         public double attackTimeout = 0;
 
+        private double fear = 0;
+
         public Creature() : base()
         {
-            energyVal = 600; //start with quite a lot so they dont die too quickly
+            energyVal = 1000; //start with quite a lot so they dont die too quickly
             gene = new HerbivoreGene();
             maxEnergy = this.gene.Size;
 
@@ -73,7 +75,7 @@ namespace IntroProject
         private void TransferParentInfo(Gene gene, double energy)
         {
             this.gene = gene;
-            this.energyVal = energy;
+            this.energyVal = energy + 100;
             maxEnergy = this.gene.Size;
 
             gene.@class = this.GetType().Name;
@@ -107,12 +109,13 @@ namespace IntroProject
         {
             if (entity == null)
                 return;
+            attackTimeout = 400;
             this.sleep = 30;
             if (energyVal >= 0.8 * maxEnergy)
                 return;
-            if (energyVal + entity.BeingEaten() >= maxEnergy)
+            if (energyVal + (entity.BeingEaten()/2) >= maxEnergy)
                 energyVal = maxEnergy;
-            else energyVal += entity.BeingEaten();
+            else energyVal += (entity.BeingEaten()/2);
         }
 
         public void scare(Point2D dir) {
@@ -188,11 +191,28 @@ namespace IntroProject
 
         public void activate(double dt)
         {
-            if (stamina < 0)
+            if (stamina < 0) 
+            {
+                this.goal = Goal.Nothing;
                 sleep = 20;
+            }
+
+            fear += dt;
+            if (this is Herbivore && fear > 20 && this.goal != Goal.Scared) 
+            {
+                carnivoreCheck();
+                fear = 0;
+            }
+
 
             if (stamina < gene.SprintDuration)
-                stamina += dt;
+            {
+                if (attackTimeout > 0)
+                    stamina += dt * 2 / (1 + attackTimeout / 80);
+                else
+                    stamina += dt * 2;
+            }
+                
             this.energyVal -= Calculator.StandardEnergyCost(gene) * dt;
 
             if (this.coolDown > 0)
@@ -248,6 +268,20 @@ namespace IntroProject
         {
             this.route = null;
             this.goal = Goal.Nothing;
+        }
+
+        public bool carnivoreCheck() 
+        {
+            List<Entity> carnivores = new List<Entity>();
+
+            for (int i = 0; i < 3; i++)
+                carnivores = carnivores.Concat(chunk.searchPoint(i, EntityType.Carnivore)).ToList();
+
+            if (carnivores.Count == 0)
+                return false;
+            ((Carnivore) carnivores[0]).Scare((Herbivore)this);
+            return true;
+
         }
 
         public virtual void passiveSearch(double dt) //check wether the place you are is ok
@@ -389,8 +423,9 @@ namespace IntroProject
         public void activeSearch() 
         {
             //check if it's possible to mate first
-            if (matingSearch())
-                return;
+            if (this is Herbivore)
+                if (matingSearch())
+                    return;
             
             this.getActiveRoute();
         }
@@ -422,12 +457,6 @@ namespace IntroProject
             }
         }
 
-        public void checkSurroundings()
-        {
-            //check if target plant has been eaten
-            //check if predators are near
-            //check if there's a new possible route (if it doesnt have one yet)
-        }
 
 
         public void move(double dt)//needs a rework 'cause the target won't be an entity
@@ -444,7 +473,7 @@ namespace IntroProject
             {
                 this.energyVal -= Calculator.SprintEnergyPerTic(gene) * dt;
                 speed = this.gene.SprintSpeed;
-                stamina -= 2*dt;
+                stamina -= 2.5f*dt;
             }
                 
 

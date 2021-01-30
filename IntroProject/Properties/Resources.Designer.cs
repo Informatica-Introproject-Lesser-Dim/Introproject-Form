@@ -73,6 +73,16 @@ namespace IntroProject.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap DNAboi {
+            get {
+                object obj = ResourceManager.GetObject("DNAboi", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Graph_icon {
             get {
                 object obj = ResourceManager.GetObject("Graph_icon", resourceCulture);
@@ -97,6 +107,16 @@ namespace IntroProject.Properties {
             get {
                 object obj = ResourceManager.GetObject("IntroProject_Logo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon IntroProject_Logo_Herziening_png {
+            get {
+                object obj = ResourceManager.GetObject("IntroProject_Logo_Herziening_png", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
         

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 
@@ -20,9 +22,20 @@ namespace IntroProject
             stamina = gene.SprintDuration;
         }
 
+        public void Scare(Herbivore herbivore) 
+        {
+            Point2D delta = herbivore.GlobalLoc - GlobalLoc;
+
+            double dist = Trigonometry.Distance(herbivore.GlobalLoc, GlobalLoc);
+            delta *= 1 / dist;
+
+            herbivore.scare(delta);
+        }
+
         public override void passiveSearch(double dt)
         {
-            
+            if (this.matingSearch())
+                return;
                 
             List<Entity> herbivores = new List<Entity>();
             List<Entity> deathPiles = new List<Entity>();
@@ -50,7 +63,7 @@ namespace IntroProject
             }
             
 
-            if (herbivores.Count > 0 && attackTimeout <= 0)
+            if (herbivores.Count > 0 && attackTimeout <= 150)
             {
                 Entity herbivore = findClosest(herbivores);
                 //make a straight line to this
@@ -72,8 +85,6 @@ namespace IntroProject
             if (stamina <= 0)
                 return true;
 
-            attackTimeout = 200;
-
             Point2D delta = target.GlobalLoc - GlobalLoc;
 
             double dist = Trigonometry.Distance(target.GlobalLoc, GlobalLoc);
@@ -92,7 +103,7 @@ namespace IntroProject
             (X, Y) = delta + this;
 
             energyVal -= Calculator.SprintEnergyPerTic(gene);
-            stamina -= 2*dt;
+            stamina -= (2 + Calculator.carnivoreCount * 0.2)*dt ;
 
 
 
@@ -151,7 +162,14 @@ namespace IntroProject
                   img = Properties.Resources.Lion_Normal;
                   break;
             }
-            g.DrawImageUnscaled(img, hexX + x - r, hexY + y - r);
+            try
+            {
+                g.DrawImageUnscaled(img, hexX + x - r, hexY + y - r);
+            }
+            catch (Exception exept)
+            {
+                Debug.WriteLine("exeption found", exept);
+            }
         }
 
         public Carnivore(Gene gene, double energy) : base(gene, energy) { }

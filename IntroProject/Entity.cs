@@ -35,11 +35,17 @@ namespace IntroProject
 
         public void PerishToDeathPile()
         {
+            if (this is DeathPile) 
+            {
+                if (chunk != null)
+                    chunk.removeEntity(this);
+                return;
+            }
             dead = true;
             if (chunk != null)
             {
                 chunk.removeEntity(this);
-                chunk.addEntity(new DeathPile(x, y, 150));
+                chunk.addEntity(new DeathPile(x, y, 100));
             }
         }
 
@@ -50,9 +56,7 @@ namespace IntroProject
             
             chunk.removeEntity(this);
 
-            if (this is DeathPile)
-                return energyVal;
-            return 0.2 * energyVal;
+            return 0.7 * energyVal;
         }
 
         public virtual void draw(Graphics g, int hexX, int hexY, Entity e)

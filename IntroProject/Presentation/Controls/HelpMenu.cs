@@ -43,9 +43,17 @@ namespace IntroProject.Presentation.Controls
 
             this.Controls.Add(textBox);
             this.Controls.Add(exit);
+
+            this.Paint += DrawMascotte;
         }
-    // All this to find IE
-    private string GetSystemDefaultBrowser()
+
+        private void DrawMascotte(object sender, PaintEventArgs e)
+        {
+            e.Graphics.DrawImage(Properties.Resources.DNAboi, new Point(-100, -200) + this.Size);
+        }
+
+        // All this to find IE
+        private string GetSystemDefaultBrowser()
     {
         string name = string.Empty;
         RegistryKey regKey = null;

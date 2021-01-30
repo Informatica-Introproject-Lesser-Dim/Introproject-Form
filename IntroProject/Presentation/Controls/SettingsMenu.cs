@@ -28,7 +28,7 @@ namespace IntroProject.Presentation.Controls
             Size = new Size(w, h);
             int edge = Math.Max(Size.Width, Size.Height) / 36;
 
-            StartSettings();
+            InitializeSettings();
 
             Button exit = new ButtonImaged(Properties.Resources.X_icon);
             exit.Location = new Point(2, 2);
@@ -373,7 +373,7 @@ namespace IntroProject.Presentation.Controls
             export += languageIndex.SelectedIndex;
             return export;
         }
-        private void StartSettings() //Gives all abstract between values their start value, preventing implementation problems
+        private void InitializeSettings() //Gives all abstract between values their start value, preventing implementation problems
         {
             TE = Settings.StartCarnivore;
             SE = Settings.StartHerbivore;

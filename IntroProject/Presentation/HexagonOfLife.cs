@@ -22,7 +22,8 @@ namespace IntroProject.Presentation
             Size = new Size(1800, 1200);
             mapscr = new MapScreen(Size);
             settingsMenu = new SettingsMenu(Size.Width, Size.Height, (object o, EventArgs ea) =>
-            { 
+            {
+                Cursor.Current = Cursors.WaitCursor;
                 settingsMenu.RevertSettings(); 
                 mapscr.UpdateVars(settingsMenu.newMap); 
                 settingsMenu.newMap = false; 
@@ -42,11 +43,11 @@ namespace IntroProject.Presentation
             dropMenu.Dock = DockStyle.Right;
 
             homeMenu = new HomeMenu(Size.Width, Size.Height,
-                                   (object o, EventArgs ea) => { mapscr.MakeMap(); homeMenu.Hide(); },
-                                   (object o, EventArgs ea) => { homeMenu.Hide(); settingsMenu.Show(); settingsMenu.BringToFront(); },
-                                   (object o, EventArgs ea) => { settingsMenu.ImportSettings(o, ea); mapscr.MakeMap(); homeMenu.Hide(); }, //Preset, needs fix
+                                   (object o, EventArgs ea) => { Cursor.Current = Cursors.WaitCursor; mapscr.MakeMap(); homeMenu.Hide(); },
+                                   (object o, EventArgs ea) => { Cursor.Current = Cursors.WaitCursor; homeMenu.Hide(); settingsMenu.Show(); settingsMenu.BringToFront(); },
+                                   (object o, EventArgs ea) => { settingsMenu.ImportSettings(o, ea); Cursor.Current = Cursors.WaitCursor; mapscr.MakeMap(); homeMenu.Hide();  }, //Preset, needs fix
                                    (object o, EventArgs ea) => { SetFormFullscreen();},
-                                   (object o, EventArgs ea) => { homeMenu.Hide(); helpMenu.Show(); helpMenu.BringToFront(); helpMenu.backHome(); }
+                                   (object o, EventArgs ea) => { Cursor.Current = Cursors.WaitCursor; homeMenu.Hide(); helpMenu.Show(); helpMenu.BringToFront(); helpMenu.backHome(); }
                                    );
 
             Controls.Add(homeMenu);

@@ -4,7 +4,7 @@ namespace IntroProject
 {
     public class DeathPile : Entity
     {
-        protected int age;
+        protected double age;
         protected int nutritionValue;
 
         public DeathPile(int x, int y, int nutritionValue) //De input waarde zijn voor referentie.
@@ -12,6 +12,7 @@ namespace IntroProject
             this.x = x;
             this.y = y;
             this.nutritionValue = nutritionValue;
+            age = 0;
             color = Color.SaddleBrown;
         }
 
@@ -19,6 +20,16 @@ namespace IntroProject
         {
             Image img = Properties.Resources.Skull;
             g.DrawImageUnscaled(img, hexX + x - r, hexY + y - r);
+        }
+
+        public void activate(double dt) 
+        {
+            age += dt;
+            if (age > 500) 
+            {
+                this.BeingEaten();
+            }
+                
         }
     }
 }

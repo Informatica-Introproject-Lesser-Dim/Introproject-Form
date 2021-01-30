@@ -62,7 +62,6 @@ namespace IntroProject.Presentation.Controls
             var pm = new PlotModel
             {
                 Title = "Graphs of Life",
-                Subtitle = "Epic",
                 Background = OxyColors.SlateGray,
                 PlotType = PlotType.Cartesian
             };
@@ -71,7 +70,8 @@ namespace IntroProject.Presentation.Controls
             pm.Axes.Clear();
             
             if(GraphChoice == 1)
-            { 
+            {
+                pm.Subtitle = "Population Size";
                 var Choice1C = new LineSeries
                 {
                     Title = "PopulationSize Carnivores",
@@ -109,6 +109,7 @@ namespace IntroProject.Presentation.Controls
 
             if(GraphChoice == 2)
             {
+                pm.Subtitle = "Average Velocity";
                 var Choice2C = new LineSeries
                 {
                     Title = "Average Velocity Carnivores",
@@ -144,6 +145,7 @@ namespace IntroProject.Presentation.Controls
 
             if (GraphChoice == 3)
             {
+                pm.Subtitle = "Average Size";
                 var Choice3C = new LineSeries
                 {
                     Title = "Average Size Carnivores",
